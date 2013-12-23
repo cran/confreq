@@ -1,0 +1,38 @@
+\name{chi_local_test_cfa}
+\alias{chi_local_test_cfa}
+\title{Local Chi-Square Test}
+\usage{
+  chi_local_test_cfa(observed, expected)
+}
+\arguments{
+  \item{expected}{a vector giving the expected
+  frequencies.}
+
+  \item{observed}{a vector giving the observed
+  frequencies.}
+}
+\value{
+  a list with chi-square statistic and corresponding
+  degrees of freedom an p-value.
+}
+\description{
+  Calculates the local chi-square test based on obseved and
+  expected frequencies.
+}
+\details{
+  No details in the moment.
+}
+\examples{
+#######################################
+# first calculate expected counts for LienertLSD data example.
+designmatrix<-design_cfg_cfa(kat=c(2,2,2)) # generate an designmatrix (only main effects)
+data(LienertLSD) # load example data
+observed<-LienertLSD[,4] # extract observed counts
+expected<-expected_cfa(des=designmatrix, observed=observed) # calculation of expected counts
+ chi_local_test_cfa(observed,expected)
+#######################################
+}
+\references{
+  No references in the moment
+}
+

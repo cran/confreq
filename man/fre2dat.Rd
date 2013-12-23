@@ -1,0 +1,54 @@
+\name{fre2dat}
+\alias{fre2dat}
+\title{pattern frequency to dataset conversion}
+\usage{
+  fre2dat(x, fact = FALSE, ...)
+}
+\arguments{
+  \item{x}{an object of class "matrix" which is a
+  (response) pattern frequencies table. It is assumed, that
+  the last column of the object \code{x} represents the
+  frequencies of the (respose) patern represented by the
+  other columns in \code{x}.}
+
+  \item{fact}{logical, default is \code{(fact=FALSE)}. If
+  this argument is set to \code{(fact=TRUE)} the result is
+  coerced to a data.frame with factor variables.}
+
+  \item{...}{additional parameters passed trough. This is
+  an option to assign factor labels to the resulting
+  \code{data.frame} (when setting argument
+  \code{fact=TRUE}) --> see \code{factor} in the
+  \code{base} package and examples.
+
+  WARNING using this option will only work correct when all
+  'pattern' columns (variables) in the frequencies table
+  share the same number of categories}
+}
+\value{
+  An object of class "matrix" or "data.frame" (depending on
+  the argument \code{fact}) containing the dataset
+  representation of the (response) pattern frequencies
+  table give in the argument \code{x}.
+}
+\description{
+  Given a (response) pattern frequencies table this
+  function returns a dataset representation of it.
+}
+\details{
+  No details
+}
+\examples{
+#######################################
+data(LienertLSD)# loading example pattern frequencies table
+fre2dat(LienertLSD)# coverting it into a (data) matrix
+# for a matrix without colnames
+colnames(LienertLSD)<-NULL # first removing the colnames
+fre2dat(LienertLSD) # conversion with automatic new colnames
+# requesting a data.frame using factor levels
+fre2dat(LienertLSD,fact=TRUE,labels=c("yes","no"))
+}
+\references{
+  No references in the moment
+}
+
