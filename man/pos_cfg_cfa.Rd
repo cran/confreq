@@ -1,0 +1,41 @@
+\name{pos_cfg_cfa}
+\alias{pos_cfg_cfa}
+\title{Possible configurations}
+\usage{
+  pos_cfg_cfa(kat, fact = FALSE)
+}
+\arguments{
+  \item{kat}{a numerical vector containing kardinal
+  numbers, giving the number of categories for each
+  variable. So the length of this numerical vector
+  represents the number of variables.}
+
+  \item{fact}{logical, default is \code{(fact=FALSE)}. If
+  this argument is set to \code{(fact=TRUE)} the result is
+  coerced to a data.frame with factor variables.}
+}
+\value{
+  An object of class "matrix" or "data.frame" (depending on
+  the argument \code{fact}) containing all possible
+  configurations for \code{lenght(kat)} variables with the
+  respective number of categories given as kardinal numbers
+  in the vector \code{kat}.
+}
+\description{
+  Calculates all possible configuartions for a some
+  variables with different numbers of categories.
+}
+\details{
+  No details
+}
+\examples{
+#######################################
+# possible configurations for ...
+# three variables with two categories each (Linert LSD example).
+pos_cfg_cfa(kat=c(2,2,2))
+#######################################
+}
+\references{
+  No references in the moment
+}
+
