@@ -4,10 +4,10 @@
 #' @description Given a dataset this function returns a (response) pattern frequencies table representation of it.
 #' @details No further details
 #' 
-#' @param x an object of class "matrix" or "data.frame". each variable (column) must be an \code{integer} or a \code{factor}. If \code{x} is a "matrix" it is assumed that the categories for each variable in \code{x} start with \code{1} -- there is no check for that !!!
+#' @param x an object of class "matrix" or "data.frame". If \code{x} is a "data.frame" each variable (column) must be an \code{integer} or a \code{factor}. If \code{x} is a "matrix" it is assumed that the categories for each variable in \code{x} start with \code{1} -- there is no check for that !!!
 #'  
 #' 
-#' @param kat ignored when \code{x} is a \code{data.frame}. When \code{x} is a \code{"matrix"} it is an optional integer vector defining the number of categories for every variable in \code{x} (in the respective order). If left empty the (max) number of categories ist estimated from the data given in \code{x}.
+#' @param kat ignored when \code{x} is a \code{data.frame}! If \code{x} is a \code{"matrix"} the optional argument \code{kat} must be an integer vector defining the number of categories for every variable in \code{x} (in the respective order). If left empty the (max) number of categories ist estimated from the data given in \code{x}.
 #' @param codes a list with character vectors containing coding for integers in matrix (if \code{x} is a numeric \code{matrix}). If \code{codes} is not empty (and the argument \code{x} is an object of class "matrix") the return object will be pattern frequencies table as \code{data.frame}.   
 #' @return An object of class c("data.frame","Pfreq") containing the (response) pattern frequencies table representation of the  given dataset in the argument \code{x}. 
 #' @references No references in the moment 
@@ -36,7 +36,8 @@ dat2fre <- function(x,kat=NULL,codes=NULL) {
     unorderedresult<-as.data.frame(table(x))# ungeordnetes tabulationsergebnis 
     
     ### sortieren der variablen nach deren kategoriezahl  
-    variablesorter<-order(sapply(apply(unorderedresult[,1:dim(unorderedresult)[2]-1],2,table),length))
+    variablesorter<-order(sapply(  sapply(unorderedresult[,1:dim(unorderedresult)[2]-1],table,simplify=F)   ,length))
+    # variablesorter<-order(sapply(apply(unorderedresult[,1:dim(unorderedresult)[2]-1],2,table),length))
     varorderedresult<-unorderedresult[,c(variablesorter,dim(unorderedresult)[2])]
     
     ### sortieren der 'fälle' bzw konfigurationen nach variablen kategorien aufsteigend

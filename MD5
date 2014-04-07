@@ -1,10 +1,11 @@
-656837d6ff5eaab423b1c97b31d722c8 *DESCRIPTION
-a899394a2f44ef72a88bbcdef23ed9d9 *NAMESPACE
+2565bfc3a69d53e5218b2a3b37721a2d *DESCRIPTION
+76c0728d19f8fbd1f7155c1fd3ce1c2e *NAMESPACE
+7cb109886e379e31fce777b75be1b512 *NEWS
 062b7d89bde8a1bb30c6833d58fb3608 *R/CFA.R
 5ac6603a31f6630f70276c769cb19218 *R/binomial_test_cfa.R
 077c802a75b3afca163231ce377b252d *R/chi_local_test_cfa.R
 881b524cd4927d83521a44b6096dbd4b *R/confreq.R
-a888851f959a625f12659f402b2d5d19 *R/dat2fre.R
+324cd305353ac16f4cf6993b523002d8 *R/dat2fre.R
 dbd7b662f8c9c1e17616d9a1ab8c1e4f *R/design_cfg_cfa.R
 8f80187995021f882bc83b6e6f009769 *R/df_des_cfa.R
 614c140312edb89f6cc5529d8959bf6c *R/expected_cfa.R
@@ -20,7 +21,7 @@ fe3ae33aecaa7b83e67da66bf3b57c6e *man/LienertLSD.Rd
 e4e5724f2285557d3b47edcb8b40df7f *man/binomial_test_cfa.Rd
 d6c13382debbfadb9f867bd2776af757 *man/chi_local_test_cfa.Rd
 3bcd3a4158e419ea37731da2ea40b8ba *man/confreq.Rd
-433e09860f2efea7349a470843a5c75e *man/dat2fre.Rd
+7f1fb0a4164cd7f4a2c6fa004c35c7dd *man/dat2fre.Rd
 67bdccde4f5f77387a4a2a07355cefae *man/design_cfg_cfa.Rd
 1033ee35135c533028e895be0f784519 *man/df_des_cfa.Rd
 b1effa097df98eab9d44dfbcab6ea16a *man/expected_cfa.Rd

@@ -5,18 +5,20 @@
   dat2fre(x, kat = NULL, codes = NULL)
 }
 \arguments{
-  \item{x}{an object of class "matrix" or "data.frame".
-  each variable (column) must be an \code{integer} or a
-  \code{factor}. If \code{x} is a "matrix" it is assumed
-  that the categories for each variable in \code{x} start
-  with \code{1} -- there is no check for that !!!}
+  \item{x}{an object of class "matrix" or "data.frame". If
+  \code{x} is a "data.frame" each variable (column) must be
+  an \code{integer} or a \code{factor}. If \code{x} is a
+  "matrix" it is assumed that the categories for each
+  variable in \code{x} start with \code{1} -- there is no
+  check for that !!!}
 
-  \item{kat}{ignored when \code{x} is a \code{data.frame}.
-  When \code{x} is a \code{"matrix"} it is an optional
-  integer vector defining the number of categories for
-  every variable in \code{x} (in the respective order). If
-  left empty the (max) number of categories ist estimated
-  from the data given in \code{x}.}
+  \item{kat}{ignored when \code{x} is a \code{data.frame}!
+  If \code{x} is a \code{"matrix"} the optional argument
+  \code{kat} must be an integer vector defining the number
+  of categories for every variable in \code{x} (in the
+  respective order). If left empty the (max) number of
+  categories ist estimated from the data given in
+  \code{x}.}
 
   \item{codes}{a list with character vectors containing
   coding for integers in matrix (if \code{x} is a numeric

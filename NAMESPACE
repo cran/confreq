@@ -1,5 +1,5 @@
-export(binomial_test_cfa)
 export(CFA)
+export(binomial_test_cfa)
 export(chi_local_test_cfa)
 export(dat2fre)
 export(design_cfg_cfa)
