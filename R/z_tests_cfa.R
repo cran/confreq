@@ -24,7 +24,7 @@ z_tests_cfa<-function(observed,expected,ccor=FALSE,ntotal=sum(observed)){
 
 # 3.4 Chi-Square Approximation to the z-Test
 z.Chi<-(observed - expected) /sqrt(expected)
-p.z.Chi<- 1 - pnorm(abs(z.Chi))
+z.pChi<- 1 - pnorm(abs(z.Chi))
 
 # 3.5 Binomial Approximation to the z-Test
 if(class(ccor)=="numeric"){
@@ -36,10 +36,10 @@ if(class(ccor)=="logical"){
   if(ccor==FALSE){ continuity <- rep(0,length(expected))}
 }
 ccor.Binomial<-continuity!=0
-z.Binomial<-(observed - expected - continuity )/ sqrt(expected * (1 - expected/sum(observed)))
-p.z.Binomial <- 1 - pnorm(abs(z.Binomial))
+z.Bin<-(observed - expected - continuity )/ sqrt(expected * (1 - expected/sum(observed)))
+z.pBin <- 1 - pnorm(abs(z.Bin))
 
-erg<-list(z.Chi=z.Chi,p.z.Chi=p.z.Chi,z.Binomial=z.Binomial,p.z.Binomial=p.z.Binomial,ccor.Binomial=ccor.Binomial)
+erg<-list(z.Chi=z.Chi,z.pChi=z.pChi,z.Bin=z.Bin,z.pBin=z.pBin,cor.=ccor.Binomial)
 
 # cat("z and p-values:", "\n")
 return(erg)

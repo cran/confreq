@@ -10,7 +10,7 @@ Data from the classical Linert LSD trial as an example for CFA. The data is in p
 }
 
 \format{
-  A matrix with 4 columns and 8 rows. The last column gives the frequencies for the (response) pattern in column 1:3. 
+  A data frame (object of class \code{c("data.frame", "Pfreq")} ) with 4 columns and 8 rows. The last column gives the frequencies for the (response) pattern in column 1:3. 
 }
 
 \details{

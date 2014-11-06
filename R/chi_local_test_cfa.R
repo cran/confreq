@@ -24,7 +24,7 @@ loc.chi.square<-((observed-expected)^2)/expected
 loc.df<-rep(1,length(loc.chi.square))
 loc.chi.square.p<-1-pchisq(loc.chi.square,loc.df) 
 
-erg<-list(loc.chi.square=loc.chi.square,loc.df=loc.df,loc.chi.square.p=loc.chi.square.p)
+erg<-list(Chi=loc.chi.square,df=loc.df,pChi=loc.chi.square.p)
 ####
 #cat("local chi-square:")
 return(erg)

@@ -29,6 +29,6 @@ df_des_cfa<-function(des){
 cfg_row<-dim(des)[1] #how many different configurations in'des'
 cfg_col<-dim(des)[2] #how many maineffects (variables) + interactions in'des'  
 df<-  (cfg_row) - (cfg_col)
-names(df)<-"df"
+#names(df)<-"df"
 return(df)
 }

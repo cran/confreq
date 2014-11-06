@@ -1,5 +1,6 @@
 #' @title Designmatrix for log linear CFA models 
 #' @export design_cfg_cfa
+#' @exportClass design_cfg_cfa
 #' @description Calculates the designmatrix corresponding to a dataset with \code{length(kat)} columns (variables). 
 #' @details This function internaly calls the function \code{pos_cfg_cfa}. 
 #' 
@@ -10,7 +11,7 @@
 #' 
 #' A special Case is to define a null-model or rather a cfa model of order zero. In such a model no (main) effects are considered. This can be achieved bei passing the character expression \code{"null"} to the argument \code{form} -- so: \code{form = "null"} 
 #' @param ... additional parameters passed through to function \code{model.matrix} in package \code{stats}.
-#' @return A designmatrix (an object of class "matrix") for the formula therm given in argument\code{form}.
+#' @return A designmatrix - an object of class \code{c("matrix","design_cfg_cfa")} - for the formula therm given in argument\code{form}.
 #' @references No references in the moment 
 #' @examples #######################################
 #' # designmatrix with three main effects.
@@ -46,5 +47,6 @@ form<-as.formula(form)
 des<-model.matrix(form, d, ...)
 options(old.o)# restore some options previously saved
 }
+class(des) <- c("matrix", "design_cfg_cfa")
 return(des)
 }

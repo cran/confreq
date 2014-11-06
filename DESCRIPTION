@@ -1,21 +1,17 @@
 Package: confreq
 Type: Package
-Title: Configural Frequencies Analysis Using Loglinear Modeling
-Version: 1.1
+Title: Configural Frequencies Analysis Using Log-linear Modeling
+Version: 1.3
 License: GPL-3
 Encoding: UTF-8
-Depends: R (>= 2.10.1), stats
-Date: 2014-04-07
-Author: joerg-henrik heine, R.W. Alexandrowicz and some package testing by Mark
-    Stemmler
-Maintainer: joerg-henrik heine <jhheine@googlemail.com>
+Depends: R (>= 2.10.1), stats, gmp
+Date: 2014-11-6
+Author: Joerg-Henrik Heine, R.W. Alexandrowicz (function stirling_cfa() )
+    and some package testing by Mark Stemmler
+Maintainer: Joerg-Henrik Heine <jhheine@googlemail.com>
 Description: Several functions for Configural Frequencies Analysis - introduced
     by G. A. Lienert as 'Konfigurations Frequenz Analyse' (KFA)
-Collate: 'design_cfg_cfa.R' 'df_des_cfa.R' 'pos_cfg_cfa.R' 'fre2dat.R'
-        'dat2fre.R' 'expected_cfa.R' 'binomial_test_cfa.R'
-        'z_tests_cfa.R' 'chi_local_test_cfa.R' 'CFA.R' 'confreq.R'
-        'stirling_cfa.r'
-Packaged: 2014-04-07 13:48:34 UTC; jh
+Packaged: 2014-11-06 09:47:26 UTC; jh
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2014-04-07 17:08:17
+Date/Publication: 2014-11-06 12:27:41

@@ -1,7 +1,7 @@
 #' @title Expected frequencies with glm 
 #' @export expected_cfa
 #' @description Calculates the expected frequencies of counts using log liniear model. 
-#' #' @details No details
+#' @details No details
 #' 
 #' @param des a designmatrix (object of class \code{"matrix"}) as returned by function \code{design_cfg_cfa}.
 #' @param observed a integer vector with \code{lenght(observed) == dim(des)[1]}. WARNING: The observed frequencies counts must be in an order corresponding to the coding sheme in designmatix (see argument \code{des}).
@@ -23,7 +23,7 @@
 expected_cfa<-function(des,observed,family=poisson(), intercept=FALSE,...){
 # func. by joerg-henrik heine jhheine(at)googlemail.com  
 ###############################################################
-FIT<-glm.fit(des, observed ,family=family, ... ) # verglichen mit cfa.exe manual von Eye --> OK
+FIT<-glm.fit(des, observed ,family=family, intercept = intercept, ... ) # verglichen mit cfa.exe manual von Eye --> OK
 exp.freq<-FIT$fitted.value
 
 #cat("expected frequencies:", "\n")

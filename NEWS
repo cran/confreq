@@ -1,3 +1,26 @@
+
+Changes in Version 1.3
+
+o added Information Theoretic Criteria (AIC, BIC) to the output of the main function CFA.
+
+o extended the argument 'form' in main function CFA.
+
+o added another data example (Lienert1978) used in the textbook by Mark Stemmler.
+
+o added the function 'S2CFA' for two-sample-CFA and the respective summary S3 method for the result objects of class 'S2CFA'.
+
+o due to numerical challenges in function 'S2CFA' when calculating factorials with big numbers, the package 'confreq' now has a depends on the package 'gmp'. 
+
+
+Changes in Version 1.2
+
+o added another data example (newborns) taken from the textbook by Mark Stemmler.
+
+o added the Likelihood Ratio Chi-square statistic.
+
+o added a summary S3 method for the result objects of class 'CFA'.
+
+
 Changes in Version 1.1
 
 o fixed a bug in function dat2fre() . 

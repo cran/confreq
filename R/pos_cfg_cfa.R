@@ -1,6 +1,6 @@
 #' @title Possible configurations 
 #' @export pos_cfg_cfa
-#' @description Calculates all possible configuartions for a some variables with different numbers of categories.
+#' @description Calculates all possible configuartions for some variables with different numbers of categories.
 #' @details No details
 #' 
 #' @param kat a numerical vector containing kardinal numbers, giving the number of categories for each variable. 

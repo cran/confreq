@@ -28,7 +28,7 @@ fre2dat <- function(x,fact=FALSE,...) {
 	pp <- dim(x)[1] # könnte zu kurz sein! je nach x
   kat <- apply(x[,1:(lp-1)],2,max) # Anzahl kategorien je variable
 	npos<-prod(kat) #anzahl möglicher pattern
-  ######## sicherheitshalber richtiges sortieren von x
+  ######## sicherheitshalber richtiges (zeilenweises) sortieren von x
 	vars<-1:(lp-1)
 	orderlist <- list()
 	for(i in 1:length(vars)){
