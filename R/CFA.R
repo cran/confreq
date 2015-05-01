@@ -44,20 +44,25 @@
 CFA<-function(patternfreq, alpha=.05, form=NULL, ccor=FALSE, family=poisson(), intercept=FALSE, ...){
   
 if(any(class(patternfreq)=="Pfreq") != TRUE){stop("patternfreq must be an object of class 'Pfreq'","\n","see func. dat2fre()", call. = TRUE) }
+
+kategorie <- sapply(lapply(patternfreq[,1:(dim(patternfreq)[2]-1) ],levels),length)
   
 if(class(form)!="matrix"){
   if(length(form)==0){form<-paste("~", paste(names(patternfreq)[1:(length(patternfreq)-1)],collapse=" + "))}
-  designmatrix <- design_cfg_cfa(kat=sapply(lapply(patternfreq[,1:(dim(patternfreq)[2]-1) ],levels),length) , form = form, ...)  
+    
+  designmatrix <- design_cfg_cfa(kat=kategorie , form = form, ...) 
+  
+  usedform <- form
 }
 
-if(class(form)=="matrix"){designmatrix <- form } # !!! no further checks !!!
+if(class(form)=="matrix"){designmatrix <- form ; usedform <- "designmatrix" } # !!! no further checks !!!
 
 pattern <- do.call(paste, patternfreq[,1:(dim(patternfreq)[2]-1) ])
   
 observed <- patternfreq[,dim(patternfreq)[2]] 
 
 # expected <- expected_cfa(des=designmatrix, observed=observed, family=family, intercept=intercept, ...) # padded out 24.10.2014
-glmfitres <- glm.fit(designmatrix, observed ,family=family, intercept = intercept) #, ... added 24.10.2014
+glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept) #, ... added 24.10.2014
 expected <- glmfitres$fitted.value # added 24.10.2014
 #aic <- glmfitres$aic # added 24.10.2014
 
@@ -77,7 +82,7 @@ bic <- BIC(glmfitres)# cheked against code below OK! added 24.10.2014
 
 
 erg <- data.frame(pat.=pattern, obs.=observed,exp.=expected,do.call(cbind,chi_local_test_cfa(observed,expected)),ex.bin.test=binomial_test_cfa(observed,expected), z_tests_cfa(observed,expected,ccor=ccor),p.stir=stirling_cfa(observed=observed, expected=expected,cum=TRUE,verb=FALSE),density.stir=stirling_cfa(observed=observed, expected=expected,cum=FALSE,verb=FALSE))
-  
+
 chi.square <- sum(erg$Chi)
   
 df <- df_des_cfa(designmatrix)
@@ -90,7 +95,7 @@ lr.p <- (1-pchisq(lr.chi,df)) ## added 20. October 2014 JHH
   
 bonferroni <- alpha/length(expected)
   
-result <- list( local.test = erg, bonferroni.alpha=bonferroni, global.test = list(pearson = list(Chi=chi.square,df=df,pChi=chi.square.p,alpha=alpha), likelihood.ratio = list(Chi=lr.chi,df=df,pChi=lr.p,alpha=alpha), infocrit=list(loglik=loglik, AIC=aic, BIC=bic)),designmatrix=designmatrix) 
+result <- list( local.test = erg, bonferroni.alpha=bonferroni, global.test = list(pearson = list(Chi=chi.square,df=df,pChi=chi.square.p,alpha=alpha), likelihood.ratio = list(Chi=lr.chi,df=df,pChi=lr.p,alpha=alpha), infocrit=list(loglik=loglik, AIC=aic, BIC=bic)),designmatrix=designmatrix, variables=kategorie, used.formula=usedform) 
   
 class(result)<-c("CFA","list")
  

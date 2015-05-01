@@ -1,3 +1,13 @@
+Changes in Version 1.3-1
+
+o added the Type index (b) for functional CFA in the summary method for object returned by function CFA().
+
+o added a sorting option in summary method for object returned by function CFA().
+
+o added information on function call in result of function CFA() and summary method.
+
+o changed the internal function 'binomial_test_cfa' to avoid NaN 'values' for the (exact) binomial test under some sparse data situations.
+
 
 Changes in Version 1.3
 

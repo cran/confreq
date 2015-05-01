@@ -23,7 +23,7 @@
 expected_cfa<-function(des,observed,family=poisson(), intercept=FALSE,...){
 # func. by joerg-henrik heine jhheine(at)googlemail.com  
 ###############################################################
-FIT<-glm.fit(des, observed ,family=family, intercept = intercept, ... ) # verglichen mit cfa.exe manual von Eye --> OK
+FIT<-glm.fit(x=des, y=observed ,family=family, intercept = intercept, ... ) # verglichen mit cfa.exe manual von Eye --> OK
 exp.freq<-FIT$fitted.value
 
 #cat("expected frequencies:", "\n")

@@ -23,32 +23,54 @@ binomial_test_cfa<-function(observed,expected,ntotal=sum(observed)){
 ###############################################################
 # helperfunction -- better than choose() !
 bin.coeff <- function(n, k) exp(lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1))
+#bin.coeff <- function(n, k) asNumeric(chooseZ(n,k))
 # ENDE hilfsfunktion -- genauer als choose() !
 
-exact<-function(obsi,expi,ntotal){ 
+# kommentar zur rechengenauigkeit bei großem n: (28-04-2015)
+# reicht aus NaN wirdd vermieden durch na.rm=TRUE bei sum.p 
+# man muss nur bei observed = expected (functional CFA) eine sonder bedingung einfügen 
+# sonst entsteht das irrationale ergebnis, dass dabei p = 0 wird also eine signifikante abweichung besteht
+
+# helperfunction -- exa ------
+exa<-function(obsi,expi,ntotal){ 
+
+if(round(as.double(expi),10)!=round(as.double(obsi),10)){ #(28-04-2015)
 p_expi <- expi / ntotal   
 sum.p <- 0
 
 if(obsi>=expi){
- for (j in obsi:ntotal) {
-    sum.p <- sum.p + ((p_expi^j) * (1 - p_expi)^(ntotal - j) * bin.coeff(ntotal, j))
-  }
+  jlist <- obsi:ntotal
+  sum.p <- sum(unlist(lapply(jlist,function(x){  ((p_expi^x) * (1 - p_expi)^(ntotal - x) * bin.coeff(ntotal, x))  })),na.rm=TRUE)
+  
+#  test <- (as.matrix(t(as.data.frame(lapply(jlist,function(x){  c( (p_expi^x) , (1 - p_expi)^(ntotal - x) , bin.coeff(ntotal, x) )  }))))) ; row.names(test) <- NULL
+#  apply(test,1,prod,na.rm = TRUE)
+   
+#  for (j in obsi:ntotal) {
+#     sum.p <- sum.p + ((p_expi^j) * (1 - p_expi)^(ntotal - j) * bin.coeff(ntotal, j))
+#   }
  exact = min(sum.p, 1-sum.p) 
 }
 
 if(obsi < expi){
-  for (j in 0:obsi) {
-    sum.p <- sum.p + ((p_expi^j) * (1 - p_expi)^(ntotal - j) * bin.coeff(ntotal, j))
-  }
+  jlist <- 0:obsi
+  sum.p <- sum(unlist(lapply(jlist,function(x){  ((p_expi^x) * (1 - p_expi)^(ntotal - x) * bin.coeff(ntotal, x))  })),na.rm=TRUE)
+  
+#   for (j in 0:obsi) {
+#     sum.p <- sum.p + ((p_expi^j) * (1 - p_expi)^(ntotal - j) * bin.coeff(ntotal, j))
+#   }
   exact = min(sum.p, 1-sum.p) 
 }
+}else{exact <- 1}#(28-04-2015)
 
 return(exact)
 }
+# ENDE helperfunction -- exa ------
+
+
 #die eingegbenen argumente als matrix:
 m<-cbind(observed,expected,rep(ntotal,length(observed)))
 #rechnen des tests:
-p.exact.binomial<-apply(m,1,function(x){exact(x[1],x[2],x[3]) })
+p.exact.binomial<-apply(m,1,function(x){exa(x[1],x[2],x[3]) })
 ####
 #cat("p-value for exact binomial test:")
 return(p.exact.binomial)

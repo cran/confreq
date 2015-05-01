@@ -1,4 +1,5 @@
 #' @export summary.S2CFA
+#' @S3method summary S2CFA
 #' @title S3 Summary for S2CFA
 #' @description S3 summary method for object of class\code{"S2CFA"}
 #' @param object object of class\code{"S2CFA"}
@@ -16,7 +17,7 @@ summary.S2CFA<-function(object, digits=3, type="ex.fisher.test",...){
   
   templocal <- data.frame(pat.=local.test[,1], disc.Type, round(local.test[,2:3],digits=digits), round(local.test[,5:10],digits=digits) , check.names = FALSE)
   #print(templocal)
-  cat("results of global tests:","currently not implemented !","\n")
+  # cat("results of global tests:","currently not implemented !","\n")
   cat("results of local tests: ","\n")
   cat("discriminating Type (+) / not discriminating Type (.) based on:", type, "; Bonferoni adj. alpha:", object$bonferroni.alpha,"\n")
   return(templocal)
