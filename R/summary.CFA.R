@@ -6,12 +6,13 @@
 #' @param digits integer rounds the values to the specified number of decimal places, default is \code{digits=3}.
 #' @param type character with default \code{type="ex.bin.test"}, to return wether the observed pattern are 'Types', 'Antitypes' or not significant at all. Possible options for \code{type} are \code{"pChi"}, \code{"z.pChi"}, \code{"z.pChi"}, \code{"z.pBin"} and \code{"p.stir"}. 
 #' @param sorton sort results of local test by any column. by default the output is not sorted. Other options may be \code{"pat."}, \code{"obs."}, \code{"exp."}, \code{"Type"}, \code{"Chi"}, etc. ...
-#' @param decreasing logical. Should the sort be increasing or decreasing? see \code{\link{order}}   
+#' @param decreasing logical. Should the sort be increasing or decreasing? see \code{\link{order}}
+#' @param showall logical with default \code{showall = FALSE} to return only significant pattern (types / antitypes).   
 #' @param ... other parameters passed trough
 
 #sorted by the p-value selected in argument \code{type}
 ########################### hier die summary method #class CFA #######################
-summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FALSE, ...){
+summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FALSE, showall=FALSE, ...){
   local.test <- object$local.test
   global.test <- object$global.test
     
@@ -34,9 +35,12 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
   if (length(sorton)==0){
     erg <- templocal
   }
+  if (showall==FALSE){
+    erg <- erg[erg$Type!=".",]
+  }
   
   
-  cat("function Call:","\n","-------------","\n","Formula:",object$used.formula,"\n","Variables:", names(object$variables),"\n","Categories:", object$variables,"\n")
+  cat("function Call:","\n","-------------","\n","Formula:",paste(object$used.formula,collapse = " "),"\n","Variables:", names(object$variables),"\n","Categories:", object$variables,"\n")
   
   cat("\n","results of global tests:","\n", "-----------------------")
   cat("\n","pearson Chi-square test:","\n")

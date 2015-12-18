@@ -1,3 +1,15 @@
+Changes in Version 1.4
+
+o added import of functions from default packages, as required by the new CRAN-check. 
+
+o added the argument 'showall' in summary function for objects of class c("CFA","list").
+
+o changed the numerical precision incalculation of the binomial test to avoide '-Inf' of 'Inf' results unter some data conditions.   
+
+o added the function expected_margin_cfa() for calculating expected counts based on margins with sparse tables.
+
+o added the arguments 'method' and 'blank' to extend the function CFA() when using functional CFA with sparse tables.
+
 Changes in Version 1.3-1
 
 o added the Type index (b) for functional CFA in the summary method for object returned by function CFA().

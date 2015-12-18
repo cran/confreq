@@ -27,7 +27,7 @@ bin.coeff <- function(n, k) exp(lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1
 # ENDE hilfsfunktion -- genauer als choose() !
 
 # kommentar zur rechengenauigkeit bei großem n: (28-04-2015)
-# reicht aus NaN wirdd vermieden durch na.rm=TRUE bei sum.p 
+# reicht aus NaN wird vermieden durch na.rm=TRUE bei sum.p 
 # man muss nur bei observed = expected (functional CFA) eine sonder bedingung einfügen 
 # sonst entsteht das irrationale ergebnis, dass dabei p = 0 wird also eine signifikante abweichung besteht
 
@@ -39,25 +39,24 @@ p_expi <- expi / ntotal
 sum.p <- 0
 
 if(obsi>=expi){
-  jlist <- obsi:ntotal
-  sum.p <- sum(unlist(lapply(jlist,function(x){  ((p_expi^x) * (1 - p_expi)^(ntotal - x) * bin.coeff(ntotal, x))  })),na.rm=TRUE)
-  
-#  test <- (as.matrix(t(as.data.frame(lapply(jlist,function(x){  c( (p_expi^x) , (1 - p_expi)^(ntotal - x) , bin.coeff(ntotal, x) )  }))))) ; row.names(test) <- NULL
-#  apply(test,1,prod,na.rm = TRUE)
-   
-#  for (j in obsi:ntotal) {
-#     sum.p <- sum.p + ((p_expi^j) * (1 - p_expi)^(ntotal - j) * bin.coeff(ntotal, j))
-#   }
+########### new on 11.11.2015  
+#   jlist <- obsi:ntotal
+#   sum.p <- sum(unlist(lapply(jlist,function(x){  ((p_expi^x) * (1 - p_expi)^(ntotal - x) * bin.coeff(ntotal, x))  })),na.rm=TRUE)
+ for (j in obsi:ntotal) {
+    #sum.p <- sum.p + ((p_expi^j) * (1 - p_expi)^(ntotal - j) * bin.coeff(ntotal, j))
+    sum.p <- sum.p + as.numeric(    prod.bigq( (p_expi^j) , ((1 - p_expi)^(ntotal - j)) , chooseZ(ntotal, j)  )    ) 
+  }
  exact = min(sum.p, 1-sum.p) 
 }
 
 if(obsi < expi){
-  jlist <- 0:obsi
-  sum.p <- sum(unlist(lapply(jlist,function(x){  ((p_expi^x) * (1 - p_expi)^(ntotal - x) * bin.coeff(ntotal, x))  })),na.rm=TRUE)
-  
-#   for (j in 0:obsi) {
-#     sum.p <- sum.p + ((p_expi^j) * (1 - p_expi)^(ntotal - j) * bin.coeff(ntotal, j))
-#   }
+#   jlist <- 0:obsi
+#   sum.p <- sum(unlist(lapply(jlist,function(x){  ((p_expi^x) * (1 - p_expi)^(ntotal - x) * bin.coeff(ntotal, x))  })),na.rm=TRUE)
+
+  for (j in 0:obsi) {
+    #sum.p <- sum.p + ((p_expi^j) * (1 - p_expi)^(ntotal - j) * bin.coeff(ntotal, j))
+    sum.p <- sum.p + as.numeric(    prod.bigq( (p_expi^j) , ((1 - p_expi)^(ntotal - j)) , chooseZ(ntotal, j)  )    ) 
+    }
   exact = min(sum.p, 1-sum.p) 
 }
 }else{exact <- 1}#(28-04-2015)

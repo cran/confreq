@@ -16,6 +16,10 @@
 #' @param family argument passed to \code{\link{glm.fit}} with default set to \code{poisson()}
 #' 
 #' @param intercept argument passed to \code{\link{glm.fit}} with default set to \code{FALSE} 
+#' 
+#' @param method charcter defining the estimation method for expected frequencies with default set to \code{method="log"} to estimate the expected frequencies using \code{\link{glm}}. An other option is to set this argument to \code{method="margins"} which will result in expected frequencies calculated based on the margins of the multidimensional contigency table. Only main effects models are posible in this case and thus the arguments \code{form}, \code{family} and \code{intercept} are ignored.
+#' 
+#' @param blank unsed only if argument \code{method} is set to \code{method="margins"} otherwise ignored. Should be either (1) character vector defining the pattern (with spaces between variable categories), which will be ignored for calculation of expected frequencies; or (2) a numeric vector defining the position(s) of the pattern in object of class \code{"Pfreq"} (see. argument \code{patternfreq}), which will be ignored for calculation of expected frequencies. At default (\code{blank=NULL}) all possible pattern, as listed in object of class \code{"Pfreq"}, are included for calculation of expected frequencies.  
 #'  
 #' @param ... additional parameters passed through to other functions.
 #' @return an object of class \code{CFA} with results.
@@ -41,51 +45,63 @@
 #' summary(res4)
 
 ############### start of function definition ##################
-CFA<-function(patternfreq, alpha=.05, form=NULL, ccor=FALSE, family=poisson(), intercept=FALSE, ...){
+CFA<-function(patternfreq, alpha=.05, form=NULL, ccor=FALSE, family=poisson(), intercept=FALSE, method="log", blank=NULL,...){
   
 if(any(class(patternfreq)=="Pfreq") != TRUE){stop("patternfreq must be an object of class 'Pfreq'","\n","see func. dat2fre()", call. = TRUE) }
 
 kategorie <- sapply(lapply(patternfreq[,1:(dim(patternfreq)[2]-1) ],levels),length)
   
-if(class(form)!="matrix"){
-  if(length(form)==0){form<-paste("~", paste(names(patternfreq)[1:(length(patternfreq)-1)],collapse=" + "))}
-    
-  designmatrix <- design_cfg_cfa(kat=kategorie , form = form, ...) 
-  
-  usedform <- form
-}
-
-if(class(form)=="matrix"){designmatrix <- form ; usedform <- "designmatrix" } # !!! no further checks !!!
-
 pattern <- do.call(paste, patternfreq[,1:(dim(patternfreq)[2]-1) ])
   
 observed <- patternfreq[,dim(patternfreq)[2]] 
 
-# expected <- expected_cfa(des=designmatrix, observed=observed, family=family, intercept=intercept, ...) # padded out 24.10.2014
-glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept) #, ... added 24.10.2014
-expected <- glmfitres$fitted.value # added 24.10.2014
-#aic <- glmfitres$aic # added 24.10.2014
+# condition added 22-06-2015
+if(method=="log"){
+  if(class(form)!="matrix"){
+    if(length(form)==0){form<-paste("~", paste(names(patternfreq)[1:(length(patternfreq)-1)],collapse=" + "))}
+    
+    designmatrix <- design_cfg_cfa(kat=kategorie , form = form, ...) 
+    
+    usedform <- form
+  }
+  
+  if(class(form)=="matrix"){designmatrix <- form ; usedform <- "designmatrix" } # !!! no further checks !!!
+  
+  # expected <- expected_cfa(des=designmatrix, observed=observed, family=family, intercept=intercept, ...) # padded out 24.10.2014
+  glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept) #, ... added 24.10.2014
+  expected <- glmfitres$fitted.value # added 24.10.2014
+  #aic <- glmfitres$aic # added 24.10.2014
+  class(glmfitres) <- c("glm", "lm" )# this is a trick!!! necessary for the following three lines of code - added 24.10.2014
+  loglik <- logLik(glmfitres)# cheked against code below OK! added 24.10.2014
+  aic <- AIC(glmfitres)# cheked against code below OK! added 24.10.2014
+  bic <- BIC(glmfitres)# cheked against code below OK! added 24.10.2014
+  # glmres <- glm(formula = paste("Freq",form) , data=patternfreq, , family = family) # added 24.10.2014
+  # expected <- fitted(glmres) # OK
+  # # resid(glmres)
+  # # predict(glmres)
+  # loglik <- logLik(glmres)
+  # aic <- AIC(glmres)
+  # bic <- BIC(glmres)
+}
 
-class(glmfitres) <- c("glm", "lm" )# this is a trick!!! necessary for the folowing three lines of code - added 24.10.2014
-
-loglik <- logLik(glmfitres)# cheked against code below OK! added 24.10.2014
-aic <- AIC(glmfitres)# cheked against code below OK! added 24.10.2014
-bic <- BIC(glmfitres)# cheked against code below OK! added 24.10.2014
-
-# glmres <- glm(formula = paste("Freq",form) , data=patternfreq, , family = family) # added 24.10.2014
-# expected <- fitted(glmres) # OK
-# # resid(glmres)
-# # predict(glmres)
-# loglik <- logLik(glmres)
-# aic <- AIC(glmres)
-# bic <- BIC(glmres)
-
+if(method=="margins"){
+  expected <- expected_margin_cfa(Pfreq = patternfreq, blank = blank) # added 22-06-2015
+  loglik <- NA # added 22-06-2015
+  aic <- NA # added 22-06-2015
+  bic <- NA # added 22-06-2015
+  # nur für df
+  form<-paste("~", paste(names(patternfreq)[1:(length(patternfreq)-1)],collapse=" + "))
+  designmatrix <- design_cfg_cfa(kat=kategorie , form = form, ...) 
+  df <- df_des_cfa(designmatrix)
+  designmatrix <- NA # added 22-06-2015
+  usedform <- "margins" # added 22-06-2015
+}
 
 erg <- data.frame(pat.=pattern, obs.=observed,exp.=expected,do.call(cbind,chi_local_test_cfa(observed,expected)),ex.bin.test=binomial_test_cfa(observed,expected), z_tests_cfa(observed,expected,ccor=ccor),p.stir=stirling_cfa(observed=observed, expected=expected,cum=TRUE,verb=FALSE),density.stir=stirling_cfa(observed=observed, expected=expected,cum=FALSE,verb=FALSE))
 
 chi.square <- sum(erg$Chi)
   
-df <- df_des_cfa(designmatrix)
+if(method=="log"){df <- df_des_cfa(designmatrix)} ## added 22-06-2015
   
 chi.square.p <- (1-pchisq(chi.square,df))
   
