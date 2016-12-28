@@ -15,7 +15,8 @@
 #' @importFrom stats model.matrix
 #' @importFrom stats pchisq
 #' @importFrom stats pnorm
-#' @importFrom stats poisson 
+#' @importFrom stats poisson
+#' @importFrom stats aggregate 
 #' @description The package \code{confreq} offers some functions for Configural Frequencies Analysis (CFA) proposed by G.A. Lienert as an analysis of types and antitypes of persons or objects grouped according to their characteristic (response) pattern. The core principle in the package \code{confreq} is to use the function \code{\link{glm}} to compute the expected counts based on a model (design) matrix. The main functions are \code{\link{CFA}} and \code{\link{S2CFA}} (see details).
 #'
 #' @details 

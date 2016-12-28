@@ -1,10 +1,22 @@
+Changes in Version 1.5.0
+
+o added the arguments 'blank' and 'cova' to extend the function CFA() introducing covariate analysis.
+
+o added function 'dat2cov'.
+
+o extended the argument 'blank' as a convenient option to perform functional CFA.
+
+Changes in Version 1.4.1
+
+o fixed some typing errors in descriptions for functions.
+
 Changes in Version 1.4
 
 o added import of functions from default packages, as required by the new CRAN-check. 
 
 o added the argument 'showall' in summary function for objects of class c("CFA","list").
 
-o changed the numerical precision incalculation of the binomial test to avoide '-Inf' of 'Inf' results unter some data conditions.   
+o changed the numerical precision in calculation of the binomial test to avoid '-Inf' of 'Inf' results Under some data conditions.   
 
 o added the function expected_margin_cfa() for calculating expected counts based on margins with sparse tables.
 

@@ -3,7 +3,7 @@
 \docType{data}
 \title{The Lienert (1978) Data}
 \description{
-Data used as an example for two-sample CFA in the textbook by Mark Stemmler (2014) taken from Linert (1978, p. 978). The data is in pattern frequencies table representation (object of class c("data.frame", "Pfreq" )). 
+Data used as an example for two-sample CFA in the textbook by Mark Stemmler (2014) taken from Lienert (1978, p. 978). The data is in pattern frequencies table representation (object of class c("data.frame", "Pfreq" )). 
 }
 \usage{
   data(Lienert1978)

@@ -18,14 +18,14 @@
 #' # three variables with two categories each.
 #' design_cfg_cfa(kat=c(2,2,2))
 #' # two variables with two categories each and one variable
-#' # with 7 categories (Linert LSD example).
+#' # with 7 categories (Lienert LSD example).
 #' design_cfg_cfa(kat=c(2,2,7))
 #' ###########
 #' # designmatrix with three main effects an three interactions.
 #' # three variables with two categories each.
 #' design_cfg_cfa(kat=c(2,2,2),form="~ V1 + V2 + V3 + V1:V2 + V1:V3 + V2:V3")
 #' # two variables with two categories each and one variable
-#' # with 7 categories (Linert LSD example).
+#' # with 7 categories (Lienert LSD example).
 #' design_cfg_cfa(kat=c(2,2,7),form="~ V1 + V2 + V3 + V1:V2 + V1:V3 + V2:V3")
 #' #######################################
 

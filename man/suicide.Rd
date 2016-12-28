@@ -1,9 +1,9 @@
 \name{suicide}
 \alias{suicide}
 \docType{data}
-\title{The Linert suicide Data}
+\title{The Lienert suicide Data}
 \description{
-Data from the Linert suicide example for CFA. The data is in data list representation (each row is one case). 
+Data from the Lienert suicide example for CFA. The data is in data list representation (each row is one case). 
 }
 \usage{
   data(suicide)

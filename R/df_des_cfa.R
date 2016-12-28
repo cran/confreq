@@ -12,7 +12,7 @@
 #' # three variables with two categories each.
 #' df_des_cfa(design_cfg_cfa(kat=c(2,2,2)))
 #' # two variables with two categories each and one variable
-#' # with 7 categories (Linert LSD example).
+#' # with 7 categories (Lienert LSD example).
 #' df_des_cfa(design_cfg_cfa(kat=c(2,2,7)))
 #' ###########
 #' # degrees of freedom for designmatrix with three main effects

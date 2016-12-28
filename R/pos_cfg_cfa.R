@@ -11,7 +11,7 @@
 #' @references No references in the moment 
 #' @examples #######################################
 #' # possible configurations for ...
-#' # three variables with two categories each (Linert LSD example).
+#' # three variables with two categories each (Lienert LSD example).
 #' pos_cfg_cfa(kat=c(2,2,2))
 #' #######################################
 

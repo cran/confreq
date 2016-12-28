@@ -1,9 +1,9 @@
 \name{LienertLSD}
 \alias{LienertLSD}
 \docType{data}
-\title{The Linert LSD Data}
+\title{The Lienert LSD Data}
 \description{
-Data from the classical Linert LSD trial as an example for CFA. The data is in pattern frequencies table representation (object of class c("data.frame", "Pfreq" )). 
+Data from the classical Lienert LSD trial as an example for CFA. The data is in pattern frequencies table representation (object of class c("data.frame", "Pfreq" )). 
 }
 \usage{
   data(LienertLSD)
@@ -14,7 +14,7 @@ Data from the classical Linert LSD trial as an example for CFA. The data is in p
 }
 
 \details{
-The first three columns are named C, T and A which are abreviations for 
+The first three columns are named C, T and A which are abbreviations for 
 the observed symptoms after taking LSD:
 
 C = narrowed consciousness

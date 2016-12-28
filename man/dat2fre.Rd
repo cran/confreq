@@ -13,7 +13,7 @@ dat2fre(x, katorder = FALSE, caseorder = TRUE, kat = NULL, codes = NULL)
 
 \item{caseorder}{logical with default set to \code{caseorder==TRUE}. When set to \code{caseorder==FALSE} configurations are only ordered according to the categories of the rightmost variable in the resulting object.}
 
-\item{kat}{ignored when \code{x} is a \code{data.frame}! If \code{x} is a \code{"matrix"} the optional argument \code{kat} must be an integer vector defining the number of categories for every variable in \code{x} (in the respective order). If left empty the (max) number of categories ist estimated from the data given in \code{x}.}
+\item{kat}{ignored when \code{x} is a \code{data.frame}! If \code{x} is a \code{"matrix"} the optional argument \code{kat} must be an integer vector defining the number of categories for every variable in \code{x} (in the respective order). If left empty the (max) number of categories is estimated from the data given in \code{x}.}
 
 \item{codes}{a list with character vectors containing coding for integers in matrix (if \code{x} is a numeric \code{matrix}). If \code{codes} is not empty (and the argument \code{x} is an object of class "matrix") the return object will be pattern frequencies table as \code{data.frame}.}
 }

@@ -4,15 +4,15 @@
 #' @description S3 summary method for object of class\code{"CFA"}
 #' @param object object of class\code{"CFA"}
 #' @param digits integer rounds the values to the specified number of decimal places, default is \code{digits=3}.
-#' @param type character with default \code{type="ex.bin.test"}, to return wether the observed pattern are 'Types', 'Antitypes' or not significant at all. Possible options for \code{type} are \code{"pChi"}, \code{"z.pChi"}, \code{"z.pChi"}, \code{"z.pBin"} and \code{"p.stir"}. 
+#' @param type character indicating which test to use for inference wether the observed pattern are 'Types', 'Antitypes' or not significant at all. Possible options for \code{type} are \code{"pChi"}, \code{"ex.bin.test"}, \code{"z.pChi"}, \code{"z.pBin"} and \code{"p.stir"}. 
 #' @param sorton sort results of local test by any column. by default the output is not sorted. Other options may be \code{"pat."}, \code{"obs."}, \code{"exp."}, \code{"Type"}, \code{"Chi"}, etc. ...
 #' @param decreasing logical. Should the sort be increasing or decreasing? see \code{\link{order}}
-#' @param showall logical with default \code{showall = FALSE} to return only significant pattern (types / antitypes).   
+#' @param showall logical with default \code{showall = TRUE}. To return only significant pattern (types / antitypes) set it to \code{showall = FALSE}.   
 #' @param ... other parameters passed trough
 
 #sorted by the p-value selected in argument \code{type}
 ########################### hier die summary method #class CFA #######################
-summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FALSE, showall=FALSE, ...){
+summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FALSE, showall=TRUE, ...){
   local.test <- object$local.test
   global.test <- object$global.test
     
@@ -22,8 +22,10 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
   
   Type <- mapply(FUN=function(x,y){ifelse(test=(x==TRUE),yes=y, no="." )   },x=temp1,y=temp2 )
   
-  temp3 <- round(as.double(local.test$exp.),10)!=round(as.double(local.test$obs.),10)#(28-04-2015)
-  Type <- mapply(FUN=function(x,y){ifelse(test=(x==TRUE),yes=y, no="b" )   },x=temp3,y=Type )#(28-04-2015)
+ # temp3 <- round(as.double(local.test$exp.),10)!=round(as.double(local.test$obs.),10)#(28-04-2015)
+ # Type <- mapply(FUN=function(x,y){ifelse(test=(x==TRUE),yes=y, no="b" )   },x=temp3,y=Type )#(28-04-2015)
+  
+  if(!is.null(object$functional)){Type[object$functional] <- "b"} # added 18-11-2016
   
   templocal <- data.frame(pat.=local.test[,1],round(local.test[,2:3],digits=digits),Type, round(local.test[,4:11],digits=digits)    ,cor.=local.test[,12],round(local.test[,13:14],digits=digits) )
   #print(templocal)
@@ -54,7 +56,8 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
   
   cat("\n","results of local tests:","\n", "-----------------------","\n","Type (+) / Antitype (-) based on:", type, "; Bonferoni adj. alpha:", object$bonferroni.alpha,"\n")
   
-  if(any(temp3==FALSE)){ cat("\n","Type (b): blanked out (functional CFA)","\n")}#(28-04-2015)}
+  #if(any(temp3==FALSE)){ cat("\n","Type (b): blanked out (functional CFA)","\n")}#(28-04-2015)}
+  if(any(Type=="b")){ cat("\n","Type (b): blanked out (functional CFA)","\n")}#(18-11-2016)}
   
   return(erg)
 }

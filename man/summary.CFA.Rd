@@ -5,20 +5,20 @@
 \title{S3 Summary for CFA}
 \usage{
 \method{summary}{CFA}(object, digits = 3, type = "z.pChi", sorton = NULL,
-  decreasing = FALSE, showall = FALSE, ...)
+  decreasing = FALSE, showall = TRUE, ...)
 }
 \arguments{
 \item{object}{object of class\code{"CFA"}}
 
 \item{digits}{integer rounds the values to the specified number of decimal places, default is \code{digits=3}.}
 
-\item{type}{character with default \code{type="ex.bin.test"}, to return wether the observed pattern are 'Types', 'Antitypes' or not significant at all. Possible options for \code{type} are \code{"pChi"}, \code{"z.pChi"}, \code{"z.pChi"}, \code{"z.pBin"} and \code{"p.stir"}.}
+\item{type}{character indicating which test to use for inference wether the observed pattern are 'Types', 'Antitypes' or not significant at all. Possible options for \code{type} are \code{"pChi"}, \code{"ex.bin.test"}, \code{"z.pChi"}, \code{"z.pBin"} and \code{"p.stir"}.}
 
 \item{sorton}{sort results of local test by any column. by default the output is not sorted. Other options may be \code{"pat."}, \code{"obs."}, \code{"exp."}, \code{"Type"}, \code{"Chi"}, etc. ...}
 
 \item{decreasing}{logical. Should the sort be increasing or decreasing? see \code{\link{order}}}
 
-\item{showall}{logical with default \code{showall = FALSE} to return only significant pattern (types / antitypes).}
+\item{showall}{logical with default \code{showall = TRUE}. To return only significant pattern (types / antitypes) set it to \code{showall = FALSE}.}
 
 \item{...}{other parameters passed trough}
 }
