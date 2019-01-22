@@ -4,7 +4,8 @@
 \alias{dat2cov}
 \title{conversion of a covariate dataset into summary covariate values}
 \usage{
-dat2cov(x, FUN = "mean", notobs = 0, katorder = FALSE, caseorder = TRUE)
+dat2cov(x, FUN = "mean", notobs = 0, katorder = FALSE,
+  caseorder = TRUE)
 }
 \arguments{
 \item{x}{an object of class "data.frame" with at least 2 \code{factor} variables representing the pattern (configurations) and at least 1 \code{numeric} variable representing the covariate(s).}
@@ -26,4 +27,3 @@ Given a dataset \code{x}, this function returns summary values for some (\code{n
 \details{
 No further details
 }
-

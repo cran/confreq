@@ -31,4 +31,3 @@ pos_cfg_cfa(kat=c(2,2,2))
 \references{
 No references in the moment
 }
-

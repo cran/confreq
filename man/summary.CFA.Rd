@@ -4,8 +4,9 @@
 \alias{summary.CFA}
 \title{S3 Summary for CFA}
 \usage{
-\method{summary}{CFA}(object, digits = 3, type = "z.pChi", sorton = NULL,
-  decreasing = FALSE, showall = TRUE, ...)
+\method{summary}{CFA}(object, digits = 3, type = "z.pChi",
+  sorton = NULL, decreasing = FALSE, showall = TRUE, holm = FALSE,
+  ...)
 }
 \arguments{
 \item{object}{object of class\code{"CFA"}}
@@ -20,9 +21,13 @@
 
 \item{showall}{logical with default \code{showall = TRUE}. To return only significant pattern (types / antitypes) set it to \code{showall = FALSE}.}
 
+\item{holm}{logical with default \code{holm = FALSE}. If set to \code{holm = TRUE}, significance testing is based on the holm procedure -- see references.}
+
 \item{...}{other parameters passed trough}
 }
 \description{
 S3 summary method for object of class\code{"CFA"}
 }
-
+\references{
+Holm, S. (1979). A simple sequentially rejective multiple test procedure. \emph{Scandinavian Journal of Statistics, 6}(2), 65–70.
+}

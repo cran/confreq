@@ -1,3 +1,13 @@
+Changes in Version 1.5.4-3
+
+o introduced sequential alpha correction according to Bonferroni-Holm in summary function summary.CFA()
+
+o fixed internal issue regarding the argument 'form' when defining a designmatrix
+
+Changes in Version 1.5.3
+
+o fixed some minor internal issues regarding the argument 'form' in main function 'CFA()' to maintain downward compatibility with earlier versions of confreq.  
+
 Changes in Version 1.5.0
 
 o added the arguments 'blank' and 'cova' to extend the function CFA() introducing covariate analysis.

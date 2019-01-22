@@ -87,11 +87,33 @@ if(method=="log"){
       designmatrix <- cbind(designmatrix, cova)
       usedform <- paste(usedform, "; and",ncol(cova) , "covariates") 
       }
-    
-    
   }
   
-  if(class(form)=="matrix"){designmatrix <- form ; usedform <- "designmatrix" } # !!! no further checks !!!
+  if(class(form)=="matrix"){
+    designmatrix <- form
+    usedform <- "designmatrix"
+    #option added 08-01-2018 
+    if(!is.null(blank)){
+      if(class(blank)!="character"){
+        blank_which <- blank
+        Mi <- sapply(blank_which,function(x){b <- (rep(0,length.out=nrow(designmatrix))); b[x] <- 1; b})
+        designmatrix <- cbind(designmatrix, Mi)
+        usedform <- paste(paste(usedform),"; and functional pattern:", paste(pattern[blank],collapse = ", "))
+      } 
+      if(class(blank)=="character"){
+        blank_which <- sapply(blank, function(x){which(x==pattern)})
+        Mi <- sapply(blank_which,function(x){b <- (rep(0,length.out=nrow(designmatrix))); b[x] <- 1; b})
+        designmatrix <- cbind(designmatrix, Mi)
+        usedform <- paste(paste(form),"; and functional pattern:", paste(blank,collapse = ", "))
+      }  
+    }else{blank_which <- blank}  
+       
+    #option added 11-05-2018
+    if(!is.null(cova)){
+      designmatrix <- cbind(designmatrix, cova)
+      usedform <- paste(usedform, "; and",ncol(cova) , "covariates") 
+    }
+    } # !!! no further checks !!!
   
   # expected <- expected_cfa(des=designmatrix, observed=observed, family=family, intercept=intercept, ...) # padded out 24.10.2014
   glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept) #, ... added 24.10.2014
@@ -137,7 +159,7 @@ lr.p <- (1-pchisq(lr.chi,df)) ## added 20. October 2014 JHH
   
 bonferroni <- alpha/length(expected)
   
-result <- list( local.test = erg, bonferroni.alpha=bonferroni, global.test = list(pearson = list(Chi=chi.square,df=df,pChi=chi.square.p,alpha=alpha), likelihood.ratio = list(Chi=lr.chi,df=df,pChi=lr.p,alpha=alpha), infocrit=list(loglik=loglik, AIC=aic, BIC=bic)),designmatrix=designmatrix, variables=kategorie, used.formula=usedform, functional=blank_which) 
+result <- list( local.test = erg, bonferroni.alpha=bonferroni, global.test = list(pearson = list(Chi=chi.square,df=df,pChi=chi.square.p,alpha=alpha), likelihood.ratio = list(Chi=lr.chi,df=df,pChi=lr.p,alpha=alpha), infocrit=list(loglik=loglik, AIC=aic, BIC=bic)),designmatrix=designmatrix, variables=kategorie, used.formula=usedform, functional=blank) 
   
 class(result)<-c("CFA","list")
  

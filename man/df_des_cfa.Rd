@@ -35,4 +35,3 @@ df_des_cfa(design_cfg_cfa(kat=c(2,2,2),form="~ V1 + V2 + V3 + V1:V2 + V1:V3 + V2
 \references{
 No references in the moment
 }
-

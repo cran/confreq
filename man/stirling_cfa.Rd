@@ -29,10 +29,9 @@ Calculates the binomial aproximation using stirling's formula (Version of functi
 \itemize{ \item{if obs > exp then sum obs:n} \item{ else              sum 0:obs}}}
 \item {The stirling approximation cannot be evaluated if the observed frequency is 0 or n. Therefore, the proposal of A. von Eye (20xx) is adopted, taking the sum up to 1 or n-1, respectively.}}
 }
-\author{
-R.W. Alexandrowicz
-}
 \references{
 von Eye, A. (2002). \emph{Configural Frequency Analysis. Methods, Models, and Applications.} Mahwah, NJ, LEA.
 }
-
+\author{
+R.W. Alexandrowicz
+}

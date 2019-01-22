@@ -2,8 +2,8 @@
 % Please edit documentation in R/confreq-package.R
 \docType{package}
 \name{confreq-package}
-\alias{confreq}
 \alias{confreq-package}
+\alias{confreq}
 \title{Configural Frequencies Analysis Using Log-linear Modeling}
 \description{
 The package \code{confreq} offers some functions for Configural Frequencies Analysis (CFA) proposed by G.A. Lienert as an analysis of types and antitypes of persons or objects grouped according to their characteristic (response) pattern. The core principle in the package \code{confreq} is to use the function \code{\link{glm}} to compute the expected counts based on a model (design) matrix. The main functions are \code{\link{CFA}} and \code{\link{S2CFA}} (see details).
@@ -39,9 +39,6 @@ suicide
 # so it must be tabulated !
 CFA(dat2fre(suicide))
 }
-\author{
-\itemize{\item{Joerg-Henrik Heine <jhheine@googlemail.com>}\item{R.W. Alexandrowicz (function \code{stirling_cfa()})}}
-}
 \references{
 von Eye, A. (2002). \emph{Configural Frequency Analysis. Methods, Models, and Applications.} Mahwah, NJ, LEA.
 
@@ -57,4 +54,6 @@ Stemmler, M. (2014). \emph{Person-Centered Methods -- Configural Frequency Analy
 
 Stemmler, M., & Hammond, S. (1997). Configural frequency analysis of dependent samples for intra-patient treatment comparisons. \emph{Studia Psychologica, 39}, 167–175.
 }
-
+\author{
+\itemize{\item{Joerg-Henrik Heine <jhheine@googlemail.com>}\item{R.W. Alexandrowicz (function \code{stirling_cfa()})}}
+}

@@ -49,4 +49,3 @@ Stemmler, M. (2014). \emph{Person-Centered Methods – Configural Frequency Anal
 
 Stemmler, M., & Hammond, S. (1997). Configural frequency analysis of dependent samples for intra-patient treatment comparisons. \emph{Studia Psychologica, 39}, 167–175.
 }
-

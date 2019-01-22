@@ -34,4 +34,3 @@ lr(observed,expected) # calculation of the likelihood ratio chi-square statistic
 \references{
 Stemmler, M. (2014). \emph{Person-Centered Methods -- Configural Frequency Analysis (CFA) and Other Methods for the Analysis of Contingency Tables}. Cham Heidelberg New York Dordrecht London: Springer.
 }
-

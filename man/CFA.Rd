@@ -5,8 +5,8 @@
 \title{Configural Frequencies Analysis Main Function}
 \usage{
 CFA(patternfreq, alpha = 0.05, form = NULL, ccor = FALSE,
-  family = poisson(), intercept = FALSE, method = "log", blank = NULL,
-  cova = NULL, ...)
+  family = poisson(), intercept = FALSE, method = "log",
+  blank = NULL, cova = NULL, ...)
 }
 \arguments{
 \item{patternfreq}{an object of class \code{"Pfreq"}, which is data in pattern frequencies representation - see function \code{\link{dat2fre}}.}
@@ -68,4 +68,3 @@ Victor, N. (1989). An Alternativ Approach to Configural Frequency Analysis. \emp
 
 Stemmler, M. (2014). \emph{Person-Centered Methods}. Cham: Springer International Publishing.
 }
-

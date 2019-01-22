@@ -37,4 +37,3 @@ z_tests_cfa(observed,expected)
 \references{
 No references in the moment
 }
-

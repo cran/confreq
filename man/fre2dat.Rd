@@ -37,4 +37,3 @@ fre2dat(LienertLSD,fact=TRUE,labels=c("yes","no"))
 \references{
 No references in the moment
 }
-

@@ -4,7 +4,8 @@
 \alias{dat2fre}
 \title{dataset to pattern frequency conversion}
 \usage{
-dat2fre(x, katorder = FALSE, caseorder = TRUE, kat = NULL, codes = NULL)
+dat2fre(x, katorder = FALSE, caseorder = TRUE, kat = NULL,
+  codes = NULL)
 }
 \arguments{
 \item{x}{an object of class "matrix" or "data.frame". If \code{x} is a "data.frame" each variable (column) must be an \code{integer} or a \code{factor}. If \code{x} is a "matrix" it is assumed that the categories for each variable in \code{x} start with \code{1} -- there is no check for that !!!}
@@ -44,4 +45,3 @@ dat2fre(test) # making a proper ordered pattern frequencies table again
 \references{
 No references in the moment
 }
-
