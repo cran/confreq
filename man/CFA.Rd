@@ -4,9 +4,19 @@
 \alias{CFA}
 \title{Configural Frequencies Analysis Main Function}
 \usage{
-CFA(patternfreq, alpha = 0.05, form = NULL, ccor = FALSE,
-  family = poisson(), intercept = FALSE, method = "log",
-  blank = NULL, cova = NULL, ...)
+CFA(
+  patternfreq,
+  alpha = 0.05,
+  form = NULL,
+  ccor = FALSE,
+  family = poisson(),
+  intercept = FALSE,
+  method = "log",
+  blank = NULL,
+  cova = NULL,
+  bintest = TRUE,
+  ...
+)
 }
 \arguments{
 \item{patternfreq}{an object of class \code{"Pfreq"}, which is data in pattern frequencies representation - see function \code{\link{dat2fre}}.}
@@ -26,7 +36,9 @@ A special case is to define a null-model or rather a cfa model of order zero. In
 
 \item{blank}{can be used to indicate which pattern (configurations) are declared as structural cells (confgurations) for functional CFA. Should be either (1) a character vector defining the pattern (with spaces between variable categories), which will be ignored for calculation of expected frequencies; or (2) a numeric vector defining the (row) positions of the pattern in an object of class \code{"Pfreq"} (see. argument \code{patternfreq}), which will be ignored for calculation of expected frequencies. At default (\code{blank=NULL}) all possible pattern, as listed in object of class \code{"Pfreq"}, are included for calculation of expected frequencies.}
 
-\item{cova}{a matrix (possibly with one or more columns) holding the covariate (mean) values for each pattern (configurations) see function \code{\link{dat2cov}} .}
+\item{cova}{a matrix (possibly with one or more columns) holding the covariate (mean) values for each pattern (configurations) see function \code{\link{dat2cov}}.}
+
+\item{bintest}{a logical with default set to \code{bintest=TRUE}; if set to \code{bintest=FALSE} no calculations for the exact binomial test are performed, which can reduce processing time in some cases dramaticaly.}
 
 \item{...}{additional parameters passed through to other functions.}
 }

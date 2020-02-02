@@ -1,5 +1,5 @@
-#' @export summary.CFA
 #' @S3method summary CFA
+#' @method summary CFA
 #' @title S3 Summary for CFA
 #' @description S3 summary method for object of class\code{"CFA"}
 #' @param object object of class\code{"CFA"}

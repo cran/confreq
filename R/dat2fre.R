@@ -32,7 +32,7 @@
 dat2fre <- function(x, katorder=FALSE, caseorder=TRUE, kat=NULL, codes=NULL) {
   #### wenn x ein data.frame ist ... 
   #### funktioniert bei: nur factors, nur integers, und gemischt
-  if(class(x)=="data.frame"){
+  if( is(object = x,class2 = "data.frame") ){
     unorderedresult<-as.data.frame(table(x))# ungeordnetes tabulationsergebnis 
     
   if(katorder==TRUE){### sortieren der variablen nach deren kategoriezahl  
@@ -52,7 +52,7 @@ dat2fre <- function(x, katorder=FALSE, caseorder=TRUE, kat=NULL, codes=NULL) {
  #### ENDE von wenn x ein data.frame ist ...
  
  #### wenn x eine "matrix" ist ...     
-  if((class(x)=="matrix")){
+  if( is(object = x,class2 = "matrix") ){
     if(is.numeric(x)!=TRUE){stop("x should be a numeric matrix !") }
     X<-x
     ### optional anzahl kategorien festlegen (falls nicht alle beobachtet wurden)

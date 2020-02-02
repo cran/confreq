@@ -4,9 +4,16 @@
 \alias{summary.CFA}
 \title{S3 Summary for CFA}
 \usage{
-\method{summary}{CFA}(object, digits = 3, type = "z.pChi",
-  sorton = NULL, decreasing = FALSE, showall = TRUE, holm = FALSE,
-  ...)
+\method{summary}{CFA}(
+  object,
+  digits = 3,
+  type = "z.pChi",
+  sorton = NULL,
+  decreasing = FALSE,
+  showall = TRUE,
+  holm = FALSE,
+  ...
+)
 }
 \arguments{
 \item{object}{object of class\code{"CFA"}}

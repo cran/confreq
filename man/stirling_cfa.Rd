@@ -4,8 +4,14 @@
 \alias{stirling_cfa}
 \title{Approximation to the binomial using Stirling's Formula}
 \usage{
-stirling_cfa(observed, expected = NULL, n = sum(observed), p = NULL,
-  cum = T, verb = T)
+stirling_cfa(
+  observed,
+  expected = NULL,
+  n = sum(observed),
+  p = NULL,
+  cum = T,
+  verb = T
+)
 }
 \arguments{
 \item{observed}{a integer vector with observed freqencies}

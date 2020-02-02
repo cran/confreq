@@ -1,3 +1,17 @@
+Changes in Version 1.5.4-6
+
+o fixed the '`class(.) == *`'  issue
+
+Changes in Version 1.5.4-5
+
+o added a hint in the package description to prevent trouble during installation of 'confreq' for Linux users
+
+o added citation information
+
+Changes in Version 1.5.4-4
+
+o introduced argument 'ex.bin.test=TRUE' in function CFA()
+
 Changes in Version 1.5.4-3
 
 o introduced sequential alpha correction according to Bonferroni-Holm in summary function summary.CFA()

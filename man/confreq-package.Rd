@@ -19,6 +19,15 @@ For further description see description of the respective functions.
 
 A good introduction into the theory and applications of Configural Frequencies Analysis is given in the Texbook 'Person-Centered Methods' by Mark Stemmler (see references).
 
+\emph{Additional Information}:
+Some users running R on 'Linux like' OS distributions (like e.g. Ubuntu -- and in rare cases MAC OS) might report trouble during installation of \code{confreq} due to the package dependency \code{gmp}, which is used in \code{confreq} to perform the exact binomial test. 
+This (miss-)behavior can usually traced back to a missing of 'the GNU Multiple Precision Arithmetic Library' in the respective OS installation. To fix this, users might consider to run the following Ubuntu Linux command in a terminal to install the latest GMP Library: 
+
+'\code{sudo apt-get install libgmp3-dev}'.
+
+For additional information see also \href{http://www.mathemagix.org/www/mmdoc/doc/html/external/gmp.en.html}{http://www.mathemagix.org/www/mmdoc/doc/html/external/gmp.en.html} and \href{https://gmplib.org/}{https://gmplib.org/}.
+
+
 Annotation:
 The foundations for this R-Package were established and discussed in Rothenberge (2011) and (finally) in Klagenfurt at FGME 2013 with Rainer A., Mark S. \dots
 }

@@ -4,8 +4,11 @@
 \alias{design_cfg_cfa}
 \title{Designmatrix for log linear CFA models}
 \usage{
-design_cfg_cfa(kat, form = paste("~", paste(paste("V", 1:length(kat), sep
-  = ""), collapse = " + ")), ...)
+design_cfg_cfa(
+  kat,
+  form = paste("~", paste(paste("V", 1:length(kat), sep = ""), collapse = " + ")),
+  ...
+)
 }
 \arguments{
 \item{kat}{a numerical vector containing kardinal numbers, giving the number of categories for each variable of a dataset (in the respective order of the variables in such a dataset) which corresponds to the requested designmatrix. So the length of this numerical vector represents the number of variables.}

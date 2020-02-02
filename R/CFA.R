@@ -21,7 +21,8 @@
 #' 
 #' @param blank can be used to indicate which pattern (configurations) are declared as structural cells (confgurations) for functional CFA. Should be either (1) a character vector defining the pattern (with spaces between variable categories), which will be ignored for calculation of expected frequencies; or (2) a numeric vector defining the (row) positions of the pattern in an object of class \code{"Pfreq"} (see. argument \code{patternfreq}), which will be ignored for calculation of expected frequencies. At default (\code{blank=NULL}) all possible pattern, as listed in object of class \code{"Pfreq"}, are included for calculation of expected frequencies.  
 #' 
-#' @param cova a matrix (possibly with one or more columns) holding the covariate (mean) values for each pattern (configurations) see function \code{\link{dat2cov}} . 
+#' @param cova a matrix (possibly with one or more columns) holding the covariate (mean) values for each pattern (configurations) see function \code{\link{dat2cov}}.
+#' @param bintest a logical with default set to \code{bintest=TRUE}; if set to \code{bintest=FALSE} no calculations for the exact binomial test are performed, which can reduce processing time in some cases dramaticaly.
 #' @param ... additional parameters passed through to other functions.
 #' @return an object of class \code{CFA} with results.
 #' @references Lienert, G. A. (1971). Die Konfigurationsfrequenzanalyse: I. Ein neuer Weg zu Typen und Syndromen. \emph{Zeitschrift für Klinische Psychologie und Psychotherapie, 19}(2), 99-115. 
@@ -48,7 +49,7 @@
 #' summary(res4)
 
 ############### start of function definition ##################
-CFA<-function(patternfreq, alpha=.05, form=NULL, ccor=FALSE, family=poisson(), intercept=FALSE, method="log", blank=NULL, cova=NULL, ...){
+CFA<-function(patternfreq, alpha=.05, form=NULL, ccor=FALSE, family=poisson(), intercept=FALSE, method="log", blank=NULL, cova=NULL,bintest=TRUE, ...){
   
 if(any(class(patternfreq)=="Pfreq") != TRUE){stop("patternfreq must be an object of class 'Pfreq'","\n","see func. dat2fre()", call. = TRUE) }
 
@@ -58,9 +59,9 @@ pattern <- do.call(paste, patternfreq[,1:(dim(patternfreq)[2]-1) ])
   
 observed <- patternfreq[,dim(patternfreq)[2]] 
 
-# condition added 22-06-2015
+# condition added 22-06-2015 fixed class issue 2.2.2020
 if(method=="log"){
-  if(class(form)!="matrix"){
+  if(   !is(object = form,class2 = "matrix")   ){
     if(length(form)==0){form<-paste("~", paste(names(patternfreq)[1:(length(patternfreq)-1)],collapse=" + "))}
     
     designmatrix <- design_cfg_cfa(kat=kategorie , form = form, ...) 
@@ -89,7 +90,7 @@ if(method=="log"){
       }
   }
   
-  if(class(form)=="matrix"){
+  if(is(object = form,class2 = "matrix")){
     designmatrix <- form
     usedform <- "designmatrix"
     #option added 08-01-2018 
@@ -145,7 +146,17 @@ if(method=="margins"){
   usedform <- "margins" # added 22-06-2015
 }
 
-erg <- data.frame(pat.=pattern, obs.=observed,exp.=expected,do.call(cbind,chi_local_test_cfa(observed,expected)),ex.bin.test=binomial_test_cfa(observed,expected), z_tests_cfa(observed,expected,ccor=ccor),p.stir=stirling_cfa(observed=observed, expected=expected,cum=TRUE,verb=FALSE),density.stir=stirling_cfa(observed=observed, expected=expected,cum=FALSE,verb=FALSE))
+if(bintest==TRUE){
+  erg <- data.frame(pat.=pattern, obs.=observed,exp.=expected,do.call(cbind,chi_local_test_cfa(observed,expected)),ex.bin.test=binomial_test_cfa(observed,expected), z_tests_cfa(observed,expected,ccor=ccor),p.stir=stirling_cfa(observed=observed, expected=expected,cum=TRUE,verb=FALSE),density.stir=stirling_cfa(observed=observed, expected=expected,cum=FALSE,verb=FALSE))
+}
+
+if(bintest==FALSE){
+  erg <- data.frame(pat.=pattern, obs.=observed,exp.=expected,do.call(cbind,chi_local_test_cfa(observed,expected)),ex.bin.test=as.numeric(rep(x = NA,length.out=length(observed))), z_tests_cfa(observed,expected,ccor=ccor),p.stir=stirling_cfa(observed=observed, expected=expected,cum=TRUE,verb=FALSE),density.stir=stirling_cfa(observed=observed, expected=expected,cum=FALSE,verb=FALSE))
+}
+
+
+
+
 
 chi.square <- sum(erg$Chi)
   

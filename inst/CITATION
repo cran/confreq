@@ -1,0 +1,11 @@
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Manual",
+         title = "{confreq}: Configural Frequencies Analysis Using Log-Linear Modeling",
+         author = c(person("Joerg-Henrik", "Heine"),
+                    person("Rainer W.", "Alexandrowicz"),
+                    person("Mark", "Stemmler")),
+         year = year,
+         note = note,
+         url = "https://CRAN.R-project.org/package=confreq")

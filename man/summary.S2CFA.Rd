@@ -4,8 +4,7 @@
 \alias{summary.S2CFA}
 \title{S3 Summary for S2CFA}
 \usage{
-\method{summary}{S2CFA}(object, digits = 3, type = "ex.fisher.test",
-  ...)
+\method{summary}{S2CFA}(object, digits = 3, type = "ex.fisher.test", ...)
 }
 \arguments{
 \item{object}{object of class\code{"S2CFA"}}

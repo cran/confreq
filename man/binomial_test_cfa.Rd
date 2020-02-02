@@ -17,8 +17,10 @@ binomial_test_cfa(observed, expected, ntotal = sum(observed))
 a numeric giving the p-value.
 }
 \description{
-Calculates the (exact) binomial test based on obseved, expected frequencies an the total number of observations. 
-#' @details No details
+Calculates the (exact) binomial test based on obseved, expected frequencies an the total number of observations.
+}
+\details{
+No details
 }
 \examples{
 #######################################
