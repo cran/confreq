@@ -12,6 +12,7 @@
   decreasing = FALSE,
   showall = TRUE,
   holm = FALSE,
+  wide=FALSE,
   ...
 )
 }
@@ -29,6 +30,8 @@
 \item{showall}{logical with default \code{showall = TRUE}. To return only significant pattern (types / antitypes) set it to \code{showall = FALSE}.}
 
 \item{holm}{logical with default \code{holm = FALSE}. If set to \code{holm = TRUE}, significance testing is based on the holm procedure -- see references.}
+
+\item{wide}{logical with default \code{wide = FALSE}. If set to \code{wide = TRUE}, results for all significance tests are returned.}
 
 \item{...}{other parameters passed trough}
 }

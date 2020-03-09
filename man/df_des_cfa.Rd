@@ -14,7 +14,8 @@ An object of class "integer" giving the degrees of freedom for the designmatrix 
 }
 \description{
 Calculates the degrees of freedom based on an designmatrix for a (log liniear) CFA model. 
-#' @details No details
+}
+\details{No details
 }
 \examples{
 #######################################

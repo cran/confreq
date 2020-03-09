@@ -4,9 +4,9 @@
 #' @details An continuity correction can be applied to the binomial approximation -- see argument \code{ccor}.
 #' @param expected a vector giving the expected frequencies.
 #' @param observed a vector giving the observed frequencies.
-#' @param ccor either a logical (TRUE / FALSE) determining wether to apply a continuity correction or not. When set to \code{ccor=TRUE} continuity correction is applied for expected values 5 =< expected =< 10. For \code{ccor=FALSE} no continuity correction is applied. Another option is to set \code{ccor=c(x,y)} where x is the lower and y the upper bound for expected values where continuity correction is applied. So \code{ccor=c(5,10)} is equivalent to \code{ccor=TRUE}. 
+#' @param ccor either a logical (TRUE / FALSE) determining wether to apply a continuity correction or not to the Binomial Approximation of the z-Test. When set to \code{ccor=TRUE} continuity correction is applied for expected values 5 =< expected =< 10. For \code{ccor=FALSE} no continuity correction is applied. Another option is to set \code{ccor=c(x,y)} where x is the lower and y the upper bound for expected values where continuity correction is applied. So \code{ccor=c(5,10)} is equivalent to \code{ccor=TRUE}. 
 #' @param ntotal optional a numeric giving the total number of observations. By default ntotal is calculated as \code{ntotal=sum(observed)}. 
-#' @return a list with z an p-values.
+#' @return a list with z and p-values.
 #' @references No references in the moment
 #' @examples #######################################
 #' # expected counts for LienertLSD data example.

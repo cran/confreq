@@ -1,7 +1,7 @@
 #' @title Degrees of freedom 
 #' @export df_des_cfa
 #' @description Calculates the degrees of freedom based on an designmatrix for a (log liniear) CFA model. 
-#' #' @details No details
+#' @details No details
 #' 
 #' @param des a designmatrix (object of class "matrix") as returned by function \code{design_cfg_cfa}.
 #' 

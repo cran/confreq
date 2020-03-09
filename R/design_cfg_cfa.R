@@ -2,7 +2,7 @@
 #' @export design_cfg_cfa
 #' @exportClass design_cfg_cfa
 #' @description Calculates the designmatrix corresponding to a dataset with \code{length(kat)} columns (variables). 
-#' @details This function internaly calls the function \code{pos_cfg_cfa}. 
+#' @details This function internaly calls the function \code{\link{pos_cfg_cfa}}.
 #' 
 #' For further information on designmatrices see decription on function \code{model.matrix} in the package \code{stats}. 
 #'    
