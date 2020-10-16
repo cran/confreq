@@ -53,8 +53,10 @@ CFA<-function(patternfreq, alpha=.05, form=NULL, ccor=FALSE, family=poisson(), i
   
 if(any(class(patternfreq)=="Pfreq") != TRUE){stop("patternfreq must be an object of class 'Pfreq'","\n","see func. dat2fre()", call. = TRUE) }
 
-kategorie <- sapply(lapply(patternfreq[,1:(dim(patternfreq)[2]-1) ],levels),length)
-  
+# kategorie <- sapply(lapply(patternfreq[,1:(dim(patternfreq)[2]-1) ],levels),length)
+# JHH: changed this to using 'unique' due to incident reported by M.Stemmler 15-10-2020 with R version 4.0.3  
+kategorie <- sapply(lapply(patternfreq[,1:(dim(patternfreq)[2]-1) ],unique),length)
+
 pattern <- do.call(paste, patternfreq[,1:(dim(patternfreq)[2]-1) ])
   
 observed <- patternfreq[,dim(patternfreq)[2]] 

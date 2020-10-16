@@ -1,3 +1,7 @@
+Changes in Version 1.5.5-2
+
+o fixed an issue in CFA() which rarely occurs for R versions >= 4.0.x when variables for configurations are not represented as factors but as characters in objects of class c("data.frame", "Pfreq")
+
 Changes in Version 1.5.5-1
 
 o fixed the 'S4 exports' issue
