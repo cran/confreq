@@ -49,7 +49,7 @@ an object of class \code{CFA} with results.
 Calculates various coefficients for the Configural Frequencies Analysis (CFA) defining main- and (optionaly) interaction effects. The core principle is to use \code{\link{glm}} in package \code{stats} to calculate the expected counts considering a designmatrix, which is constructed based on an formular definition given in argument \code{form}.
 }
 \details{
-This is the main function of the package. It internaly calls several functions of the package \code{\link{confreq}} which are also available as single functions. For clasification of the observed patterns into 'Types' and 'Antitypes' according to Lienert  (1971), a S3 summary method for the resulting object of class \code{"CFA"} can be applied - see \code{\link{summary.CFA}}.
+This is the main function of the package. It internaly calls several functions of the package \code{\link{confreq}} which are also available as single functions. For clasification of the observed patterns into 'Types' and 'Antitypes' according to Lienert  (1971), an S3 summary method for the resulting object of class \code{"CFA"} can be applied -- see \code{\link{summary.CFA}}. An S3 plot method is usefull for visualization of the contingency table and the 'Types' and 'Antitypes' -- see \code{\link{plot.CFA}}. 
 }
 \examples{
 #######################################
@@ -78,5 +78,5 @@ Glück, J., & Von Eye, A. (2000). Including covariates in configural frequency a
 
 Victor, N. (1989). An Alternativ Approach to Configural Frequency Analysis. \emph{Methodika, 3}, 61–73.
 
-Stemmler, M. (2014). \emph{Person-Centered Methods}. Cham: Springer International Publishing.
+Stemmler, M. (2020). \emph{Person-Centered Methods}. Cham: Springer International Publishing.
 }

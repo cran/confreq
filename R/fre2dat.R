@@ -41,7 +41,7 @@ fre2dat <- function(x,fact=FALSE,...) {
 	if (npos!=pp){ 
 	  cat("pattern frequencies representation covers not all possible paterns!","\n")
 	  ### vervollständigen (sortiert ist ja schon):
-	  pos_p<-apply(pos_cfg_cfa(kat, fact = FALSE),1,function(x){paste(x,collapse="")})
+	  pos_p<-apply(pos_cfg_cfa(kat, fact = fact),1,function(x){paste(x,collapse="")}) # JHH 09-03-2021 fact = FALSE --> fact = fact
 	  emp_p<-apply(x[ ,1:(lp-1)],1,function(x){paste(x,collapse="")})
 	  fehlend_p<-pos_p[!pos_p%in%emp_p]
 	  fehlende<-cbind(matrix(as.numeric(unlist(strsplit(fehlend_p, split=""))),ncol=(lp-1),byrow = TRUE),rep(0,length(fehlend_p)) )
@@ -63,8 +63,7 @@ fre2dat <- function(x,fact=FALSE,...) {
     dat<-do.call(rbind,apply(x,1,fun))
     if(length(colnames(x))!=0){colnames(dat)<-colnames(x)[1:(lp-1)]} # variablennmen aus x uebertragen
     if(length(colnames(x))==0){colnames(dat)<-LETTERS[1:(lp-1)]}
-    if(fact==T){dat<-as.data.frame(apply(dat,2,factor,...))
-    } 
+    if(fact==TRUE){dat<-as.data.frame(apply(dat,2,factor,...),stringsAsFactors=fact)}#,... # # JHH 09-03-2021: ,stringsAsFactors=fact
   }
 
   return(dat)

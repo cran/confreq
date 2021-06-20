@@ -24,7 +24,7 @@ laenge=prod(kat)
 if(length(names(kat))!=0){colnames(b)<-names(kat)}
  
 for (i in 1:length(kat)){b[,i]<-rep(1:kat[i], each=(laenge/prod(kat[1:i])) ,length.out=laenge)}
-if(fact==T){b<-as.data.frame(apply(b,2,factor))
+if(fact==T){b<-as.data.frame(apply(b,2,factor),stringsAsFactors=fact)# JHH 09-03-2021: ,stringsAsFactors=fact
            if(length(names(kat))==0){names(b)<-paste("V",1:length(kat),sep="")} }
 
 return(b)

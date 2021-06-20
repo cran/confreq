@@ -1,3 +1,15 @@
+Changes in Version 1.5.6
+
+o introduced the argument 'adjalpha' (with options "bonferroni" (default), "none", and "holm" so far ...) in function summary.CFA() which replaces the deprecated argument 'holm' for controlling alpha adjustment (the argument 'holm' is kept in this version for downward compatibility).
+
+o introduced the function fre2tab() 
+
+o introduced the S3 method plot for (result) objects of class c("CFA", "list") 
+
+Changes in Version 1.5.5-3
+
+o streamlined functions fre2dat(), dat2fre() and internal function pos_cfg_cfa() 
+
 Changes in Version 1.5.5-2
 
 o fixed an issue in CFA() which rarely occurs for R versions >= 4.0.x when variables for configurations are not represented as factors but as characters in objects of class c("data.frame", "Pfreq")

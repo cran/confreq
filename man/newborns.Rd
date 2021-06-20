@@ -1,9 +1,9 @@
 \name{newborns}
 \alias{newborns}
 \docType{data}
-\title{The Data Example from Stemmler 2014}
+\title{The Data Example from Stemmler 2020}
 \description{
-data example by Stemmler (2014) p. 26 where \emph{N} = 56 newborns 'with seizures' = 1 or 'without seizures' = 2 (coded in the in first column named 'A') were tested with an intelligence test while they attended kindergarten. Children’s intelligence was divided into 'average or above' = 1 and 'below average' = 2 (coded in the in second column named 'B'). The third column gives the frequencies of the respective pattern.
+data example by Stemmler (2020, table 4.1, p. 33) where \emph{n} = 56 newborns 'with seizures' = 1 or 'without seizures' = 2 (coded in the in first column named 'A') were tested with an intelligence test while they attended kindergarten. Children’s intelligence was divided into 'average or above' = 1 and 'below average' = 2 (coded in the in second column named 'B'). The third column gives the frequencies of the respective pattern.
 }
 \usage{
   data(newborns)
@@ -26,6 +26,6 @@ newborns
 }
 
 \references{
-Stemmler, M. (2014). \emph{Person-Centered Methods -- Configural Frequency Analysis (CFA) and Other Methods for the Analysis of Contingency Tables}. Cham Heidelberg New York Dordrecht London: Springer.
+Stemmler, M. (2020). \emph{Person-Centered Methods -- Configural Frequency Analysis (CFA) and Other Methods for the Analysis of Contingency Tables}. Cham Heidelberg New York Dordrecht London: Springer.
 }
 \keyword{datasets}

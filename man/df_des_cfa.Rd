@@ -13,7 +13,7 @@ df_des_cfa(des)
 An object of class "integer" giving the degrees of freedom for the designmatrix defined in argument \code{des}.
 }
 \description{
-Calculates the degrees of freedom based on an designmatrix for a (log liniear) CFA model. 
+Calculates the degrees of freedom based on an designmatrix for a (log liniear) CFA model.
 }
 \details{No details
 }
@@ -23,7 +23,7 @@ Calculates the degrees of freedom based on an designmatrix for a (log liniear) C
 # three variables with two categories each.
 df_des_cfa(design_cfg_cfa(kat=c(2,2,2)))
 # two variables with two categories each and one variable
-# with 7 categories (Lienert LSD example).
+# with 7 categories (e.g. The Krauth & Lienert suicide Data).
 df_des_cfa(design_cfg_cfa(kat=c(2,2,7)))
 ###########
 # degrees of freedom for designmatrix with three main effects

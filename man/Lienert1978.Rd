@@ -3,7 +3,7 @@
 \docType{data}
 \title{The Lienert (1978) Data}
 \description{
-Data used as an example for two-sample CFA in the textbook by Mark Stemmler (2014) taken from Lienert (1978, p. 978). The data is in pattern frequencies table representation (object of class c("data.frame", "Pfreq" )). 
+Data used as an example for two-sample CFA in the textbook by Mark Stemmler (2020, Table 7.7, p.97) taken from Lienert (1978, p. 978). The data is in pattern frequencies table representation (object of class c("data.frame", "Pfreq" )). 
 }
 \usage{
   data(Lienert1978)
@@ -27,6 +27,6 @@ colnames(Lienert1978) # show all variable names of Lienert1978
 \references{
 Lienert, G. A. (1978). \emph{Verteilungsfreie Methoden in der Biostatistik (Band II)} [Non-parametrical 168 methods in the field of biometrics (Vol. II)]. Meisenheim am Glan, Germany: Hain.
 
-Stemmler, M. (2014). \emph{Person-Centered Methods -- Configural Frequency Analysis (CFA) and Other Methods for the Analysis of Contingency Tables}. Cham Heidelberg New York Dordrecht London: Springer.
+Stemmler, M. (2020). \emph{Person-Centered Methods -- Configural Frequency Analysis (CFA) and Other Methods for the Analysis of Contingency Tables}. Cham Heidelberg New York Dordrecht London: Springer.
 }
 \keyword{datasets}

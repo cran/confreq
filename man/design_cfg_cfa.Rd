@@ -26,7 +26,7 @@ A designmatrix - an object of class \code{c("matrix","design_cfg_cfa")} - for th
 Calculates the designmatrix corresponding to a dataset with \code{length(kat)} columns (variables).
 }
 \details{
-This function internaly calls the function \code{\link{pos_cfg_cfa}}. 
+This function internaly calls the function \code{\link{pos_cfg_cfa}}.
 
 For further information on designmatrices see decription on function \code{model.matrix} in the package \code{stats}.
 }
@@ -36,7 +36,7 @@ For further information on designmatrices see decription on function \code{model
 # three variables with two categories each.
 design_cfg_cfa(kat=c(2,2,2))
 # two variables with two categories each and one variable
-# with 7 categories (Lienert LSD example).
+# with 7 categories (e.g. The Krauth & Lienert suicide Data).
 design_cfg_cfa(kat=c(2,2,7))
 ###########
 # designmatrix with three main effects an three interactions.

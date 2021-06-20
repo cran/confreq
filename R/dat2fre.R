@@ -24,8 +24,6 @@
 #' dat2fre(test) # making a proper ordered pattern frequencies table again
 #' ##### try it with a data.frame too!
 #' #######################################
-
-
 ############### start of function definition ##################
 ###########  data to pattern frequency conversion #############
 ################ jhheine at googlemail.com ####################
@@ -68,8 +66,9 @@ dat2fre <- function(x, katorder=FALSE, caseorder=TRUE, kat=NULL, codes=NULL) {
   
     Freq<-tabulate( factor(apply(X, 1, function(v){paste(v, collapse = "")}),levels=all_pat ),nbins=length(all_pat) ) 
   
-    konfig<-data.frame(apply(konfig,2,factor))
-    
+    konfig<-data.frame(apply(konfig,2,factor),stringsAsFactors=TRUE)# JHH 09-03-2021: ,stringsAsFactors=TRUE
+ 
+       
     result<-cbind(konfig,Freq) # the default return
     
     

@@ -45,7 +45,7 @@ res4 <- S2CFA(suicide_2s_fre, ccor=TRUE) # with continuity correction
 summary(res4)
 }
 \references{
-Stemmler, M. (2014). \emph{Person-Centered Methods – Configural Frequency Analysis (CFA) and Other Methods for the Analysis of Contingency Tables.} Cham Heidelberg New York Dordrecht London: Springer.
+Stemmler, M. (2020). \emph{Person-Centered Methods – Configural Frequency Analysis (CFA) and Other Methods for the Analysis of Contingency Tables.} Cham Heidelberg New York Dordrecht London: Springer.
 
 Stemmler, M., & Hammond, S. (1997). Configural frequency analysis of dependent samples for intra-patient treatment comparisons. \emph{Studia Psychologica, 39}, 167–175.
 }

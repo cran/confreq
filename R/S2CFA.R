@@ -12,7 +12,7 @@
 #'   
 #' @param ... additional parameters passed through to other functions.
 #' @return an object of class \code{S2CFA} with results.
-#' @references Stemmler, M. (2014). \emph{Person-Centered Methods – Configural Frequency Analysis (CFA) and Other Methods for the Analysis of Contingency Tables.} Cham Heidelberg New York Dordrecht London: Springer.
+#' @references Stemmler, M. (2020). \emph{Person-Centered Methods – Configural Frequency Analysis (CFA) and Other Methods for the Analysis of Contingency Tables.} Cham Heidelberg New York Dordrecht London: Springer.
 #' @references Stemmler, M., & Hammond, S. (1997). Configural frequency analysis of dependent samples for intra-patient treatment comparisons. \emph{Studia Psychologica, 39}, 167–175.
 #' 
 #' @examples #######################################
@@ -33,7 +33,7 @@
 #' summary(res3)
 #' res4 <- S2CFA(suicide_2s_fre, ccor=TRUE) # with continuity correction
 #' summary(res4)
-
+###############################################################
 ############### start of function definition ##################
 S2CFA<-function(patternfreq, alpha=.05, ccor=FALSE, ...){
 if(any(class(patternfreq)=="Pfreq") != TRUE){stop("patternfreq must be an object of class 'Pfreq'","\n","see func. dat2fre()", call. = TRUE) }
@@ -103,7 +103,7 @@ bonferroni <- alpha/length(expected_1)
 erg <- data.frame(pattern_1, expected_1, observed_1, pattern_2, expected_2, observed_2, ex.fisher.test=fisher_res, Chi=Chi, df=df, pChi=pChi)
 names(erg)[1:6] <- paste(c( rep(subsamples[1],3),rep(subsamples[2],3) ), rep(c("pat.","exp.","obs."),2)    ,sep=".")
 
-result <- list( local.test = erg, bonferroni.alpha=bonferroni, global.test = NULL) 
+result <- list( local.test = erg, bonferroni.alpha=bonferroni, global.test = NULL, inputdata=patternfreq) 
 
 class(result)<-c("S2CFA","list")
 

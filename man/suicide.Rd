@@ -1,16 +1,16 @@
 \name{suicide}
 \alias{suicide}
 \docType{data}
-\title{The Lienert suicide Data}
+\title{The Krauth & Lienert suicide Data}
 \description{
-Data from the Lienert suicide example for CFA. The data is in data list representation (each row is one case). 
+Data from the Krauth & Lienert suicide example for CFA (see Tables 39a and 39b; Krauth & Lienert, 1973). The data describe suicide patterns in pre- and post-WWII Germany -- see von Eye, A., (2002); p. 385.
 }
 \usage{
   data(suicide)
 }
 
 \format{
-  A \code{data.frame} with 3 columns (as factors). 
+  A \code{data.frame} with 3 columns (as factors).  The data is in data list representation -- each row represents one case.
 }
 
 \details{
@@ -34,5 +34,7 @@ str(suicide)
 
 \references{
 Krauth, J., & Lienert, G. A. (1973). \emph{Die Konfigurationsfrequenzanalyse (KFA) und ihre Anwendung in Psychologie und Medizin: ein multivariates nichtparametrisches Verfahren zur Aufdeckung von Typen und Syndromen; mit 70 Tabellen}. Freiburg; München: Alber Karl.
+
+von Eye, A. (2002). Configural Frequency Analysis: Methods, models, and applications. Mahwah, N.J.: Lawrence Erlbaum Associates.
 }
 \keyword{datasets}

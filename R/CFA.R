@@ -2,7 +2,7 @@
 #' @export CFA
 #' @exportClass CFA
 #' @description Calculates various coefficients for the Configural Frequencies Analysis (CFA) defining main- and (optionaly) interaction effects. The core principle is to use \code{\link{glm}} in package \code{stats} to calculate the expected counts considering a designmatrix, which is constructed based on an formular definition given in argument \code{form}. 
-#' @details This is the main function of the package. It internaly calls several functions of the package \code{\link{confreq}} which are also available as single functions. For clasification of the observed patterns into 'Types' and 'Antitypes' according to Lienert  (1971), a S3 summary method for the resulting object of class \code{"CFA"} can be applied - see \code{\link{summary.CFA}}.
+#' @details This is the main function of the package. It internaly calls several functions of the package \code{\link{confreq}} which are also available as single functions. For clasification of the observed patterns into 'Types' and 'Antitypes' according to Lienert  (1971), a S3 summary method for the resulting object of class \code{"CFA"} can be applied - see \code{\link{summary.CFA}}. An S3 plot method is usefull for visualization of the contingency table and the 'Types' and 'Antitypes' -- see \code{\link{plot.CFA}}.
 #' 
 #' @param patternfreq an object of class \code{"Pfreq"}, which is data in pattern frequencies representation - see function \code{\link{dat2fre}}.
 #' 
@@ -28,7 +28,7 @@
 #' @references Lienert, G. A. (1971). Die Konfigurationsfrequenzanalyse: I. Ein neuer Weg zu Typen und Syndromen. \emph{Zeitschrift für Klinische Psychologie und Psychotherapie, 19}(2), 99-115. 
 #' @references Glück, J., & Von Eye, A. (2000). Including covariates in configural frequency analysis. \emph{Psychologische Beitrage, 42}, 405–417.
 #' @references Victor, N. (1989). An Alternativ Approach to Configural Frequency Analysis. \emph{Methodika, 3}, 61–73.
-#' @references Stemmler, M. (2014). \emph{Person-Centered Methods}. Cham: Springer International Publishing.
+#' @references Stemmler, M. (2020). \emph{Person-Centered Methods}. Cham: Springer International Publishing.
 #' @examples #######################################
 #' ######### some examples ########
 #' data(LienertLSD)
@@ -47,7 +47,7 @@
 #' # suicide data is in non tabulated data representation - so it must be tabulated !
 #' res4 <- CFA(dat2fre(suicide))  
 #' summary(res4)
-
+###############################################################
 ############### start of function definition ##################
 CFA<-function(patternfreq, alpha=.05, form=NULL, ccor=FALSE, family=poisson(), intercept=FALSE, method="log", blank=NULL, cova=NULL,bintest=TRUE, ...){
   
@@ -157,9 +157,6 @@ if(bintest==FALSE){
 }
 
 
-
-
-
 chi.square <- sum(erg$Chi)
   
 if(method=="log"){df <- df_des_cfa(designmatrix)} ## added 22-06-2015
@@ -172,7 +169,7 @@ lr.p <- (1-pchisq(lr.chi,df)) ## added 20. October 2014 JHH
   
 bonferroni <- alpha/length(expected)
   
-result <- list( local.test = erg, bonferroni.alpha=bonferroni, global.test = list(pearson = list(Chi=chi.square,df=df,pChi=chi.square.p,alpha=alpha), likelihood.ratio = list(Chi=lr.chi,df=df,pChi=lr.p,alpha=alpha), infocrit=list(loglik=loglik, AIC=aic, BIC=bic)),designmatrix=designmatrix, variables=kategorie, used.formula=usedform, functional=blank) 
+result <- list( local.test = erg, bonferroni.alpha=bonferroni, global.test = list(pearson = list(Chi=chi.square,df=df,pChi=chi.square.p,alpha=alpha), likelihood.ratio = list(Chi=lr.chi,df=df,pChi=lr.p,alpha=alpha), infocrit=list(loglik=loglik, AIC=aic, BIC=bic)),designmatrix=designmatrix, variables=kategorie, used.formula=usedform, functional=blank, inputdata=patternfreq, alpha=alpha) 
   
 class(result)<-c("CFA","list")
  

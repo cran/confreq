@@ -8,17 +8,18 @@
 #' @param sorton sort results of local test by any column. by default the output is not sorted. Other options may be \code{"pat."}, \code{"obs."}, \code{"exp."}, \code{"Type"}, \code{"Chi"}, etc. ...
 #' @param decreasing logical. Should the sort be increasing or decreasing? see \code{\link{order}}
 #' @param showall logical with default \code{showall = TRUE}. To return only significant pattern (types / antitypes) set it to \code{showall = FALSE}.
-#' @param holm logical with default \code{holm = FALSE}. If set to \code{holm = TRUE}, significance testing is based on the holm procedure -- see references. 
+#' @param holm logical with default \code{holm = FALSE}. If set to \code{holm = TRUE}, significance testing is based on the holm procedure -- see references. This argument is deprecated (since version 1.5.6) and kept only for downward compatibility. Use argument \code{adjalpha} for any type of alpha adjustment.  
 #' @param wide logical with default \code{wide = FALSE}. If set to \code{wide = TRUE}, results for all significance tests are returned. 
+#' @param adjalpha character with default \code{adjalpha = "bonferroni"}. Selector for the type of alpha adjustment for multiple testing. Possible options are: \code{adjalpha = "none"}, for no adjustment; \code{adjalpha = "bonferroni"}, for bonferroni adjustment (default); \code{adjalpha = "holm"}, for alpha adjustment according to Holm (1979); other options to come ... . 
 #' @param ... other parameters passed trough
 #' @references Holm, S. (1979). A simple sequentially rejective multiple test procedure. \emph{Scandinavian Journal of Statistics, 6}(2), 65–70.
 
 
 #sorted by the p-value selected in argument \code{type}
 ########################### hier die summary method #class CFA #######################
-#digits=4; type="z.pChi";sorton=NULL; decreasing=FALSE; showall=TRUE; holm=TRUE; wide=FALSE
+#digits=3; type="z.pChi";sorton=NULL; decreasing=FALSE; showall=TRUE; holm=TRUE; wide=FALSE; adjalpha = "bonferroni"
 
-summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FALSE, showall=TRUE, holm=FALSE, wide=FALSE, ...){
+summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FALSE, showall=TRUE, holm=FALSE, wide=FALSE, adjalpha = "bonferroni", ...){
   local.test <- object$local.test
   global.test <- object$global.test
   functional <- object$functional
@@ -27,7 +28,7 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
    functional <- sapply(functional, function(x){which(x==as.character(object$local.test$pat.))})
  }
   
-  # interpreting option "wide" # option added 8-2-2020
+  # interpreting option "wide" # option added 8-2-2020 -------------------------
   if (wide==FALSE){
     if(type=="pChi"){out_wide <- c("Chi","df","pChi")}
     if(type=="ex.bin.test"){out_wide <- c("df","ex.bin.test")}
@@ -36,16 +37,20 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
     if(type=="p.stir"){out_wide <- c("df","p.stir","density.stir")}
   }else{out_wide <- c("Chi","df","pChi","ex.bin.test","z.Chi","z.pChi","z.Bin","z.pBin","cor.","p.stir","density.stir")}  
   
-  # significant (anti)types cf. Holm 
-  ## added 21-01-2019
-  if(holm==TRUE){
+  ############## START of alpha adjustment methods -----------------------------
+  
+  if(holm==TRUE){adjalpha <- "holm"} # 30-04-2021 for downward compatibility
+  
+  #### significant (anti)types cf. Holm ----------------------------------------
+  ## added 21-01-2019 #changed 30-04-2021
+  if(adjalpha=="holm"){ # 30-04-2021 new type of alpha adjustment control
   p_val <- local.test[,which(names(local.test)==type)]
     if(!is.null(functional)){p_val[functional] <- NA}
   
   ord_p <- order(p_val,decreasing = FALSE) # starting with the smallest
   k <- length(p_val)
   n <- length(na.omit(p_val))
-  alpha <- object$global.test$pearson$alpha
+  alpha <- object$alpha # 30-04-2021 according to new structure of CFA result object
   i=0
   holm_res <- vector(mode = "logical", length = k)
   if(i<n){ # hier nur bis n (NAs werden nicht getestet)
@@ -67,29 +72,106 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
   # round(p_val,4)
   # #alpha_bon <-((c((alpha/1:n),rep(NA,times=sum(is.na(p_val)))))[(order(rev(ord_p)))]) #added 'rev' 8-2-2020
   # alpha_bon[is.na(alpha_bon)] <-0 
+  templocal <- data.frame(pat.=local.test[,"pat."],local.test[,c("obs.","exp.")],Type, Holm.crit=alpha_bon ,local.test[,out_wide])  
   }
   
-  #object$bonferroni.alpha
-  if(holm==FALSE){ ## condition added 21-01-2019
+  ### significant (anti)types cf. (classical) Bonferroni adjustment ------------
+  if(adjalpha=="bonferroni"){ ## condition added 21-01-2019 # 30-04-2021 new type of alpha adjustment control
   temp1 <- local.test[,which(names(local.test)==type)] < object$bonferroni.alpha
   temp2 <- ifelse(test=local.test$obs. > local.test$exp., yes="+",no="-") 
   Type <- mapply(FUN=function(x,y){ifelse(test=(x==TRUE),yes=y, no="." )   },x=temp1,y=temp2 )
-  
   if(!is.null(functional)){Type[functional] <- "b"} # added 18-11-2016
-  }
-  
-  if(holm==FALSE){
-  #templocal <- data.frame(pat.=local.test[,"pat."],round(local.test[,c("obs.","exp.")],digits=digits),Type, round(local.test[,out_wide],digits=digits), cor.=local.test[,"cor."])
   templocal <- data.frame(pat.=local.test[,"pat."],local.test[,c("obs.","exp.")],Type, local.test[,out_wide])
   }
   
-  if(holm==TRUE){
-  #templocal <- data.frame(pat.=local.test[,"pat."],round(local.test[,c("obs.","exp.")],digits=digits),Type, Holm.crit=round(alpha_bon,digits = digits) ,round(local.test[,out_wide],digits=digits), cor.=local.test[,"cor."])
-  templocal <- data.frame(pat.=local.test[,"pat."],local.test[,c("obs.","exp.")],Type, Holm.crit=alpha_bon ,local.test[,out_wide])
+  ### significant (anti)types without any adjustment for multiple testing ------
+  if(adjalpha=="none"){ ## condition 30-04-2021
+    temp1 <- local.test[,which(names(local.test)==type)] < object$alpha
+    temp2 <- ifelse(test=local.test$obs. > local.test$exp., yes="+",no="-") 
+    Type <- mapply(FUN=function(x,y){ifelse(test=(x==TRUE),yes=y, no="." )   },x=temp1,y=temp2 )
+    if(!is.null(functional)){Type[functional] <- "b"} # added 18-11-2016
+    templocal <- data.frame(pat.=local.test[,"pat."],local.test[,c("obs.","exp.")],Type, local.test[,out_wide])    
   }
   
+  ### significant (anti)types according to Holland and DiPonzio Copenhaver’s procedure any adjustment for multiple testing ------
+### das ist eine riesen B A U S T E L L E
+  
+    # if(adjalpha=="holland"){ ## condition 30-04-2021
+  #   
+  #   setUpperBound <- function (vector, bound){
+  #     # Simple function to limit the maximum value of a vector to a given value
+  #     # Args:
+  #     #   vector: Vector whose values will be bounded
+  #     #   bound:  Maximum value in the result
+  #     # Returns:
+  #     #   A vector equal to 'vector' except for those values above 'bound', that are
+  #     #   set to this upper bound
+  #     res <- sapply(vector, 
+  #                   FUN=function(x) {
+  #                     return(min(bound, x))
+  #                   })
+  #     return(res)
+  #   }
+  #   correctForMonotonicity <- function (pvalues){
+  #     # Function to ensure the monotonicity of the p-values after being corrected
+  #     # Args:
+  #     #   pvalues: Corrected p-values, in DECRESING ORDER ACCORDING TO THE RAW PVALUE
+  #     # Returns:
+  #     #   The corrected p-values such as there is not a p-value smaller than the any 
+  #     #   of the previous ones.
+  #     #
+  #     pvalues <- sapply(1:length(pvalues), 
+  #                       FUN=function(x) {
+  #                         return(max(pvalues[1:x]))
+  #                       })
+  #     return(pvalues)
+  #   }
+  #   #################### end helper functions -------------
+  #   p_val <- local.test[,which(names(local.test)==type)]
+  #   names(p_val) <- local.test$pat. ## using names to control ordering
+  #   if(!is.null(functional)){p_val[functional] <- NA}
+  #   ord_p <- order(p_val, na.last=NA) # not sure about na.last option ... 'ord'
+  #   pvalues.sorted <- p_val[ord_p]
+  #   k <- length(pvalues.sorted) + 1
+  #   
+  #   p.val.aux <- sapply(1:(k - 1), 
+  #                       FUN=function(j, p.val, k){
+  #                         r <- 1 - (1 - p.val[j])^(k - j)
+  #                         return(r)
+  #                       },
+  #                       p.val=pvalues.sorted, k=k)
+  #   
+  #   p.adj.aux <- setUpperBound(p.val.aux, 1)
+  #   p.adj.aux <- correctForMonotonicity(p.adj.aux)
+  #   
+  #   p.adj <- rep(NA, length(p_val))
+  #   suppressWarnings(expr = {
+  #     p.adj[ord_p] <- p.adj.aux
+  #   })
+  # 
+  #   
+  # 
+  #   }
+  # 
+  
+ 
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  ############## END of alpha adjustment methods -------------------------------
+  
+  
   #print(templocal)
-  # sort output by sorton ...
+  # sort output by sorton ... --------------------------------------------------
   if (length(sorton)!=0 && any(names(templocal)%in%sorton) ){ #cond. changed 8-2-2020
   #   sorton <- "Holm.crit"
   #   sorton <- "p.stir"
@@ -103,7 +185,7 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
   
   if (length(sorton)==0){
     erg <- templocal
-    if (holm==TRUE){
+    if (adjalpha=="holm"){
       sorton <- type
       sorter <- order(templocal[,which(names(templocal)==sorton)],decreasing=decreasing)
       erg <- templocal[sorter,]
@@ -132,11 +214,14 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
   cat("\n","Information Criteria:","\n")
   print(data.frame(global.test$infocrit))
   
-  if(holm==FALSE){
-    cat("\n","results of local tests:","\n", "-----------------------","\n","Type (+) / Antitype (-) based on:", type ,";","\n", "Bonferoni adj. alpha:", object$bonferroni.alpha,"\n")
+  if(adjalpha=="bonferroni"){
+    cat("\n","results of local tests:","\n", "-----------------------","\n","Type (+) / Antitype (-) based on:", type ,";","\n", "with Bonferroni adjusted alpha:", object$bonferroni.alpha,"\n")#changed 30-04-2021
   }
-  if(holm==TRUE){
-    cat("\n","results of local tests:","\n", "-----------------------","\n","Type (+) / Antitype (-) based on:", type, ";","\n","with Holm-Bonferroni adjustment - see \"Holm.crit\" \n")#added 21-01-2019
+  if(adjalpha=="holm"){
+    cat("\n","results of local tests:","\n", "-----------------------","\n","Type (+) / Antitype (-) based on:", type, ";","\n","with Holm adjusted alpha - see \"Holm.crit\" \n")#added 21-01-2019 #changed 30-04-2021
+  }
+  if(adjalpha=="none"){
+    cat("\n","results of local tests:","\n", "-----------------------","\n","Type (+) / Antitype (-) based on:", type, ";","\n","with not adjusted alpha:", object$alpha,"\n")#added 30-04-2021
   }
   
   #if(any(temp3==FALSE)){ cat("\n","Type (b): blanked out (functional CFA)","\n")}#(28-04-2015)}

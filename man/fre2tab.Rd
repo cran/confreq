@@ -1,0 +1,39 @@
+\name{fre2tab}
+\alias{fre2tab}
+\title{pattern frequency to table conversion}
+\usage{
+fre2tab(patternfreq, form = NULL)
+}
+\arguments{
+\item{patternfreq}{an object of class c("data.frame","Pfreq")}
+
+\item{form}{a formula object with possibly both left and right hand sides specifying the order of the variables in the resulting table. At default (\code{formula=NULL}) all variables in \code{(patternfreq)} are used in their respective order.}
+}
+\value{
+An object of class "table", see \code{\link{table}}.
+}
+\description{
+Given data as pattern frequencies (object of class class c("data.frame","Pfreq", see function \code{\link{dat2fre}}) this function returns a typical array representation (class "table", see \code{\link{table}}) of it.
+}
+\details{
+This function was introduced in order to connect the typical confreq data representation in the objects of the class \code{c("data.frame","Pfreq")}, see function \code{\link{dat2fre}}, to the R-typical array representation as it exists in objects of the \code{"table"} class, see \code{\link{table}}. This array representation of multi-dimensional contingency tables is used more universally in R -- e.g. also in the R package \code{vcd}, see the examples section below.
+
+It is assumed, that the last column of the object \code{patternfreq} represents the frequencies of the (respose) patern represented by the other columns in \code{patternfreq}.
+}
+\examples{
+#######################################
+data(LienertLSD)# loading example pattern frequencies table
+fre2tab(LienertLSD)# coverting it into a table
+
+### examples using functions from package vcd
+data(Lienert1978)# loading example pattern frequencies table
+fre2tab(Lienert1978)# coverting it into a table
+strucplot(fre2tab(Lienert1978))# plotting data with 'vcd'
+structable(fre2tab(Lienert1978),direction = "v")# flatten table (vertical) with 'vcd'
+
+# changing the vertical grouping when flattening the table by unsing a 'formula':
+structable(fre2tab(Lienert1978, form=~Group + Student + Teacher),direction = "v")# flatten table
+}
+\references{
+No references at the moment
+}
