@@ -1,14 +1,14 @@
-#' @title Configural Frequencies Analysis for two Samples. 
+#' @title Configural Frequencies Analysis for two Samples.
+#' @keywords mainfunction 
 #' @export S2CFA
-#' @exportClass S2CFA
-#' @description Calculates coefficients for the two-sample CFA. Instead of differentiating between types and antitypes, two-sample CFA looks for discrimination types, that is configurations with significant differences in frequencies between two subsamples.
+#' @description Calculates coefficients for the two-sample CFA. Instead of differentiating between 'Types' and 'Antitypes', two-sample CFA looks for discrimination types, that is configurations with significant differences in frequencies between two sub samples.
 #' @details no details at the moment ...
 #' 
-#' @param patternfreq an object of class \code{"Pfreq"}, which is data in pattern frequencies representation - see function \code{\link{dat2fre}}. The variable defining the two subsaples (a variable with max. two categories) must be located in the last but one column of the object of class \code{"Pfreq"} 
+#' @param patternfreq an object of class \code{"Pfreq"}, which is data in pattern frequencies representation - see function \code{\link{dat2fre}}. The variable defining the two sub samples (a variable with max. two categories) must be located in the last but one column of the object of class \code{"Pfreq"} 
 #' 
 #' @param alpha a numeric giving the alpha level for testing (default set to \code{alpha=.05})
 #' 
-#' @param ccor a logical (TRUE / FALSE) determining wether to apply a continuity correction or not. When set to \code{ccor=TRUE} continuity correction is applied. For \code{ccor=FALSE} no continuity correction is applied.
+#' @param ccor a logical (TRUE / FALSE) determining whether to apply a continuity correction or not. When set to \code{ccor=TRUE} continuity correction is applied. For \code{ccor=FALSE} no continuity correction is applied.
 #'   
 #' @param ... additional parameters passed through to other functions.
 #' @return an object of class \code{S2CFA} with results.
@@ -103,7 +103,7 @@ bonferroni <- alpha/length(expected_1)
 erg <- data.frame(pattern_1, expected_1, observed_1, pattern_2, expected_2, observed_2, ex.fisher.test=fisher_res, Chi=Chi, df=df, pChi=pChi)
 names(erg)[1:6] <- paste(c( rep(subsamples[1],3),rep(subsamples[2],3) ), rep(c("pat.","exp.","obs."),2)    ,sep=".")
 
-result <- list( local.test = erg, bonferroni.alpha=bonferroni, global.test = NULL, inputdata=patternfreq) 
+result <- list( local.test = erg, bonferroni.alpha=bonferroni, global.test = NULL, inputdata=patternfreq, alpha=alpha, ccor=ccor, grouping= list(var=names(patternfreq)[ncol(patternfreq)-1], cats=subsamples), pat=names(patternfreq)[-c(ncol(patternfreq), ncol(patternfreq)-1)] ) 
 
 class(result)<-c("S2CFA","list")
 

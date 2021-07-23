@@ -15,7 +15,8 @@ An object of class "integer" giving the degrees of freedom for the designmatrix 
 \description{
 Calculates the degrees of freedom based on an designmatrix for a (log liniear) CFA model.
 }
-\details{No details
+\details{
+No details
 }
 \examples{
 #######################################
@@ -36,3 +37,4 @@ df_des_cfa(design_cfg_cfa(kat=c(2,2,2),form="~ V1 + V2 + V3 + V1:V2 + V1:V3 + V2
 \references{
 No references in the moment
 }
+\keyword{misc}

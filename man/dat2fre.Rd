@@ -44,3 +44,4 @@ dat2fre(test) # making a proper ordered pattern frequencies table again
 \references{
 No references in the moment
 }
+\keyword{utilities}

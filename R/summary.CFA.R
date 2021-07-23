@@ -1,18 +1,21 @@
-#' @S3method summary CFA
+#' @exportS3Method summary CFA
+#' @keywords methods
 #' @method summary CFA
 #' @title S3 Summary for CFA
 #' @description S3 summary method for object of class\code{"CFA"}
 #' @param object object of class\code{"CFA"}
 #' @param digits integer rounds the values to the specified number of decimal places, default is \code{digits=3}.
-#' @param type character indicating which test to use for inference wether the observed pattern are 'Types', 'Antitypes' or not significant at all. Possible options for \code{type} are \code{"pChi"}, \code{"ex.bin.test"}, \code{"z.pChi"}, \code{"z.pBin"} and \code{"p.stir"}. 
-#' @param sorton sort results of local test by any column. by default the output is not sorted. Other options may be \code{"pat."}, \code{"obs."}, \code{"exp."}, \code{"Type"}, \code{"Chi"}, etc. ...
+#' @param type character indicating which test to use for inference whether the observed pattern are 'Types', 'Antitypes' or not significant at all. Possible options for \code{type} are \code{"pChi"}, \code{"ex.bin.test"}, \code{"z.pChi"}, \code{"z.pBin"} and \code{"p.stir"}. 
+#' @param sorton sort results of local test by any column. By default the output is not sorted. Other options may be \code{"pat."}, \code{"obs."}, \code{"exp."}, \code{"Type"}, \code{"Chi"}, etc. ... So all column names that can potentially appear in the result.
 #' @param decreasing logical. Should the sort be increasing or decreasing? see \code{\link{order}}
-#' @param showall logical with default \code{showall = TRUE}. To return only significant pattern (types / antitypes) set it to \code{showall = FALSE}.
+#' @param showall logical with default \code{showall = TRUE}. To return only significant pattern ('Types' / 'Antitypes') set it to \code{showall = FALSE}.
 #' @param holm logical with default \code{holm = FALSE}. If set to \code{holm = TRUE}, significance testing is based on the holm procedure -- see references. This argument is deprecated (since version 1.5.6) and kept only for downward compatibility. Use argument \code{adjalpha} for any type of alpha adjustment.  
 #' @param wide logical with default \code{wide = FALSE}. If set to \code{wide = TRUE}, results for all significance tests are returned. 
 #' @param adjalpha character with default \code{adjalpha = "bonferroni"}. Selector for the type of alpha adjustment for multiple testing. Possible options are: \code{adjalpha = "none"}, for no adjustment; \code{adjalpha = "bonferroni"}, for bonferroni adjustment (default); \code{adjalpha = "holm"}, for alpha adjustment according to Holm (1979); other options to come ... . 
-#' @param ... other parameters passed trough
+#' @param ... other parameters passed trough.
+#' @return a summary of the results printed on the console.
 #' @references Holm, S. (1979). A simple sequentially rejective multiple test procedure. \emph{Scandinavian Journal of Statistics, 6}(2), 65–70.
+#' @references Bonferroni, C. E. (1935). Il calcolo delle assicurazioni su gruppi di teste. In S.O. Carboni (Ed.), \emph{Studi in Onore del Professore Salvatore Ortu Carboni} (S. 13–60). Roma, Tipografia del Senato: Bardi.
 
 
 #sorted by the p-value selected in argument \code{type}
@@ -27,6 +30,9 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
  if(class(functional)=="character"){ ## added 22-01-2019
    functional <- sapply(functional, function(x){which(x==as.character(object$local.test$pat.))})
  }
+  # check for ex.bin.test present? # test added 23-06-2021
+  if(all(is.na(object$local.test$ex.bin.test)) && type == "ex.bin.test"){stop("no results for 'ex.bin.test' available \n try to run CFA() again with argument 'bintest = TRUE' ")}
+
   
   # interpreting option "wide" # option added 8-2-2020 -------------------------
   if (wide==FALSE){
@@ -61,7 +67,7 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
   }
   temp1 <- holm_res[order(ord_p)] # reorders it back 
   temp2 <- ifelse(test=local.test$obs. > local.test$exp., yes="+",no="-") 
-  Type <- mapply(FUN=function(x,y){ifelse(test=(x==TRUE),yes=y, no="." )   },x=temp1,y=temp2 )
+  Type <- mapply(FUN=function(xx,y){ifelse(test=(xx==TRUE),yes=y, no="." )   },xx=temp1,y=temp2 )
   if(!is.null(functional)){Type[functional] <- "b"} # added 18-11-2016
   #subsequent added on 8-2-2020
   alpha_bon_temp1 <-(alpha/1:n)[(order(rev(ord_p[1:(length(ord_p)-length(functional))])))]
@@ -79,7 +85,7 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
   if(adjalpha=="bonferroni"){ ## condition added 21-01-2019 # 30-04-2021 new type of alpha adjustment control
   temp1 <- local.test[,which(names(local.test)==type)] < object$bonferroni.alpha
   temp2 <- ifelse(test=local.test$obs. > local.test$exp., yes="+",no="-") 
-  Type <- mapply(FUN=function(x,y){ifelse(test=(x==TRUE),yes=y, no="." )   },x=temp1,y=temp2 )
+  Type <- mapply(FUN=function(xx,y){ifelse(test=(xx==TRUE),yes=y, no="." )   },xx=temp1,y=temp2 )
   if(!is.null(functional)){Type[functional] <- "b"} # added 18-11-2016
   templocal <- data.frame(pat.=local.test[,"pat."],local.test[,c("obs.","exp.")],Type, local.test[,out_wide])
   }
@@ -88,7 +94,7 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
   if(adjalpha=="none"){ ## condition 30-04-2021
     temp1 <- local.test[,which(names(local.test)==type)] < object$alpha
     temp2 <- ifelse(test=local.test$obs. > local.test$exp., yes="+",no="-") 
-    Type <- mapply(FUN=function(x,y){ifelse(test=(x==TRUE),yes=y, no="." )   },x=temp1,y=temp2 )
+    Type <- mapply(FUN=function(xx,y){ifelse(test=(xx==TRUE),yes=y, no="." )   },xx=temp1,y=temp2 )
     if(!is.null(functional)){Type[functional] <- "b"} # added 18-11-2016
     templocal <- data.frame(pat.=local.test[,"pat."],local.test[,c("obs.","exp.")],Type, local.test[,out_wide])    
   }
@@ -154,20 +160,7 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
   #   }
   # 
   
- 
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  ############## END of alpha adjustment methods -------------------------------
+   ############## END of alpha adjustment methods -------------------------------
   
   
   #print(templocal)
@@ -185,11 +178,12 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
   
   if (length(sorton)==0){
     erg <- templocal
-    if (adjalpha=="holm"){
-      sorton <- type
-      sorter <- order(templocal[,which(names(templocal)==sorton)],decreasing=decreasing)
-      erg <- templocal[sorter,]
-    }#added 'rev' 8-2-2020
+    # muted the subsequent code on 23-06-2021
+    # if (adjalpha=="holm"){
+    #   sorton <- type
+    #   sorter <- order(templocal[,which(names(templocal)==sorton)],decreasing=decreasing)
+    #   erg <- templocal[sorter,]
+    # }#added 'rev' 8-2-2020
   }
   if (showall==FALSE){
     erg <- erg[erg$Type!=".",]

@@ -1,4 +1,5 @@
 #' @title Local Chi-Square Test 
+#' @keywords misc
 #' @export chi_local_test_cfa
 #' @description Calculates the local chi-square test based on obseved and expected frequencies. 
 #' @details No details in the moment.

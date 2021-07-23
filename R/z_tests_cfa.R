@@ -1,4 +1,5 @@
 #' @title Two z-Approximation Tests
+#' @keywords misc
 #' @export z_tests_cfa
 #' @description Calculates the Chi-square approximation to the z-test and the binomial approximation to the z-test. 
 #' @details An continuity correction can be applied to the binomial approximation -- see argument \code{ccor}.

@@ -1,6 +1,6 @@
 #' @title dataset to pattern frequency conversion 
+#' @keywords utilities 
 #' @export dat2fre
-#' @exportClass Pfreq
 #' @description Given a dataset this function returns a (response) pattern frequencies table representation of it.
 #' @details No further details
 #' 

@@ -27,3 +27,4 @@ Function tabulating (answer) categories in \code{X}.
 data(suicide)
 ftab(suicide)
 }
+\keyword{utilities}

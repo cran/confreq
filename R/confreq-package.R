@@ -1,6 +1,5 @@
 #' @title Configural Frequencies Analysis Using Log-linear Modeling
 #' @name confreq-package
-#' @aliases confreq
 #' @docType package
 #' @importFrom gmp as.bigq
 #' @importFrom gmp as.bigz
@@ -19,13 +18,13 @@
 #' @importFrom stats pchisq
 #' @importFrom stats pnorm
 #' @importFrom stats poisson
-#' @importFrom vcd,structable
-#' @importFrom vcd,strucplot
+#' @importFrom vcd structable
+#' @importFrom vcd strucplot
 #' @import grid
+#' @import vcd
 #' @description The package \code{confreq} offers some functions for Configural Frequencies Analysis (CFA) proposed by G.A. Lienert as an analysis of types and antitypes of persons or objects grouped according to their characteristic (response) pattern. The core principle in the package \code{confreq} is to use the function \code{\link{glm}} to compute the expected counts based on a model (design) matrix. The main functions are \code{\link{CFA}} and \code{\link{S2CFA}} (see details).
 #'
 #' @details 
-#' 
 #' The simplest entry to the package \code{confreq} is to use the main function \code{\link{CFA}}, which will compute several coefficients of Configural Frequencies Analysis at once.
 #' 
 #' More sophisticated control can be achieved by using the several single functions like \code{\link{expected_cfa}}, \code{\link{design_cfg_cfa}}, \code{\link{chi_local_test_cfa}} , \code{\link{stirling_cfa}} , etc. \dots
@@ -34,7 +33,7 @@
 #' 
 #' For further description see description of the respective functions.
 #' 
-#' A good introduction into the theory and applications of Configural Frequencies Analysis is given in the Texbook 'Person-Centered Methods' by Mark Stemmler (see references).
+#' A good introduction into the theory and applications of Configural Frequencies Analysis is given in the Textbook 'Person-Centered Methods' by Mark Stemmler (see references).
 #' 
 #' \emph{Additional Information}:
 #' Some users running R on 'Linux like' OS distributions (like e.g. Ubuntu -- and in rare cases MAC OS) might report trouble during installation of \code{confreq} due to the package dependency \code{gmp}, which is used in \code{confreq} to perform the exact binomial test. 

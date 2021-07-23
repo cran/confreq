@@ -1,3 +1,19 @@
+Changes in Version 1.5.6-4
+
+o added arguments 'sorton', 'decreasing', 'showall' and 'adjalpha' in summary.S2CFA() -- adapted from summary.CFA()
+
+o introduced the S3 method plot for (result) objects of class c("S2CFA", "list")  
+
+Changes in Version 1.5.6-2
+
+o added check for presence of 'ex.bin.test' results in plot.CFA
+
+o streamlined internal coloring function within plot.CFA 
+
+Changes in Version 1.5.6-1
+
+o added check for presence of 'ex.bin.test' results in summary.CFA
+
 Changes in Version 1.5.6
 
 o introduced the argument 'adjalpha' (with options "bonferroni" (default), "none", and "holm" so far ...) in function summary.CFA() which replaces the deprecated argument 'holm' for controlling alpha adjustment (the argument 'holm' is kept in this version for downward compatibility).

@@ -38,3 +38,4 @@ expected_cfa(des=designmatrix, observed=observed) # calculation of expected coun
 \references{
 No references in the moment
 }
+\keyword{misc}

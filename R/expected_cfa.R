@@ -1,4 +1,5 @@
 #' @title Expected frequencies with glm 
+#' @keywords misc
 #' @export expected_cfa
 #' @description Calculates the expected frequencies of counts using log liniear model. 
 #' @details No details

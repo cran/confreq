@@ -4,7 +4,16 @@
 \alias{summary.S2CFA}
 \title{S3 Summary for S2CFA}
 \usage{
-\method{summary}{S2CFA}(object, digits = 3, type = "ex.fisher.test", ...)
+\method{summary}{S2CFA}(
+  object,
+  digits = 3,
+  type = "ex.fisher.test",
+  sorton = NULL,
+  decreasing = FALSE,
+  showall = TRUE,
+  adjalpha = "bonferroni",
+  ...
+)
 }
 \arguments{
 \item{object}{object of class\code{"S2CFA"}}
@@ -13,8 +22,25 @@
 
 \item{type}{character with default \code{type="ex.fisher.test"}, to return wether the observed pattern are 'discriminating Types' or not significant at all based on the respective p-value. Another option for \code{type} is \code{type="pChi"}.}
 
-\item{...}{other parameters passed trough}
+\item{sorton}{sort results of local test by any column. By default the output is not sorted. Other options may be \code{"pat."}, \code{"disc.Type"}, etc. ... So all column names that can potentially appear in the result.}
+
+\item{decreasing}{logical. Should the sort be increasing or decreasing? see \code{\link{order}}}
+
+\item{showall}{logical with default \code{showall = TRUE}. To return only significant pattern (discriminating types) set it to \code{showall = FALSE}.}
+
+\item{adjalpha}{character with default \code{adjalpha = "bonferroni"}. Selector for the type of alpha adjustment for multiple testing. Possible options are: \code{adjalpha = "none"}, for no adjustment; \code{adjalpha = "bonferroni"}, for bonferroni adjustment (default); \code{adjalpha = "holm"}, for alpha adjustment according to Holm (1979); other options to come ... .}
+
+\item{...}{other parameters passed trough.}
+}
+\value{
+a summary of the results printed on the console.
 }
 \description{
 S3 summary method for object of class\code{"S2CFA"}
 }
+\references{
+Holm, S. (1979). A simple sequentially rejective multiple test procedure. \emph{Scandinavian Journal of Statistics, 6}(2), 65–70.
+
+Bonferroni, C. E. (1935). Il calcolo delle assicurazioni su gruppi di teste. In S.O. Carboni (Ed.), \emph{Studi in Onore del Professore Salvatore Ortu Carboni} (S. 13–60). Roma, Tipografia del Senato: Bardi.
+}
+\keyword{methods}

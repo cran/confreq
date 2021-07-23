@@ -1,4 +1,5 @@
 #' @title Expected frequencies using margins 
+#' @keywords misc
 #' @export expected_margin_cfa
 #' @description Calculates the expected frequencies of counts based on the margins of the k-dimensional contingency table. 
 #' @details only main effects are considered.

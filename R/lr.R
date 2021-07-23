@@ -1,4 +1,5 @@
 #' @title Likelihood Ratio Chi-square (LR) 
+#' @keywords misc
 #' @export lr
 #' @description Calculates the likelihod ratio chi-square statistic based on observed and expected counts. 
 #' @details No details in the moment.

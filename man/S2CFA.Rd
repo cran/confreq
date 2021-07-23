@@ -7,11 +7,11 @@
 S2CFA(patternfreq, alpha = 0.05, ccor = FALSE, ...)
 }
 \arguments{
-\item{patternfreq}{an object of class \code{"Pfreq"}, which is data in pattern frequencies representation - see function \code{\link{dat2fre}}. The variable defining the two subsaples (a variable with max. two categories) must be located in the last but one column of the object of class \code{"Pfreq"}}
+\item{patternfreq}{an object of class \code{"Pfreq"}, which is data in pattern frequencies representation - see function \code{\link{dat2fre}}. The variable defining the two sub samples (a variable with max. two categories) must be located in the last but one column of the object of class \code{"Pfreq"}}
 
 \item{alpha}{a numeric giving the alpha level for testing (default set to \code{alpha=.05})}
 
-\item{ccor}{a logical (TRUE / FALSE) determining wether to apply a continuity correction or not. When set to \code{ccor=TRUE} continuity correction is applied. For \code{ccor=FALSE} no continuity correction is applied.}
+\item{ccor}{a logical (TRUE / FALSE) determining whether to apply a continuity correction or not. When set to \code{ccor=TRUE} continuity correction is applied. For \code{ccor=FALSE} no continuity correction is applied.}
 
 \item{...}{additional parameters passed through to other functions.}
 }
@@ -19,7 +19,7 @@ S2CFA(patternfreq, alpha = 0.05, ccor = FALSE, ...)
 an object of class \code{S2CFA} with results.
 }
 \description{
-Calculates coefficients for the two-sample CFA. Instead of differentiating between types and antitypes, two-sample CFA looks for discrimination types, that is configurations with significant differences in frequencies between two subsamples.
+Calculates coefficients for the two-sample CFA. Instead of differentiating between 'Types' and 'Antitypes', two-sample CFA looks for discrimination types, that is configurations with significant differences in frequencies between two sub samples.
 }
 \details{
 no details at the moment ...
@@ -49,3 +49,4 @@ Stemmler, M. (2020). \emph{Person-Centered Methods – Configural Frequency Anal
 
 Stemmler, M., & Hammond, S. (1997). Configural frequency analysis of dependent samples for intra-patient treatment comparisons. \emph{Studia Psychologica, 39}, 167–175.
 }
+\keyword{mainfunction}

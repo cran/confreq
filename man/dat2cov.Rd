@@ -9,7 +9,7 @@ dat2cov(x, FUN = "mean", notobs = 0, katorder = FALSE, caseorder = TRUE)
 \arguments{
 \item{x}{an object of class "data.frame" with at least 2 \code{factor} variables representing the pattern (configurations) and at least 1 \code{numeric} variable representing the covariate(s).}
 
-\item{FUN}{a function to compute the summary statistics which can be applied to all covariate variables in \code{x}. See function \code{\link{aggregate}}.}
+\item{FUN}{a function to compute the summary statistics which can be applied to all covariate variables in \code{x}. See function \code{\link[stats]{aggregate}}.}
 
 \item{notobs}{a numeric vector possibly with length equal to the number of \code{numeric} variables in \code{x}, defining the summary value for the respective covariate variable to use for unobserved pattern (configurations) defined by the \code{factor} variables in \code{x}. By default it is assumend that this value is 0. \code{notobs} is recycled if only one value is given.}
 
@@ -26,3 +26,4 @@ Given a dataset \code{x}, this function returns summary values for some (\code{n
 \details{
 No further details
 }
+\keyword{utilities}

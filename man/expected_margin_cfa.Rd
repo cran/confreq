@@ -30,3 +30,4 @@ expected_margin_cfa(Pfreq = LienertLSD) # calculation of expected counts (only m
 \references{
 No references in the moment
 }
+\keyword{misc}

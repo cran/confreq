@@ -3,7 +3,6 @@
 \docType{package}
 \name{confreq-package}
 \alias{confreq-package}
-\alias{confreq}
 \title{Configural Frequencies Analysis Using Log-linear Modeling}
 \description{
 The package \code{confreq} offers some functions for Configural Frequencies Analysis (CFA) proposed by G.A. Lienert as an analysis of types and antitypes of persons or objects grouped according to their characteristic (response) pattern. The core principle in the package \code{confreq} is to use the function \code{\link{glm}} to compute the expected counts based on a model (design) matrix. The main functions are \code{\link{CFA}} and \code{\link{S2CFA}} (see details).
@@ -17,7 +16,7 @@ Two-Sample-CFA, to detect discriminating pattern between two (sub-) samples, can
 
 For further description see description of the respective functions.
 
-A good introduction into the theory and applications of Configural Frequencies Analysis is given in the Texbook 'Person-Centered Methods' by Mark Stemmler (see references).
+A good introduction into the theory and applications of Configural Frequencies Analysis is given in the Textbook 'Person-Centered Methods' by Mark Stemmler (see references).
 
 \emph{Additional Information}:
 Some users running R on 'Linux like' OS distributions (like e.g. Ubuntu -- and in rare cases MAC OS) might report trouble during installation of \code{confreq} due to the package dependency \code{gmp}, which is used in \code{confreq} to perform the exact binomial test. 

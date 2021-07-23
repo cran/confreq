@@ -1,6 +1,6 @@
 #' @title Designmatrix for log linear CFA models 
+#' @keywords misc
 #' @export design_cfg_cfa
-#' @exportClass design_cfg_cfa
 #' @description Calculates the designmatrix corresponding to a dataset with \code{length(kat)} columns (variables). 
 #' @details This function internaly calls the function \code{\link{pos_cfg_cfa}}.
 #' 

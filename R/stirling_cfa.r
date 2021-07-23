@@ -1,4 +1,5 @@
 #' @title  Approximation to the binomial using Stirling's Formula
+#' @keywords misc
 #' @export stirling_cfa
 #' @description Calculates the binomial aproximation using stirling's formula (Version of function: V 1.0 - November 2013)
 #' @author R.W. Alexandrowicz

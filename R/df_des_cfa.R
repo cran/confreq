@@ -1,4 +1,5 @@
 #' @title Degrees of freedom 
+#' @keywords misc
 #' @export df_des_cfa
 #' @description Calculates the degrees of freedom based on an designmatrix for a (log liniear) CFA model. 
 #' @details No details

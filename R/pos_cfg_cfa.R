@@ -1,4 +1,5 @@
 #' @title Possible configurations 
+#' @keywords misc
 #' @export pos_cfg_cfa
 #' @description Calculates all possible configuartions for some variables with different numbers of categories.
 #' @details No details

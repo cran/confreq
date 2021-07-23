@@ -23,22 +23,22 @@ CFA(
 
 \item{alpha}{a numeric giving the alpha level for testing (default set to \code{alpha=.05})}
 
-\item{form}{either a character expression which can be coerced into a model formula with the function \code{as.formula} in the package \code{stats}. If this argument is left empty (at default \code{form=NULL}) the (internal) function \code{design_cfg_cfa()} will return a designmatrix coding only main effects and no interactions -- for a designmatrix refering to  three variables (V1, V2, V3) for example, leaving the argument \code{form} empty will be equivalent to assigning the character \code{"~ V1 + V2 + V3"} to the argument (\code{form="~ V1 + V2 + V3"}).
-A special case is to define a null-model or rather a cfa model of order zero. In such a model no (main) effects are considered. This can be achieved bei passing the character expression \code{"null"} to the argument \code{form} -- so: \code{form = "null"} -- not to be confound with the default setting of this argument \code{form=NULL}. Another option is to define your own designmatrix and assign it to this argument (\code{form}) in this case the object assigned to \code{form} musst be of class \code{"matrix"} and must logicaly match to the argument \code{patternfreq}, which is currently not checked! - but simply assumed.}
+\item{form}{either a character expression which can be coerced into a model formula with the function \code{as.formula} in the package \code{stats}. If this argument is left empty (at default \code{form=NULL}) the (internal) function \code{design_cfg_cfa()} will return a designmatrix coding only main effects and no interactions -- for a designmatrix referring to  three variables (V1, V2, V3) for example, leaving the argument \code{form} empty will be equivalent to assigning the character \code{"~ V1 + V2 + V3"} to the argument (\code{form="~ V1 + V2 + V3"}).
+A special case is to define a null-model or rather a cfa model of order zero. In such a model no (main) effects are considered. This can be achieved bei passing the character expression \code{"null"} to the argument \code{form} -- so: \code{form = "null"} -- not to be confound with the default setting of this argument \code{form=NULL}. Another option is to define your own designmatrix and assign it to this argument (\code{form}) in this case the object assigned to \code{form} must be of class \code{"matrix"} and must logical match to the argument \code{patternfreq}, which is currently not checked! - but simply assumed.}
 
-\item{ccor}{either a logical (TRUE / FALSE) determining wether to apply a continuity correction or not for the the Binomial Approximation to the z-Test. When set to \code{ccor=TRUE} continuity correction is applied for expected values 5 =< expected =< 10. For \code{ccor=FALSE} no continuity correction is applied. Another option is to set \code{ccor=c(x,y)} where x is the lower and y the upper bound for expected values where continuity correction is applied. So \code{ccor=c(5,10)} is equivalent to \code{ccor=TRUE}.}
+\item{ccor}{either a logical (TRUE / FALSE) determining whether to apply a continuity correction or not for the Binomial Approximation to the z-Test. When set to \code{ccor=TRUE} continuity correction is applied for expected values 5 =< expected =< 10. For \code{ccor=FALSE} no continuity correction is applied. Another option is to set \code{ccor=c(x,y)} where x is the lower and y the upper bound for expected values where continuity correction is applied. So \code{ccor=c(5,10)} is equivalent to \code{ccor=TRUE}.}
 
 \item{family}{argument passed to \code{\link{glm.fit}} with default set to \code{poisson()}}
 
 \item{intercept}{argument passed to \code{\link{glm.fit}} with default set to \code{FALSE}}
 
-\item{method}{charcter defining the estimation method for expected frequencies with default set to \code{method="log"} to estimate the expected frequencies using \code{\link{glm}}. An other option is to set this argument to \code{method="margins"} which will result in expected frequencies calculated based on the margins of the multidimensional contigency table. Only main effects models are posible in this case and thus the arguments \code{form}, \code{family} \code{cova} and \code{intercept} are ignored.}
+\item{method}{character defining the estimation method for expected frequencies with default set to \code{method="log"} to estimate the expected frequencies using \code{\link{glm}}. An other option is to set this argument to \code{method="margins"} which will result in expected frequencies calculated based on the margins of the multidimensional contingency table. Only main effects models are possible in this case and thus the arguments \code{form}, \code{family} \code{cova} and \code{intercept} are ignored.}
 
-\item{blank}{can be used to indicate which pattern (configurations) are declared as structural cells (confgurations) for functional CFA. Should be either (1) a character vector defining the pattern (with spaces between variable categories), which will be ignored for calculation of expected frequencies; or (2) a numeric vector defining the (row) positions of the pattern in an object of class \code{"Pfreq"} (see. argument \code{patternfreq}), which will be ignored for calculation of expected frequencies. At default (\code{blank=NULL}) all possible pattern, as listed in object of class \code{"Pfreq"}, are included for calculation of expected frequencies.}
+\item{blank}{can be used to indicate which pattern (configurations) are declared as structural cells (configurations) for functional CFA. Should be either (1) a character vector defining the pattern (with spaces between variable categories), which will be ignored for calculation of expected frequencies; or (2) a numeric vector defining the (row) positions of the pattern in an object of class \code{"Pfreq"} (see. argument \code{patternfreq}), which will be ignored for calculation of expected frequencies. At default (\code{blank=NULL}) all possible pattern, as listed in object of class \code{"Pfreq"}, are included for calculation of expected frequencies.}
 
 \item{cova}{a matrix (possibly with one or more columns) holding the covariate (mean) values for each pattern (configurations) see function \code{\link{dat2cov}}.}
 
-\item{bintest}{a logical with default set to \code{bintest=TRUE}; if set to \code{bintest=FALSE} no calculations for the exact binomial test are performed, which can reduce processing time in some cases dramaticaly.}
+\item{bintest}{a logical with default set to \code{bintest=TRUE}; if set to \code{bintest=FALSE} no calculations for the exact binomial test are performed, which can reduce processing time in some cases dramatically.}
 
 \item{...}{additional parameters passed through to other functions.}
 }
@@ -46,10 +46,10 @@ A special case is to define a null-model or rather a cfa model of order zero. In
 an object of class \code{CFA} with results.
 }
 \description{
-Calculates various coefficients for the Configural Frequencies Analysis (CFA) defining main- and (optionaly) interaction effects. The core principle is to use \code{\link{glm}} in package \code{stats} to calculate the expected counts considering a designmatrix, which is constructed based on an formular definition given in argument \code{form}.
+Calculates various coefficients for the Configural Frequencies Analysis (CFA) defining main- and (optional) interaction effects. The core principle is to use \code{\link{glm}} in package \code{stats} to calculate the expected counts considering a designmatrix, which is constructed based on an formula definition given in argument \code{form}.
 }
 \details{
-This is the main function of the package. It internaly calls several functions of the package \code{\link{confreq}} which are also available as single functions. For clasification of the observed patterns into 'Types' and 'Antitypes' according to Lienert  (1971), an S3 summary method for the resulting object of class \code{"CFA"} can be applied -- see \code{\link{summary.CFA}}. An S3 plot method is usefull for visualization of the contingency table and the 'Types' and 'Antitypes' -- see \code{\link{plot.CFA}}. 
+This is the main function of the package. It internal calls several functions of the package \code{\link{confreq-package}} which are also available as single functions. For classification of the observed patterns into 'Types' and 'Antitypes' according to Lienert  (1971), a S3 summary method for the resulting object of class \code{"CFA"} can be applied - see \code{\link{summary.CFA}}. An S3 plot method is useful for visualization of the contingency table and the 'Types' and 'Antitypes' -- see \code{\link{plot.CFA}}.
 }
 \examples{
 #######################################
@@ -74,9 +74,10 @@ summary(res4)
 \references{
 Lienert, G. A. (1971). Die Konfigurationsfrequenzanalyse: I. Ein neuer Weg zu Typen und Syndromen. \emph{Zeitschrift für Klinische Psychologie und Psychotherapie, 19}(2), 99-115.
 
-Glück, J., & Von Eye, A. (2000). Including covariates in configural frequency analysis. \emph{Psychologische Beitrage, 42}, 405–417.
+Glück, J., & Von Eye, A. (2000). Including covariates in Configural Frequency Analysis. \emph{Psychologische Beitrage, 42}, 405–417.
 
 Victor, N. (1989). An Alternativ Approach to Configural Frequency Analysis. \emph{Methodika, 3}, 61–73.
 
 Stemmler, M. (2020). \emph{Person-Centered Methods}. Cham: Springer International Publishing.
 }
+\keyword{mainfunction}

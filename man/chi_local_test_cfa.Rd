@@ -33,3 +33,4 @@ expected<-expected_cfa(des=designmatrix, observed=observed) # calculation of exp
 \references{
 No references in the moment
 }
+\keyword{misc}

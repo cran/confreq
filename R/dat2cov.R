@@ -1,11 +1,11 @@
 #' @title conversion of a covariate dataset into summary covariate values
+#' @keywords utilities 
 #' @export dat2cov
-#' @exportClass Pcov
 #' @description Given a dataset \code{x}, this function returns summary values for some (\code{numeric}) covariate variables in \code{x} for each pattern (configuration) defined by a set of factor variables in \code{x}. 
 #' @details No further details
 #' 
 #' @param x an object of class "data.frame" with at least 2 \code{factor} variables representing the pattern (configurations) and at least 1 \code{numeric} variable representing the covariate(s).
-#' @param FUN a function to compute the summary statistics which can be applied to all covariate variables in \code{x}. See function \code{\link{aggregate}}.
+#' @param FUN a function to compute the summary statistics which can be applied to all covariate variables in \code{x}. See function \code{\link[stats]{aggregate}}.
 #' @param notobs a numeric vector possibly with length equal to the number of \code{numeric} variables in \code{x}, defining the summary value for the respective covariate variable to use for unobserved pattern (configurations) defined by the \code{factor} variables in \code{x}. By default it is assumend that this value is 0. \code{notobs} is recycled if only one value is given.
 #' @param katorder see \code{\link{dat2fre}}
 #' @param caseorder see \code{\link{dat2fre}} 

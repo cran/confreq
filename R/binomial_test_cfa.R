@@ -1,4 +1,5 @@
 #' @title Binomial Test 
+#' @keywords misc
 #' @export binomial_test_cfa
 #' @description Calculates the (exact) binomial test based on obseved, expected frequencies an the total number of observations. 
 #' @details No details
