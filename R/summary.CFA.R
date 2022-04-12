@@ -26,10 +26,11 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
   local.test <- object$local.test
   global.test <- object$global.test
   functional <- object$functional
-  
- if(class(functional)=="character"){ ## added 22-01-2019
+if(!is.null(functional)){   
+ if(inherits(x = class(functional),what = "character")){ ## added 22-01-2019 class(functional)=="character" changed 12-04-2022
    functional <- sapply(functional, function(x){which(x==as.character(object$local.test$pat.))})
  }
+}
   # check for ex.bin.test present? # test added 23-06-2021
   if(all(is.na(object$local.test$ex.bin.test)) && type == "ex.bin.test"){stop("no results for 'ex.bin.test' available \n try to run CFA() again with argument 'bintest = TRUE' ")}
 

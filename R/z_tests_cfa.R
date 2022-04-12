@@ -28,11 +28,11 @@ z.Chi<-(observed - expected) /sqrt(expected)
 z.pChi<- 1 - pnorm(abs(z.Chi))
 
 # 3.5 Binomial Approximation to the z-Test
-if(class(ccor)=="numeric"){
+if(is.numeric(ccor)){ # class(ccor)=="numeric"
   stopifnot(length(ccor)==2)
   continuity<-(expected<= ccor[2] & expected >= ccor[1])/2  
 }
-if(class(ccor)=="logical"){
+if(is.logical(ccor)){ #class(ccor)=="logical"
   if(ccor==TRUE){ continuity <- (expected<= 10 & expected >= 5)/2 }
   if(ccor==FALSE){ continuity <- rep(0,length(expected))}
 }

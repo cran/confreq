@@ -1,3 +1,11 @@
+Changes in Version 1.5.6-7
+
+o changed internal if conditions due to issue 'if() conditions comparing class() to string' for R version 4.2.0 beta (2022-04-11 r82149 ucrt) 
+
+Changes in Version 1.5.6-6
+
+o fixed a bug in dat2cov() -- thanks to Christian Grebe
+
 Changes in Version 1.5.6-4
 
 o added arguments 'sorton', 'decreasing', 'showall' and 'adjalpha' in summary.S2CFA() -- adapted from summary.CFA()

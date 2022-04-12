@@ -4,12 +4,14 @@
 \alias{dat2cov}
 \title{conversion of a covariate dataset into summary covariate values}
 \usage{
-dat2cov(x, FUN = "mean", notobs = 0, katorder = FALSE, caseorder = TRUE)
+dat2cov(x, FUN = "mean", ..., notobs = 0, katorder = FALSE, caseorder = TRUE)
 }
 \arguments{
 \item{x}{an object of class "data.frame" with at least 2 \code{factor} variables representing the pattern (configurations) and at least 1 \code{numeric} variable representing the covariate(s).}
 
 \item{FUN}{a function to compute the summary statistics which can be applied to all covariate variables in \code{x}. See function \code{\link[stats]{aggregate}}.}
+
+\item{...}{further arguments passed to or used by methods un \code{FUN}.}
 
 \item{notobs}{a numeric vector possibly with length equal to the number of \code{numeric} variables in \code{x}, defining the summary value for the respective covariate variable to use for unobserved pattern (configurations) defined by the \code{factor} variables in \code{x}. By default it is assumend that this value is 0. \code{notobs} is recycled if only one value is given.}
 

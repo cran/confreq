@@ -18,10 +18,12 @@ plot.CFA<-function(x, type="z.pChi", fill=c("red", "blue", "grey"), adjalpha = "
   global.test <- x$global.test
   functional <- x$functional
   inputdata <- x$inputdata
-  
- if(class(functional)=="character"){ ## added 22-01-2019
+ 
+if(!is.null(functional)){   
+ if(inherits(x = class(functional),what = "character")){ ## added 22-01-2019 class(functional)=="character" changed 12-04-2022
    functional <- sapply(functional, function(y){which(y==as.character(x$local.test$pat.))})
  }
+}
   
   
   # check for ex.bin.test present? # test added 23-06-2021

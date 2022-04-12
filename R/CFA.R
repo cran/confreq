@@ -72,13 +72,13 @@ if(method=="log"){
     
     #option added 18-11-2016 
     if(!is.null(blank)){
-      if(class(blank)!="character"){
+      if(!inherits(x = class(blank),what = "character")){  #class(blank)!="character"
         blank_which <- blank
         Mi <- sapply(blank_which,function(x){b <- (rep(0,length.out=nrow(designmatrix))); b[x] <- 1; b})
         designmatrix <- cbind(designmatrix, Mi)
         usedform <- paste(paste(form),"; and functional pattern:", paste(pattern[blank],collapse = ", "))
       }
-      if(class(blank)=="character"){
+      if(inherits(x = class(blank),what = "character")){ #class(blank)=="character"
         blank_which <- sapply(blank, function(x){which(x==pattern)})
         Mi <- sapply(blank_which,function(x){b <- (rep(0,length.out=nrow(designmatrix))); b[x] <- 1; b})
         designmatrix <- cbind(designmatrix, Mi)
@@ -97,13 +97,13 @@ if(method=="log"){
     usedform <- "designmatrix"
     #option added 08-01-2018 
     if(!is.null(blank)){
-      if(class(blank)!="character"){
+      if(!inherits(x = class(blank),what = "character")){
         blank_which <- blank
         Mi <- sapply(blank_which,function(x){b <- (rep(0,length.out=nrow(designmatrix))); b[x] <- 1; b})
         designmatrix <- cbind(designmatrix, Mi)
         usedform <- paste(paste(usedform),"; and functional pattern:", paste(pattern[blank],collapse = ", "))
       } 
-      if(class(blank)=="character"){
+      if(inherits(x = class(blank),what = "character")){
         blank_which <- sapply(blank, function(x){which(x==pattern)})
         Mi <- sapply(blank_which,function(x){b <- (rep(0,length.out=nrow(designmatrix))); b[x] <- 1; b})
         designmatrix <- cbind(designmatrix, Mi)

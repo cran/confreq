@@ -16,12 +16,13 @@
 #' ####################################### 
 expected_margin_cfa <- function(Pfreq, blank=NULL){
   # Pfreq object of class "Pfreq"
-  # blank either (1) character vector defining the pattern  
-  if(class(blank)!="NULL"){
-    if(class(blank)!="character"){
+  # blank either (1) character vector defining the pattern 
+  
+  if(!is.null(blank)){ #if(class(blank)!="NULL")
+    if(!inherits(x = class(blank),what = "character")){ #class(blank)!="character"
       Pfreq$Freq[blank] <- NA  
     }
-    if(class(blank)=="character"){
+    if(inherits(x = class(blank),what = "character")){
       posp <- base::apply(Pfreq[,1:(ncol(Pfreq)-1)],1,paste, collapse=" ") 
       Freq_ind <- sapply(blank, function(x){which(x==posp)})
       Pfreq$Freq[Freq_ind] <- NA
