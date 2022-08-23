@@ -13,7 +13,7 @@ dat2cov(x, FUN = "mean", ..., notobs = 0, katorder = FALSE, caseorder = TRUE)
 
 \item{...}{further arguments passed to or used by methods un \code{FUN}.}
 
-\item{notobs}{a numeric vector possibly with length equal to the number of \code{numeric} variables in \code{x}, defining the summary value for the respective covariate variable to use for unobserved pattern (configurations) defined by the \code{factor} variables in \code{x}. By default it is assumend that this value is 0. \code{notobs} is recycled if only one value is given.}
+\item{notobs}{a numeric vector possibly with length equal to the number of \code{numeric} variables in \code{x}, defining the summary value for the respective covariate variable to use for unobserved pattern (configurations) defined by the \code{factor} variables in \code{x}. By default it is assumed that this value is 0. \code{notobs} is recycled if only one value is given.}
 
 \item{katorder}{see \code{\link{dat2fre}}}
 

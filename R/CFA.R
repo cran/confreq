@@ -2,7 +2,7 @@
 #' @keywords mainfunction
 #' @export CFA
 #' @description Calculates various coefficients for the Configural Frequencies Analysis (CFA) defining main- and (optional) interaction effects. The core principle is to use \code{\link{glm}} in package \code{stats} to calculate the expected counts considering a designmatrix, which is constructed based on an formula definition given in argument \code{form}. 
-#' @details This is the main function of the package. It internal calls several functions of the package \code{\link{confreq-package}} which are also available as single functions. For classification of the observed patterns into 'Types' and 'Antitypes' according to Lienert  (1971), a S3 summary method for the resulting object of class \code{"CFA"} can be applied - see \code{\link{summary.CFA}}. An S3 plot method is useful for visualization of the contingency table and the 'Types' and 'Antitypes' -- see \code{\link{plot.CFA}}.
+#' @details This is the main function of the package. It internal calls several functions of the package \code{\link{confreq-package}} which are also available as single functions. For classification of the observed patterns into 'Types' and 'Antitypes' according to Lienert  (1971), a S3 summary method for the resulting object of class \code{"CFA"} can be applied - see \code{\link{summary.CFA}}. An S3 plot method is useful for visualization of the contingency table and the 'Types' and 'Antitypes' -- see \code{\link{plot.CFA}}. Since version  1.6.0-1 of \code{confreq} survey weights are supported when tabluating a data set with function \code{\link{dat2fre}}. In case that for the resulting tabulated data in the object of class \code{c("data.frame","Pfreq")} survey weights were used the function \code{CFA} will take into account those weigts for estimation of the expected counts -- currently only when \code{method="log"}.  
 #' 
 #' @param patternfreq an object of class \code{"Pfreq"}, which is data in pattern frequencies representation - see function \code{\link{dat2fre}}.
 #' 
@@ -61,6 +61,12 @@ pattern <- do.call(paste, patternfreq[,1:(dim(patternfreq)[2]-1) ])
   
 observed <- patternfreq[,dim(patternfreq)[2]] 
 
+# version 1.6 weights
+if(!is.null(attributes(patternfreq)$comment)){
+if(attributes(patternfreq)$comment=="using weighted data!"){
+ WGT <-  attributes(patternfreq)$WGT
+}
+}else{WGT <- NULL}
 # condition added 22-06-2015 fixed class issue 2.2.2020
 if(method=="log"){
   if(   !is(object = form,class2 = "matrix")   ){
@@ -72,13 +78,13 @@ if(method=="log"){
     
     #option added 18-11-2016 
     if(!is.null(blank)){
-      if(!inherits(x = class(blank),what = "character")){  #class(blank)!="character"
+      if(is.numeric(blank)){  #class(blank)!="character" , '!inherits(x = class(blank),what = "character")' again changed 19-08-2022
         blank_which <- blank
         Mi <- sapply(blank_which,function(x){b <- (rep(0,length.out=nrow(designmatrix))); b[x] <- 1; b})
         designmatrix <- cbind(designmatrix, Mi)
         usedform <- paste(paste(form),"; and functional pattern:", paste(pattern[blank],collapse = ", "))
       }
-      if(inherits(x = class(blank),what = "character")){ #class(blank)=="character"
+      if(is.character(blank)){ #class(blank)=="character", 'inherits(x = class(blank),what = "character"' again changed 19-08-2022
         blank_which <- sapply(blank, function(x){which(x==pattern)})
         Mi <- sapply(blank_which,function(x){b <- (rep(0,length.out=nrow(designmatrix))); b[x] <- 1; b})
         designmatrix <- cbind(designmatrix, Mi)
@@ -97,13 +103,13 @@ if(method=="log"){
     usedform <- "designmatrix"
     #option added 08-01-2018 
     if(!is.null(blank)){
-      if(!inherits(x = class(blank),what = "character")){
+      if(!is.character(blank)){# '!inherits(x = class(blank),what = "character")' again changed 29-08-2022
         blank_which <- blank
         Mi <- sapply(blank_which,function(x){b <- (rep(0,length.out=nrow(designmatrix))); b[x] <- 1; b})
         designmatrix <- cbind(designmatrix, Mi)
         usedform <- paste(paste(usedform),"; and functional pattern:", paste(pattern[blank],collapse = ", "))
       } 
-      if(inherits(x = class(blank),what = "character")){
+      if(is.character(blank)){# 'inherits(x = class(blank),what = "character")' again changed 29-08-2022
         blank_which <- sapply(blank, function(x){which(x==pattern)})
         Mi <- sapply(blank_which,function(x){b <- (rep(0,length.out=nrow(designmatrix))); b[x] <- 1; b})
         designmatrix <- cbind(designmatrix, Mi)
@@ -119,7 +125,7 @@ if(method=="log"){
     } # !!! no further checks !!!
   
   # expected <- expected_cfa(des=designmatrix, observed=observed, family=family, intercept=intercept, ...) # padded out 24.10.2014
-  glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept) #, ... added 24.10.2014
+  glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept,weights = WGT) #, ... added 24.10.2014
   expected <- glmfitres$fitted.value # added 24.10.2014
   #aic <- glmfitres$aic # added 24.10.2014
   class(glmfitres) <- c("glm", "lm" )# this is a trick!!! necessary for the following three lines of code - added 24.10.2014
@@ -170,7 +176,10 @@ lr.p <- (1-pchisq(lr.chi,df)) ## added 20. October 2014 JHH
 bonferroni <- alpha/length(expected)
   
 result <- list( local.test = erg, bonferroni.alpha=bonferroni, global.test = list(pearson = list(Chi=chi.square,df=df,pChi=chi.square.p,alpha=alpha), likelihood.ratio = list(Chi=lr.chi,df=df,pChi=lr.p,alpha=alpha), infocrit=list(loglik=loglik, AIC=aic, BIC=bic)),designmatrix=designmatrix, variables=kategorie, used.formula=usedform, functional=blank, inputdata=patternfreq, alpha=alpha) 
-  
+
+if(!is.null(WGT)){
+  comment(result) <- "using weighted data!"
+}
 class(result)<-c("CFA","list")
  
 return(result)

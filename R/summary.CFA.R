@@ -27,7 +27,7 @@ summary.CFA<-function(object, digits=3, type="z.pChi",sorton=NULL, decreasing=FA
   global.test <- object$global.test
   functional <- object$functional
 if(!is.null(functional)){   
- if(inherits(x = class(functional),what = "character")){ ## added 22-01-2019 class(functional)=="character" changed 12-04-2022
+ if(is.character(functional)){ ## added 22-01-2019 class(functional)=="character" changed 12-04-2022 ' inherits(x = class(functional),what = "character") ' again changed 19-08-2022 
    functional <- sapply(functional, function(x){which(x==as.character(object$local.test$pat.))})
  }
 }
@@ -52,24 +52,25 @@ if(!is.null(functional)){
   ## added 21-01-2019 #changed 30-04-2021
   if(adjalpha=="holm"){ # 30-04-2021 new type of alpha adjustment control
   p_val <- local.test[,which(names(local.test)==type)]
-    if(!is.null(functional)){p_val[functional] <- NA}
+    if(!is.null(functional)){p_val[functional] <- NA}# set all functional cells to NA
   
-  ord_p <- order(p_val,decreasing = FALSE) # starting with the smallest
+  ord_p <- order(p_val,decreasing = FALSE) # starting with the smallest 'p_val'
   k <- length(p_val)
   n <- length(na.omit(p_val))
   alpha <- object$alpha # 30-04-2021 according to new structure of CFA result object
-  i=0
-  holm_res <- vector(mode = "logical", length = k)
-  if(i<n){ # hier nur bis n (NAs werden nicht getestet)
-  while(p_val[ord_p[i+1]]  <  alpha/(n-(i))){
-    holm_res[i+1] <- p_val[ord_p[i+1]]  <  alpha/(n-(i)) 
-    i=i+1
-    }
-  }
-  temp1 <- holm_res[order(ord_p)] # reorders it back 
-  temp2 <- ifelse(test=local.test$obs. > local.test$exp., yes="+",no="-") 
-  Type <- mapply(FUN=function(xx,y){ifelse(test=(xx==TRUE),yes=y, no="." )   },xx=temp1,y=temp2 )
-  if(!is.null(functional)){Type[functional] <- "b"} # added 18-11-2016
+  # did this all new on 22-08-2022...........
+  # i=0
+  # holm_res <- vector(mode = "logical", length = k)
+  # if(i<n){ # hier nur bis n (NAs werden nicht getestet)
+  # while(p_val[ord_p[i+1]]  <  alpha/(n-(i))){
+  #   holm_res[i+1] <- p_val[ord_p[i+1]]  <  alpha/(n-(i)) 
+  #   i=i+1
+  #   }
+  # }
+  # temp1 <- holm_res[order(ord_p)] # reorders it back 
+  # temp2 <- ifelse(test=local.test$obs. > local.test$exp., yes="+",no="-") 
+  # Type <- mapply(FUN=function(xx,y){ifelse(test=(xx==TRUE),yes=y, no="." )   },xx=temp1,y=temp2 )
+  # if(!is.null(functional)){Type[functional] <- "b"} # added 18-11-2016
   #subsequent added on 8-2-2020
   alpha_bon_temp1 <-(alpha/1:n)[(order(rev(ord_p[1:(length(ord_p)-length(functional))])))]
   alpha_bon_temp2 <- p_val
@@ -79,6 +80,12 @@ if(!is.null(functional)){
   # round(p_val,4)
   # #alpha_bon <-((c((alpha/1:n),rep(NA,times=sum(is.na(p_val)))))[(order(rev(ord_p)))]) #added 'rev' 8-2-2020
   # alpha_bon[is.na(alpha_bon)] <-0 
+  # subsequent new added 22-08-2022 --------
+   temp1 <- p_val < alpha_bon 
+   temp2 <- ifelse(test=local.test$obs. > local.test$exp., yes="+",no="-") 
+   Type <- mapply(FUN=function(xx,y){ifelse(test=(xx==TRUE),yes=y, no="." )   },xx=temp1,y=temp2 )
+   if(!is.null(functional)){Type[functional] <- "b"} # added 18-11-2016
+  # and here we go ...
   templocal <- data.frame(pat.=local.test[,"pat."],local.test[,c("obs.","exp.")],Type, Holm.crit=alpha_bon ,local.test[,out_wide])  
   }
   
@@ -199,24 +206,24 @@ if(!is.null(functional)){
   
   cat("function Call:","\n","-------------","\n","Formula:",paste(object$used.formula,collapse = " "),"\n","Variables:", names(object$variables),"\n","Categories:", object$variables,"\n")
   
-  cat("\n","results of global tests:","\n", "-----------------------")
-  cat("\n","pearson Chi-square test:","\n")
+  cat("\n","results of global tests:",attributes(object)$comment,"\n", "-----------------------")
+  cat("\n","pearson Chi-square test:",attributes(object)$comment,"\n")
   print(data.frame(global.test$pearson))
   
-  cat("\n","likelihood ratio test:","\n")
+  cat("\n","likelihood ratio test:",attributes(object)$comment,"\n")
   print(data.frame(global.test$likelihood.ratio))
   
-  cat("\n","Information Criteria:","\n")
+  cat("\n","Information Criteria:",attributes(object)$comment,"\n")
   print(data.frame(global.test$infocrit))
   
   if(adjalpha=="bonferroni"){
-    cat("\n","results of local tests:","\n", "-----------------------","\n","Type (+) / Antitype (-) based on:", type ,";","\n", "with Bonferroni adjusted alpha:", object$bonferroni.alpha,"\n")#changed 30-04-2021
+    cat("\n","results of local tests:",attributes(object)$comment,"\n", "-----------------------","\n","Type (+) / Antitype (-) based on:", type ,";","\n", "with Bonferroni adjusted alpha:", object$bonferroni.alpha,"\n")#changed 30-04-2021
   }
   if(adjalpha=="holm"){
-    cat("\n","results of local tests:","\n", "-----------------------","\n","Type (+) / Antitype (-) based on:", type, ";","\n","with Holm adjusted alpha - see \"Holm.crit\" \n")#added 21-01-2019 #changed 30-04-2021
+    cat("\n","results of local tests:",attributes(object)$comment,"\n", "-----------------------","\n","Type (+) / Antitype (-) based on:", type, ";","\n","with Holm adjusted alpha - see \"Holm.crit\" \n")#added 21-01-2019 #changed 30-04-2021
   }
   if(adjalpha=="none"){
-    cat("\n","results of local tests:","\n", "-----------------------","\n","Type (+) / Antitype (-) based on:", type, ";","\n","with not adjusted alpha:", object$alpha,"\n")#added 30-04-2021
+    cat("\n","results of local tests:",attributes(object)$comment,"\n", "-----------------------","\n","Type (+) / Antitype (-) based on:", type, ";","\n","with not adjusted alpha:", object$alpha,"\n")#added 30-04-2021
   }
   
   #if(any(temp3==FALSE)){ cat("\n","Type (b): blanked out (functional CFA)","\n")}#(28-04-2015)}

@@ -1,6 +1,18 @@
+Changes in Version 1.6.0-3
+
+o fixed 'Type' indicator when using 'holm' procedure for local testing for summary.CFA() and plot.CFA()
+
+Changes in Version 1.6.0-2
+
+o again changed internal if conditions 
+
+Changes in Version 1.6.0-1
+
+o introduced survey (case) weights in function dat2fre(), which are in turn also supported in functions CFA(), summary.CFA() and plot.CFA().
+
 Changes in Version 1.5.6-7
 
-o changed internal if conditions due to issue 'if() conditions comparing class() to string' for R version 4.2.0 beta (2022-04-11 r82149 ucrt) 
+o changed internal if conditions due to issue 'if() conditions comparing class() to string' for R version 4.2.0 beta (2022-04-11 r82149 ucrt)
 
 Changes in Version 1.5.6-6
 

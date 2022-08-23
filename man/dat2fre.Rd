@@ -4,7 +4,14 @@
 \alias{dat2fre}
 \title{dataset to pattern frequency conversion}
 \usage{
-dat2fre(x, katorder = FALSE, caseorder = TRUE, kat = NULL, codes = NULL)
+dat2fre(
+  x,
+  katorder = FALSE,
+  caseorder = TRUE,
+  kat = NULL,
+  codes = NULL,
+  wgt = NULL
+)
 }
 \arguments{
 \item{x}{an object of class "matrix" or "data.frame". If \code{x} is a "data.frame" each variable (column) must be an \code{integer} or a \code{factor}. If \code{x} is a "matrix" it is assumed that the categories for each variable in \code{x} start with \code{1} -- there is no check for that !!!}
@@ -16,6 +23,8 @@ dat2fre(x, katorder = FALSE, caseorder = TRUE, kat = NULL, codes = NULL)
 \item{kat}{ignored when \code{x} is a \code{data.frame}! If \code{x} is a \code{"matrix"} the optional argument \code{kat} must be an integer vector defining the number of categories for every variable in \code{x} (in the respective order). If left empty the (max) number of categories is estimated from the data given in \code{x}.}
 
 \item{codes}{a list with character vectors containing coding for integers in matrix (if \code{x} is a numeric \code{matrix}). If \code{codes} is not empty (and the argument \code{x} is an object of class "matrix") the return object will be pattern frequencies table as \code{data.frame}.}
+
+\item{wgt}{a numerical vector of survey weights to weight the cases (rows) in \code{x}}
 }
 \value{
 An object of class c("data.frame","Pfreq") containing the (response) pattern frequencies table representation of the given dataset in the argument \code{x}.
@@ -24,7 +33,7 @@ An object of class c("data.frame","Pfreq") containing the (response) pattern fre
 Given a dataset this function returns a (response) pattern frequencies table representation of it.
 }
 \details{
-No further details
+To use survey weights a vector of positive numeric values with length matching the number of rows in \code{x} must be assigned to the argument \code{wgt}. The individual case weights are then aggregated (respective sum of weights) for each pattern observed in the data (assigned to argument \code{x}).
 }
 \examples{
 #######################################

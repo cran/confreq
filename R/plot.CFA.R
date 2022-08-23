@@ -20,8 +20,8 @@ plot.CFA<-function(x, type="z.pChi", fill=c("red", "blue", "grey"), adjalpha = "
   inputdata <- x$inputdata
  
 if(!is.null(functional)){   
- if(inherits(x = class(functional),what = "character")){ ## added 22-01-2019 class(functional)=="character" changed 12-04-2022
-   functional <- sapply(functional, function(y){which(y==as.character(x$local.test$pat.))})
+  if(is.character(functional)){ ## added 22-01-2019 class(functional)=="character" changed 12-04-2022 ' inherits(x = class(functional),what = "character") ' again changed 19-08-2022 
+    functional <- sapply(functional, function(y){which(y==as.character(x$local.test$pat.))})
  }
 }
   
@@ -33,39 +33,28 @@ if(!is.null(functional)){
 
   ############## START of alpha adjustment methods -----------------------------
   
-  # if(holm==TRUE){adjalpha <- "holm"} # 30-04-2021 for downward compatibility
-  
+
   #### significant (anti)types cf. Holm ----------------------------------------
-  ## added 21-01-2019 #changed 30-04-2021
+  ## added 21-01-2019 #changed 30-04-2021 # new from summary 23-08-2022
   if(adjalpha=="holm"){ # 30-04-2021 new type of alpha adjustment control
     p_val <- local.test[,which(names(local.test)==type)]
-    if(!is.null(functional)){p_val[functional] <- NA}
+    if(!is.null(functional)){p_val[functional] <- NA}# set all functional cells to NA
     
-    ord_p <- order(p_val,decreasing = FALSE) # starting with the smallest
+    ord_p <- order(p_val,decreasing = FALSE) # starting with the smallest 'p_val'
     k <- length(p_val)
     n <- length(na.omit(p_val))
     alpha <- x$alpha # 30-04-2021 according to new structure of CFA result object
-    i=0
-    holm_res <- vector(mode = "logical", length = k)
-    if(i<n){ # hier nur bis n (NAs werden nicht getestet)
-      while(p_val[ord_p[i+1]]  <  alpha/(n-(i))){
-        holm_res[i+1] <- p_val[ord_p[i+1]]  <  alpha/(n-(i)) 
-        i=i+1
-      }
-    }
-    temp1 <- holm_res[order(ord_p)] # reorders it back 
-    temp2 <- ifelse(test=local.test$obs. > local.test$exp., yes="+",no="-") 
-    Type <- mapply(FUN=function(xx,y){ifelse(test=(xx==TRUE),yes=y, no="." )   },xx=temp1,y=temp2 )
-    if(!is.null(functional)){Type[functional] <- "b"} # added 18-11-2016
-    #subsequent added on 8-2-2020
+   
     alpha_bon_temp1 <-(alpha/1:n)[(order(rev(ord_p[1:(length(ord_p)-length(functional))])))]
     alpha_bon_temp2 <- p_val
     alpha_bon_temp2[!is.na(p_val)] <- alpha_bon_temp1
     alpha_bon <- alpha_bon_temp2
-    # round(alpha_bon_temp2,4)
-    # round(p_val,4)
-    # #alpha_bon <-((c((alpha/1:n),rep(NA,times=sum(is.na(p_val)))))[(order(rev(ord_p)))]) #added 'rev' 8-2-2020
-    # alpha_bon[is.na(alpha_bon)] <-0 
+    
+    temp1 <- p_val < alpha_bon 
+    temp2 <- ifelse(test=local.test$obs. > local.test$exp., yes="+",no="-") 
+    Type <- mapply(FUN=function(xx,y){ifelse(test=(xx==TRUE),yes=y, no="." )   },xx=temp1,y=temp2 )
+    if(!is.null(functional)){Type[functional] <- "b"} # added 18-11-2016
+
     templocal <- data.frame(pat.=local.test[,"pat."],local.test[,c("obs.","exp.")],Type, Holm.crit=alpha_bon ,local.test[,out_wide])  
   }
   
@@ -88,6 +77,8 @@ if(!is.null(functional)){
   }
   
   if(any(Type=="b")){ cat("\n","Type (b): blanked out (functional CFA)","\n")}#(18-11-2016)}
+  
+  cat(attributes(x)$comment) # version 1.6
   
   inputdata_ <- inputdata
 
