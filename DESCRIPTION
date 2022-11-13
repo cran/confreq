@@ -1,12 +1,12 @@
 Package: confreq
 Type: Package
 Title: Configural Frequencies Analysis Using Log-Linear Modeling
-Version: 1.6.0-3
+Version: 1.6.1-1
 License: GPL-3
 LazyData: true
 Encoding: UTF-8
 Depends: R (>= 3.5.0), stats, gmp, methods, grid, vcd
-Date: 2022-08-23
+Date: 2022-11-11
 Author: Joerg-Henrik Heine, R.W. Alexandrowicz (function stirling_cfa() )
     and some package testing by Mark Stemmler
 Maintainer: Joerg-Henrik Heine <jhheine@googlemail.com>
@@ -18,6 +18,6 @@ Description: Offers several functions for Configural Frequencies
     Zeitschrift für Klinische Psychologie und Psychotherapie, 19(2), 99–115.
 NeedsCompilation: no
 RoxygenNote: 7.2.1
-Packaged: 2022-08-23 15:37:35 UTC; ga75dam
+Packaged: 2022-11-12 01:10:33 UTC; jhh
 Repository: CRAN
-Date/Publication: 2022-08-23 16:10:02 UTC
+Date/Publication: 2022-11-13 05:40:15 UTC

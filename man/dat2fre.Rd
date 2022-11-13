@@ -10,7 +10,8 @@ dat2fre(
   caseorder = TRUE,
   kat = NULL,
   codes = NULL,
-  wgt = NULL
+  wgt = NULL,
+  ...
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ dat2fre(
 \item{codes}{a list with character vectors containing coding for integers in matrix (if \code{x} is a numeric \code{matrix}). If \code{codes} is not empty (and the argument \code{x} is an object of class "matrix") the return object will be pattern frequencies table as \code{data.frame}.}
 
 \item{wgt}{a numerical vector of survey weights to weight the cases (rows) in \code{x}}
+
+\item{...}{other parameters passed through to \code{\link{table}} (in case of x  being a \code{data.frame}) or to \code{\link{tabulate}} (in case of x being a matrix).}
 }
 \value{
 An object of class c("data.frame","Pfreq") containing the (response) pattern frequencies table representation of the given dataset in the argument \code{x}.

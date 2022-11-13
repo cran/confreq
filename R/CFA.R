@@ -58,21 +58,28 @@ if(any(class(patternfreq)=="Pfreq") != TRUE){stop("patternfreq must be an object
 kategorie <- sapply(lapply(patternfreq[,1:(dim(patternfreq)[2]-1) ],unique),length)
 
 pattern <- do.call(paste, patternfreq[,1:(dim(patternfreq)[2]-1) ])
-  
-observed <- patternfreq[,dim(patternfreq)[2]] 
 
-# version 1.6 weights
-if(!is.null(attributes(patternfreq)$comment)){
-if(attributes(patternfreq)$comment=="using weighted data!"){
- WGT <-  attributes(patternfreq)$WGT
+# version 1.6.0-4 weights
+if(is.null(attr(patternfreq, "comment"))){
+  observed <- patternfreq[,dim(patternfreq)[2]] 
 }
-}else{WGT <- NULL}
+
+if(!is.null(attr(patternfreq, "comment"))){
+  observed <- attr(patternfreq, "wgtfreq") ## assign weighted frequencies to observed
+}
+  
+# version 1.6.0-3 weights -- now obsolete
+# if(!is.null(attributes(patternfreq)$comment)){
+# if(attributes(patternfreq)$comment=="using weighted data!"){
+#  WGT <-  attributes(patternfreq)$WGT
+# }
+# }else{WGT <- NULL}
 # condition added 22-06-2015 fixed class issue 2.2.2020
 if(method=="log"){
   if(   !is(object = form,class2 = "matrix")   ){
     if(length(form)==0){form<-paste("~", paste(names(patternfreq)[1:(length(patternfreq)-1)],collapse=" + "))}
     
-    designmatrix <- design_cfg_cfa(kat=kategorie , form = form, ...) 
+    designmatrix <- design_cfg_cfa(kat=kategorie , form = form, ...)#  
     
     usedform <- form
     
@@ -125,7 +132,21 @@ if(method=="log"){
     } # !!! no further checks !!!
   
   # expected <- expected_cfa(des=designmatrix, observed=observed, family=family, intercept=intercept, ...) # padded out 24.10.2014
-  glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept,weights = WGT) #, ... added 24.10.2014
+  # glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept,weights = WGT) #, ... added 24.10.2014
+  #glmfitres <- glm.fit(x=designmatrix, y=floor(attributes(patternfreq)$wgtfreq) ,family=family, intercept = intercept) #, ... added 24.10.2014
+  # glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept) #, ... added 24.10.2014
+  
+  if(is.null(attr(patternfreq, "comment"))){# unweigted data case
+    glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept, ...)  
+  }
+  
+  if(!is.null(attr(patternfreq, "comment"))){# weighted data case
+    if(family$family=="poisson"){
+      family <- quasipoisson()
+    }
+    glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept, ...)  
+  }
+
   expected <- glmfitres$fitted.value # added 24.10.2014
   #aic <- glmfitres$aic # added 24.10.2014
   class(glmfitres) <- c("glm", "lm" )# this is a trick!!! necessary for the following three lines of code - added 24.10.2014
@@ -146,6 +167,7 @@ if(method=="margins"){
   loglik <- NA # added 22-06-2015
   aic <- NA # added 22-06-2015
   bic <- NA # added 22-06-2015
+  glmfitres <- NA # added 05-10-2022
   # nur für df
   form<-paste("~", paste(names(patternfreq)[1:(length(patternfreq)-1)],collapse=" + "))
   designmatrix <- design_cfg_cfa(kat=kategorie , form = form, ...) 
@@ -165,8 +187,11 @@ if(bintest==FALSE){
 
 chi.square <- sum(erg$Chi)
   
-if(method=="log"){df <- df_des_cfa(designmatrix)} ## added 22-06-2015
-  
+if(method=="log"){
+  df <- df_des_cfa(designmatrix)
+  } ## added 22-06-2015 + extended 05-10-2022
+
+
 chi.square.p <- (1-pchisq(chi.square,df))
   
 lr.chi <- lr(observed,expected) ## added 20. October 2014 JHH
@@ -175,13 +200,14 @@ lr.p <- (1-pchisq(lr.chi,df)) ## added 20. October 2014 JHH
   
 bonferroni <- alpha/length(expected)
   
-result <- list( local.test = erg, bonferroni.alpha=bonferroni, global.test = list(pearson = list(Chi=chi.square,df=df,pChi=chi.square.p,alpha=alpha), likelihood.ratio = list(Chi=lr.chi,df=df,pChi=lr.p,alpha=alpha), infocrit=list(loglik=loglik, AIC=aic, BIC=bic)),designmatrix=designmatrix, variables=kategorie, used.formula=usedform, functional=blank, inputdata=patternfreq, alpha=alpha) 
+result <- list(local.test = erg, bonferroni.alpha=bonferroni, global.test = list(pearson = list(Chi=chi.square,df=df,pChi=chi.square.p,alpha=alpha), likelihood.ratio = list(Chi=lr.chi,df=df,pChi=lr.p,alpha=alpha), infocrit=list(loglik=loglik, AIC=aic, BIC=bic)),designmatrix=designmatrix, variables=kategorie, used.formula=usedform, functional=blank, inputdata=patternfreq, alpha=alpha, glmfitres=glmfitres) 
 
-if(!is.null(WGT)){
+if(!is.null(attr(patternfreq, "comment"))){
   comment(result) <- "using weighted data!"
 }
+
 class(result)<-c("CFA","list")
  
 return(result)
 }
-# End of function ------ 
+# End of function ------

@@ -1,3 +1,17 @@
+Changes in Version 1.6.1-1
+
+o improvements in dat2cov() -- (working with ordered factors)
+
+o introduced weights in dat2cov()
+
+Changes in Version 1.6.1-0
+
+o improvements in dat2fre()
+
+o estimate weighted observed frequencies using family=quasipoisson() -- which is automaticaly detected 
+
+o added coef method for object of class 'CFA'
+
 Changes in Version 1.6.0-3
 
 o fixed 'Type' indicator when using 'holm' procedure for local testing for summary.CFA() and plot.CFA()

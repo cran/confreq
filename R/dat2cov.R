@@ -6,22 +6,30 @@
 #' 
 #' @param x an object of class "data.frame" with at least 2 \code{factor} variables representing the pattern (configurations) and at least 1 \code{numeric} variable representing the covariate(s).
 #' @param FUN a function to compute the summary statistics which can be applied to all covariate variables in \code{x}. See function \code{\link[stats]{aggregate}}.
-#' @param ... further arguments passed to or used by methods un \code{FUN}.
+#' @param ... further arguments passed to or used by methods in \code{FUN}.
 #' @param notobs a numeric vector possibly with length equal to the number of \code{numeric} variables in \code{x}, defining the summary value for the respective covariate variable to use for unobserved pattern (configurations) defined by the \code{factor} variables in \code{x}. By default it is assumed that this value is 0. \code{notobs} is recycled if only one value is given.
 #' @param katorder see \code{\link{dat2fre}}
 #' @param caseorder see \code{\link{dat2fre}} 
+#' @param wgt a numerical vector of survey weights to weight the cases (rows) in \code{x}   
 #' @return An object of class \code{c("data.frame", "Pcov")} holding the summary statistics for the covariate variables corresponding to the pattern (configurations) of the given dataset in the argument \code{x}. 
 
 ############### start of function definition ##################
 ################ jhheine at googlemail.com ####################
-dat2cov <- function(x, FUN = "mean", ... , notobs = 0, katorder = FALSE, caseorder = TRUE ){
+dat2cov <- function(x, FUN = "mean", ... , notobs = 0, katorder = FALSE, caseorder = TRUE, wgt=NULL ){
   d <- x
-  p_ind <- (sapply(d,class))=="factor"
-  cov_ind <- (sapply(d,class))=="numeric"
+  #p_ind <- (sapply(d,class))=="factor"
+  p_ind <- (sapply(X = d,FUN = function(x){is.factor(x)}    ))
+  #cov_ind <- (sapply(d,class))=="numeric"
+  cov_ind <- (sapply(X = d,FUN = function(x){is.numeric(x)}    ))
   nam <- names(d)[cov_ind]
   
-  ta <- dat2fre(d[,p_ind],katorder = katorder,caseorder = caseorder)
-  fre <- ta[,ncol(ta)]
+  ta <- dat2fre(d[,p_ind],katorder = katorder,caseorder = caseorder,wgt = wgt)
+  if(is.null(wgt)){ 
+    fre <- ta[,ncol(ta)]
+  }
+  if(!is.null(wgt)){
+    fre <- attributes(ta)$WGT
+  }
   pat <- apply(X =ta[,1:(ncol(ta)-1)],1,paste, collapse = " ")     
   
   dp <-  data.frame(pat = apply(X = d[,p_ind],1,paste, collapse = " "), d[,cov_ind])

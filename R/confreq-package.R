@@ -18,6 +18,8 @@
 #' @importFrom stats pchisq
 #' @importFrom stats pnorm
 #' @importFrom stats poisson
+#' @importFrom stats quasipoisson
+#' @importFrom stats coef
 #' @importFrom vcd structable
 #' @importFrom vcd strucplot
 #' @import grid

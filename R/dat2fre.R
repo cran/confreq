@@ -10,6 +10,7 @@
 #' @param kat ignored when \code{x} is a \code{data.frame}! If \code{x} is a \code{"matrix"} the optional argument \code{kat} must be an integer vector defining the number of categories for every variable in \code{x} (in the respective order). If left empty the (max) number of categories is estimated from the data given in \code{x}.
 #' @param codes a list with character vectors containing coding for integers in matrix (if \code{x} is a numeric \code{matrix}). If \code{codes} is not empty (and the argument \code{x} is an object of class "matrix") the return object will be pattern frequencies table as \code{data.frame}.
 #' @param wgt a numerical vector of survey weights to weight the cases (rows) in \code{x}   
+#' @param ... other parameters passed through to \code{\link{table}} (in case of x  being a \code{data.frame}) or to \code{\link{tabulate}} (in case of x being a matrix).
 #' @return An object of class c("data.frame","Pfreq") containing the (response) pattern frequencies table representation of the given dataset in the argument \code{x}. 
 #' @references No references in the moment 
 #' @examples #######################################
@@ -28,12 +29,12 @@
 ############### start of function definition ##################
 ###########  data to pattern frequency conversion #############
 ################ jhheine at googlemail.com ####################
-dat2fre <- function(x, katorder=FALSE, caseorder=TRUE, kat=NULL, codes=NULL, wgt=NULL) {
+dat2fre <- function(x, katorder=FALSE, caseorder=TRUE, kat=NULL, codes=NULL, wgt=NULL, ...) {
   #### wenn x ein data.frame ist ... 
   #### funktioniert bei: nur factors, nur integers, und gemischt
   if( is(object = x,class2 = "data.frame") ){
-    
-    unorderedresult<-as.data.frame(table(x))# ungeordnetes tabulationsergebnis 
+    # if(sum(is.na(x))!=0){cat("\n","x contains missing values (NA) implicitly treated with na.rm=TRUE","\n")}
+    unorderedresult<-as.data.frame(table(x, ...))# ungeordnetes tabulationsergebnis 
     
   if(katorder==TRUE){### sortieren der variablen nach deren kategoriezahl  
     variablesorter<-order(sapply(  sapply(unorderedresult[,1:dim(unorderedresult)[2]-1],table,simplify=F)   ,length))
@@ -55,7 +56,7 @@ dat2fre <- function(x, katorder=FALSE, caseorder=TRUE, kat=NULL, codes=NULL, wgt
       tmp <- data.frame(pat.=factor(apply(x, 1, function(v){paste(v, collapse = "")}),levels=all_pat ), wgt=wgt)
       Freq<-aggregate(x = tmp[,2],by = list(tmp$pat.),FUN = sum,drop = FALSE)[,2]
       Freq[is.na(Freq)] <- 0
-      ### neuer gedanke: es werden gewicht für die tabulierten Häufigkeiten erstellt
+      ### neuer gedanke: es werden gewichte für die tabulierten Häufigkeiten erstellt
       # result$Freq <- Freq
       frwgt <- Freq / freq ## frwgt sind die Gewicht für die (tabulierten) pattern Häufigkeiten
       frwgt[is.na(frwgt)] <- 1 ## null mal beobachtete Patern bleiben bei einer gewichtung mit 1
@@ -71,10 +72,15 @@ dat2fre <- function(x, katorder=FALSE, caseorder=TRUE, kat=NULL, codes=NULL, wgt
     X<-x
     ### optional anzahl kategorien festlegen (falls nicht alle beobachtet wurden)
   if(length(kat)==0){
-    kat<-apply(X,2,max)
-    cat("Number of categories for each variable","\n","estimated from data are: " , "\n",names(kat),"\n", kat ,"\n", "-->",prod(kat),"different configurations","\n")
+    
+    
+    kat<-apply(X,2,max, ...)
+    cat("\n","Number of categories for each variable","\n","estimated from data are: " , "\n",names(kat),"\n", kat ,"\n", "-->",prod(kat),"different configurations","\n")
 	}
-    ### ENDE von optional anzahl kateg ....
+  
+    if(is.na(prod(kat))){stop("x contains missing values (NA) please recode or consider use na.rm=TRUE") }
+    
+      ### ENDE von optional anzahl kateg ....
   konfig<-pos_cfg_cfa(kat)
   if(length(colnames(x))!=0){colnames(konfig)<-colnames(X)} # variablennmen aus x uebertragen
   if(length(colnames(x))==0){colnames(konfig)<-paste("V",1:length(kat),sep="")}
@@ -115,7 +121,7 @@ dat2fre <- function(x, katorder=FALSE, caseorder=TRUE, kat=NULL, codes=NULL, wgt
   class(result)<-c("Pfreq","data.frame")  # was before 1.6 c("data.frame", "Pfreq")
   if(!is.null(wgt)){
     comment(result) <- "using weighted data!"
-    attr(result,"wgtdat") <- wgt
+    attr(result,"wgtdat") <- wgt # save original data vector of weights
     attr(result,"wgtfreq") <- Freq
     attr(result,"WGT") <- frwgt
     cat("using weighted data!", "\n")
