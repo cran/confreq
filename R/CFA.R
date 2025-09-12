@@ -30,23 +30,35 @@
 #' @references Victor, N. (1989). An Alternativ Approach to Configural Frequency Analysis. \emph{Methodika, 3}, 61–73.
 #' @references Stemmler, M. (2020). \emph{Person-Centered Methods}. Cham: Springer International Publishing.
 #' @examples #######################################
-#' ######### some examples ########
 #' data(LienertLSD)
 #' LienertLSD
 #' res1 <- CFA(LienertLSD)
 #' summary(res1)
+#' plot(res1)
+#' coef(res1)
+#' ## testing independence conditional on structural pattern number 8 (functional approach)
+#' res1_f8 <- CFA(LienertLSD,blank = 8)
+#' summary(res1_f8)
+#' plot(res1_f8)
+#' coef(res1_f8)
 #' ## testing with (full) interactions
 #' res2 <- CFA(LienertLSD,form="~ C + T + A + C:T + C:A + T:A + C:T:A")
 #' summary(res2)
+#' plot(res2)
+#' coef(res2)
 #' #' ## testing the null model
 #' res3 <- CFA(LienertLSD,form="null")
 #' summary(res3)
+#' plot(res3)
+#' coef(res3)
 #' #######################
 #' data(suicide)
 #' suicide
 #' # suicide data is in non tabulated data representation - so it must be tabulated !
 #' res4 <- CFA(dat2fre(suicide))  
 #' summary(res4)
+#' plot(res4)
+#' coef(res4)
 ###############################################################
 ############### start of function definition ##################
 CFA<-function(patternfreq, alpha=.05, form=NULL, ccor=FALSE, family=poisson(), intercept=FALSE, method="log", blank=NULL, cova=NULL,bintest=TRUE, ...){

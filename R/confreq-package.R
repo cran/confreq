@@ -1,6 +1,6 @@
 #' @title Configural Frequencies Analysis Using Log-linear Modeling
-#' @name confreq-package
-#' @docType package
+#' @name confreq_PACKAGE
+#' @aliases confreq-package
 #' @importFrom gmp as.bigq
 #' @importFrom gmp as.bigz
 #' @importFrom gmp chooseZ
@@ -43,7 +43,7 @@
 #' 
 #' '\code{sudo apt-get install libgmp3-dev}'.
 #' 
-#' For additional information see also \href{http://www.mathemagix.org/www/mmdoc/doc/html/external/gmp.en.html}{http://www.mathemagix.org/www/mmdoc/doc/html/external/gmp.en.html} and \href{https://gmplib.org/}{https://gmplib.org/}.
+#' For additional information see also \href{https://www.mathemagix.org/www/mmdoc/doc/html/external/gmp.en.html}{https://www.mathemagix.org/www/mmdoc/doc/html/external/gmp.en.html} and \href{https://gmplib.org/}{https://gmplib.org/}.
 #' 
 #' 
 #' Annotation:

@@ -85,7 +85,7 @@ if(!is.null(functional)){
   ############## END of alpha adjustment methods -------------------------------
   
 ####### eigentlicher plotting teil ###################################
-    Preq_tab <- fre2tab(inputdata_[,c((rev(colnames(inputdata_)))[-1], "Freq")])  
+    Preq_tab <- fre2tab(inputdata_[ ,c((rev(colnames(inputdata_)))[-1], "Freq")])  
     fil <-sapply(1:length(Type), function(y){
       if(Type[y]=="+"){res <- fill[1]}
       if(Type[y]=="-"){res <- fill[2]}

@@ -4,12 +4,12 @@
 \alias{fre2dat}
 \title{pattern frequency to dataset conversion}
 \usage{
-fre2dat(x, fact = FALSE, ...)
+fre2dat(x, fact = TRUE, ...)
 }
 \arguments{
-\item{x}{an object of class "matrix" which is a (response) pattern frequencies table. It is assumed, that the last column of the object \code{x} represents the frequencies of the (respose) patern represented by the other columns in \code{x}.}
+\item{x}{typically an object of class "matrix" which is a (response) pattern frequencies table. \code{data.frames} are converted into a matrix with \code{\link{data.matrix}}. It is assumed, that the last column of the object \code{x} represents the frequencies of the (respose) patern represented by the other columns in \code{x}.}
 
-\item{fact}{logical, default is \code{(fact=FALSE)}. If this argument is set to \code{(fact=TRUE)} the result is coerced to a data.frame with factor variables.}
+\item{fact}{logical, default is \code{(fact=TRUE)} and the result is coerced to a data.frame with factor variables. If this argument is set to \code{(fact=FALSE)} a matrix object with numerical values is returned.}
 
 \item{...}{additional parameters passed trough. This is an option to assign factor labels to the resulting \code{data.frame} (when setting argument \code{fact=TRUE}) --> see \code{factor} in the \code{base} package and examples.
 

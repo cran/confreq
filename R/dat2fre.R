@@ -74,7 +74,7 @@ dat2fre <- function(x, katorder=FALSE, caseorder=TRUE, kat=NULL, codes=NULL, wgt
   if(length(kat)==0){
     
     
-    kat<-apply(X,2,max, ...)
+    kat<-apply(X,2,max)
     cat("\n","Number of categories for each variable","\n","estimated from data are: " , "\n",names(kat),"\n", kat ,"\n", "-->",prod(kat),"different configurations","\n")
 	}
   
@@ -104,7 +104,7 @@ dat2fre <- function(x, katorder=FALSE, caseorder=TRUE, kat=NULL, codes=NULL, wgt
     konfig<-data.frame(apply(konfig,2,factor),stringsAsFactors=TRUE)# JHH 09-03-2021: ,stringsAsFactors=TRUE
  
        
-    result<-cbind(konfig,freq) # the default return
+    result<-cbind(konfig,Freq) # the default return -- -6.8.2024 changed to Freq (instead of freq)
     
     
     ### optionale umwandlung in data.frame mit codesx
@@ -119,6 +119,7 @@ dat2fre <- function(x, katorder=FALSE, caseorder=TRUE, kat=NULL, codes=NULL, wgt
   }
   #### ENDE von wenn x eine "matrix" ist ...   
   class(result)<-c("Pfreq","data.frame")  # was before 1.6 c("data.frame", "Pfreq")
+  
   if(!is.null(wgt)){
     comment(result) <- "using weighted data!"
     attr(result,"wgtdat") <- wgt # save original data vector of weights

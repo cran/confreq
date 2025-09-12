@@ -69,7 +69,7 @@ oplist_3 <- lapply(oplist_2, function(x){xv <- abs(x); names(xv) <- 1:n; xv}) # 
 # oplist_3
 oplist_4 <- mapply(function(ind, wert){ list(oben=wert[ind$ind_oben],unten=wert[ind$ind_unten]) }, ind=oplist_3_ind, wert=oplist_3, SIMPLIFY = FALSE) # names sind die Produktherme; vector ist die anzahl des jew. Produktherms 
 # oplist_4
-###### berechnungen mit gekürzter Produktherm liste 'oplist_4'
+###### berechnungen mit gekürzter Produkterm liste 'oplist_4'
 # library(gmp) # für funkktion 'as.bigz'
 oplist_5 <- lapply(oplist_4, function(x){ list(oben=as.bigz(rep(x=as.numeric(names(x$oben)), times=x$oben)), unten=as.bigz(rep(x=as.numeric(names(x$unten)), times=x$unten))      )} )
 # oplist_5
