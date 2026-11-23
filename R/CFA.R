@@ -4,6 +4,16 @@
 #' @description Calculates various coefficients for the Configural Frequencies Analysis (CFA) defining main- and (optional) interaction effects. The core principle is to use \code{\link{glm}} in package \code{stats} to calculate the expected counts considering a designmatrix, which is constructed based on an formula definition given in argument \code{form}. 
 #' @details This is the main function of the package. It internal calls several functions of the package \code{\link{confreq-package}} which are also available as single functions. For classification of the observed patterns into 'Types' and 'Antitypes' according to Lienert  (1971), a S3 summary method for the resulting object of class \code{"CFA"} can be applied - see \code{\link{summary.CFA}}. An S3 plot method is useful for visualization of the contingency table and the 'Types' and 'Antitypes' -- see \code{\link{plot.CFA}}. Since version  1.6.0-1 of \code{confreq} survey weights are supported when tabluating a data set with function \code{\link{dat2fre}}. In case that for the resulting tabulated data in the object of class \code{c("data.frame","Pfreq")} survey weights were used the function \code{CFA} will take into account those weigts for estimation of the expected counts -- currently only when \code{method="log"}.  
 #' 
+#' Input must contain a complete, nonduplicated configuration grid in
+#' canonical category order. Invalid input is rejected before fitting, rather
+#' than silently pairing frequencies with the wrong design-matrix rows.
+#' After selecting or sorting rows, recreate canonical input and align any
+#' covariates or custom design matrix explicitly. Weighted input is detected
+#' from a valid \code{wgtfreq} attribute, not from an arbitrary comment.
+#' Weighted \code{method="margins"} is rejected because the historical margin
+#' calculation uses raw frequencies. The existing weighted log-linear path is
+#' retained; it is not a new design-based survey-variance implementation.
+#'
 #' @param patternfreq an object of class \code{"Pfreq"}, which is data in pattern frequencies representation - see function \code{\link{dat2fre}}.
 #' 
 #' @param alpha a numeric giving the alpha level for testing (default set to \code{alpha=.05})
@@ -13,9 +23,9 @@
 #' 
 #' @param ccor either a logical (TRUE / FALSE) determining whether to apply a continuity correction or not for the Binomial Approximation to the z-Test. When set to \code{ccor=TRUE} continuity correction is applied for expected values 5 =< expected =< 10. For \code{ccor=FALSE} no continuity correction is applied. Another option is to set \code{ccor=c(x,y)} where x is the lower and y the upper bound for expected values where continuity correction is applied. So \code{ccor=c(5,10)} is equivalent to \code{ccor=TRUE}.
 #' 
-#' @param family argument passed to \code{\link{glm.fit}} with default set to \code{poisson()}
+#' @param family argument passed to \code{\link{glm}} with default set to \code{poisson()}
 #' 
-#' @param intercept argument passed to \code{\link{glm.fit}} with default set to \code{FALSE} 
+#' @param intercept deprecated argument currently ignored -- former was passed to \code{\link{glm.fit}} with default set to \code{FALSE} 
 #' 
 #' @param method character defining the estimation method for expected frequencies with default set to \code{method="log"} to estimate the expected frequencies using \code{\link{glm}}. An other option is to set this argument to \code{method="margins"} which will result in expected frequencies calculated based on the margins of the multidimensional contingency table. Only main effects models are possible in this case and thus the arguments \code{form}, \code{family} \code{cova} and \code{intercept} are ignored.
 #' 
@@ -65,6 +75,35 @@ CFA<-function(patternfreq, alpha=.05, form=NULL, ccor=FALSE, family=poisson(), i
   
 if(any(class(patternfreq)=="Pfreq") != TRUE){stop("patternfreq must be an object of class 'Pfreq'","\n","see func. dat2fre()", call. = TRUE) }
 
+
+  # Eine Teilmenge bleibt eventuell eine Pfreq-Tabelle, aber die Analyse
+  # braucht genau eine Zeile fuer jede Kombination der Kategorien.
+  # Faktorlevels zaehlen auch dann mit, wenn ihre Nullzellen entfernt wurden.
+  configurations <- as.data.frame(patternfreq)[seq_len(ncol(patternfreq) - 1L)]
+  if (!ncol(configurations) || !nrow(configurations))
+    stop("The analysis requires a nonempty configuration table.")
+  categories <- lapply(configurations, function(z)
+    if (is.factor(z)) levels(z) else unique(z))
+  if (anyNA(configurations))
+    stop("Missing configuration categories are not supported by this analysis.")
+  if (anyDuplicated(configurations) ||
+      prod(lengths(categories)) != nrow(configurations))
+    stop("The analysis requires one row per complete configuration; recreate missing zero cells with dat2fre().")
+
+  # Die Designmatrix wird unabhaengig von den Eingabezeilen erzeugt.
+  # Deshalb fehlerhafte Reihenfolgen frueh ablehnen statt falsche Ergebnisse
+  # zu berechnen. Kovariaten/benutzerdefinierte Matrizen werden nicht heimlich
+  # umsortiert, da deren Zeilen an die vorhandene Eingabe gebunden sein koennen.
+  category_codes <- Map(function(z, lev) match(as.character(z), as.character(lev)),
+                        configurations, categories)
+  canonical <- do.call(order, category_codes)
+  if (!identical(as.integer(canonical), seq_len(nrow(configurations))))
+    stop("CFA requires canonical row order (rightmost variable changes fastest). Recreate with dat2fre(caseorder=TRUE) and align covariates/design rows.")
+  has_weights <- !is.null(attr(patternfreq, "wgtfreq", exact = TRUE))
+  if (has_weights) .cf_frequency(patternfreq, weighted = TRUE)
+  if (has_weights && method == "margins")
+    stop("Weighted method='margins' is not supported; it would mix weighted observations with unweighted margins. Use method='log'.")
+
 # kategorie <- sapply(lapply(patternfreq[,1:(dim(patternfreq)[2]-1) ],levels),length)
 # JHH: changed this to using 'unique' due to incident reported by M.Stemmler 15-10-2020 with R version 4.0.3  
 kategorie <- sapply(lapply(patternfreq[,1:(dim(patternfreq)[2]-1) ],unique),length)
@@ -72,11 +111,11 @@ kategorie <- sapply(lapply(patternfreq[,1:(dim(patternfreq)[2]-1) ],unique),leng
 pattern <- do.call(paste, patternfreq[,1:(dim(patternfreq)[2]-1) ])
 
 # version 1.6.0-4 weights
-if(is.null(attr(patternfreq, "comment"))){
+if(is.null(attr(patternfreq, "wgtfreq", exact = TRUE))){
   observed <- patternfreq[,dim(patternfreq)[2]] 
 }
 
-if(!is.null(attr(patternfreq, "comment"))){
+if(!is.null(attr(patternfreq, "wgtfreq", exact = TRUE))){
   observed <- attr(patternfreq, "wgtfreq") ## assign weighted frequencies to observed
 }
   
@@ -148,20 +187,22 @@ if(method=="log"){
   #glmfitres <- glm.fit(x=designmatrix, y=floor(attributes(patternfreq)$wgtfreq) ,family=family, intercept = intercept) #, ... added 24.10.2014
   # glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept) #, ... added 24.10.2014
   
-  if(is.null(attr(patternfreq, "comment"))){# unweigted data case
-    glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept, ...)  
+  if(is.null(attr(patternfreq, "wgtfreq", exact = TRUE))){# unweigted data case
+    # glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept, ...) 
+    glmfitres <- glm(observed ~ 0 + designmatrix, family=family$family, ...) # JHH changed 20.11.2026
   }
   
-  if(!is.null(attr(patternfreq, "comment"))){# weighted data case
+  if(!is.null(attr(patternfreq, "wgtfreq", exact = TRUE))){# weighted data case
     if(family$family=="poisson"){
       family <- quasipoisson()
     }
-    glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept, ...)  
+    # glmfitres <- glm.fit(x=designmatrix, y=observed ,family=family, intercept = intercept, ...)
+    glmfitres <- glm(observed ~ 0 + designmatrix, family=family$family, ...) # JHH changed 20.11.2026
   }
 
   expected <- glmfitres$fitted.value # added 24.10.2014
   #aic <- glmfitres$aic # added 24.10.2014
-  class(glmfitres) <- c("glm", "lm" )# this is a trick!!! necessary for the following three lines of code - added 24.10.2014
+  # this was a trick # JHH changed 20.11.2026 class(glmfitres) <- c("glm", "lm" )# this is a trick!!! necessary for the following three lines of code - added 24.10.2014
   loglik <- logLik(glmfitres)# cheked against code below OK! added 24.10.2014
   aic <- AIC(glmfitres)# cheked against code below OK! added 24.10.2014
   bic <- BIC(glmfitres)# cheked against code below OK! added 24.10.2014
@@ -188,13 +229,31 @@ if(method=="margins"){
   usedform <- "margins" # added 22-06-2015
 }
 
+## hier vorher den determination koeffizient rechnen mit den neuen Funktionen added JHH: 12-11-2026
+
+############ NEU VON LD HINZUGEFÜGT ##### credit to: Diaconescu, Luciana
+# adding determination coefficient Q -----------------------------------------
+# if (Q == TRUE) { Q wird immer berechnet changed JHH: 12-11-2026
+  Q_val <- Q_determination_cfa(observed = observed, expected = expected) # observed und expected aus obiger allgemeiner aufbereitung; changed JHH: 12-11-2026
+
+#### to be checked if necesary JHH 12-11-2026  
+#if (!is.null(functional)) {Q_val[functional] <- NA} # passt changed JHH: 12-11-2026
+
+
+  # padded out JHH: 12-11-2026 # local.test$Q <- Q_val # geht das, dass ich einfach Q dazu tu oder sprenge ich damit CFA()??
+  # padded out JHH: 12-11-2026 out_wide <- c("Q", out_wide) # damit es vor den p-Werten ist, ergibt das Sinn? Dann ist es nicht ganz hinten
+
+############ Ende von LD #######
+
+
+#### HIER WERDEN DIE EINZELNEN LOKALEN TEST GERECHNET UNTER BEIDEN BEDINGUNGEN bintest
 if(bintest==TRUE){
-  erg <- data.frame(pat.=pattern, obs.=observed,exp.=expected,do.call(cbind,chi_local_test_cfa(observed,expected)),ex.bin.test=binomial_test_cfa(observed,expected), z_tests_cfa(observed,expected,ccor=ccor),p.stir=stirling_cfa(observed=observed, expected=expected,cum=TRUE,verb=FALSE),density.stir=stirling_cfa(observed=observed, expected=expected,cum=FALSE,verb=FALSE))
-}
+  erg <- data.frame(pat.=pattern, obs.=observed,exp.=expected,do.call(cbind,chi_local_test_cfa(observed,expected)),ex.bin.test=binomial_test_cfa(observed,expected), z_tests_cfa(observed,expected,ccor=ccor),p.stir=stirling_cfa(observed=observed, expected=expected,cum=TRUE,verb=FALSE),density.stir=stirling_cfa(observed=observed, expected=expected,cum=FALSE,verb=FALSE), Q.unst = Q_val, Q.std = Q_val / Q_determination_bound_cfa( (ncol(patternfreq) -1) ) )
+} # added Q JHH: 12-11-2026
 
 if(bintest==FALSE){
-  erg <- data.frame(pat.=pattern, obs.=observed,exp.=expected,do.call(cbind,chi_local_test_cfa(observed,expected)),ex.bin.test=as.numeric(rep(x = NA,length.out=length(observed))), z_tests_cfa(observed,expected,ccor=ccor),p.stir=stirling_cfa(observed=observed, expected=expected,cum=TRUE,verb=FALSE),density.stir=stirling_cfa(observed=observed, expected=expected,cum=FALSE,verb=FALSE))
-}
+  erg <- data.frame(pat.=pattern, obs.=observed,exp.=expected,do.call(cbind,chi_local_test_cfa(observed,expected)),ex.bin.test=as.numeric(rep(x = NA,length.out=length(observed))), z_tests_cfa(observed,expected,ccor=ccor),p.stir=stirling_cfa(observed=observed, expected=expected,cum=TRUE,verb=FALSE),density.stir=stirling_cfa(observed=observed, expected=expected,cum=FALSE,verb=FALSE), Q.unst = Q_val, Q.std = Q_val / Q_determination_bound_cfa( (ncol(patternfreq) -1) ))
+} # added Q JHH: 12-11-2026
 
 
 chi.square <- sum(erg$Chi)
@@ -212,9 +271,9 @@ lr.p <- (1-pchisq(lr.chi,df)) ## added 20. October 2014 JHH
   
 bonferroni <- alpha/length(expected)
   
-result <- list(local.test = erg, bonferroni.alpha=bonferroni, global.test = list(pearson = list(Chi=chi.square,df=df,pChi=chi.square.p,alpha=alpha), likelihood.ratio = list(Chi=lr.chi,df=df,pChi=lr.p,alpha=alpha), infocrit=list(loglik=loglik, AIC=aic, BIC=bic)),designmatrix=designmatrix, variables=kategorie, used.formula=usedform, functional=blank, inputdata=patternfreq, alpha=alpha, glmfitres=glmfitres) 
+result <- list(local.test = erg, bonferroni.alpha=bonferroni, global.test = list(pearson = list(Chi=chi.square,df=df,pChi=chi.square.p,alpha=alpha), likelihood.ratio = list(Chi=lr.chi,df=df,pChi=lr.p,alpha=alpha), infocrit=list(loglik=loglik, AIC=aic, BIC=bic)),designmatrix=designmatrix, variables=kategorie, used.formula=usedform, functional=blank, inputdata=patternfreq, alpha=alpha, glmfitres=glmfitres, Qupper=Q_determination_bound_cfa( (ncol(patternfreq) -1) )) # JHH 12-11-2026 added Qupper 
 
-if(!is.null(attr(patternfreq, "comment"))){
+if(!is.null(attr(patternfreq, "wgtfreq", exact = TRUE))){
   comment(result) <- "using weighted data!"
 }
 

@@ -4,15 +4,28 @@
 \alias{fre2tab}
 \title{pattern frequency to table conversion}
 \usage{
-fre2tab(patternfreq, form = NULL)
+fre2tab(patternfreq, form = NULL, weighted = FALSE)
 }
 \arguments{
 \item{patternfreq}{an object of class c("data.frame","Pfreq")}
 
-\item{form}{a formula object with possibly both left and right hand sides specifying the order of the variables in the resulting table. At default (\code{(formula=NULL)}) all variables in \code{(x)} are used in their respective order.}
+\item{form}{a formula object with possibly both left and right hand sides specifying the order of the variables in the resulting table. At default (\code{(formula=NULL)}) all variables in \code{(x)} are used in their respective order. With two sides,
+dimensions on the right precede those on the left, matching the previous
+\code{structable()} conversion. A left-hand side of \code{Freq} denotes
+frequencies rather than a configuration dimension, e.g. \code{Freq ~ A + B}.
+Omitting variables sums over those dimensions. Only variable names joined
+by \code{+} are supported; transformations and interactions are rejected.}
+
+\item{weighted}{Logical. If \code{FALSE} (default), use the final frequency
+column. If \code{TRUE}, use the \code{wgtfreq} attribute and report an
+error if this attribute is absent or invalid.}
 }
 \value{
-An object of class "table" see \code{\link{table}}.
+An object of class \code{"table"}, with named dimensions in
+  the input order or the order specified by \code{form}.
+
+An object of class \code{"table"}, with named dimensions in
+  the input order or the order specified by \code{form}; see \code{\link{table}}.
 }
 \description{
 Given data as pattern frequencies (object of class class c("data.frame","Pfreq", see function \code{\link{dat2fre}}) this function returns a typical array representation (class "table" , see \code{\link{table}}) of it.
@@ -21,9 +34,25 @@ Given data as pattern frequencies (object of class class c("data.frame","Pfreq",
 This function was introduced in order to connect the typical confreq data representation in the objects of the class \code{c("data.frame","Pfreq")}, see function \code{\link{dat2fre}}, to the R-typical array representation as it exists in objects of the \code{"table"} class, see \code{\link{table}}. This array representation of multi-dimensional contingency tables is used more universally in R -- e.g. also in the R package \code{vcd}, see the examples section below.
 
 It is assumed, that the last column of the object \code{patternfreq} represents the frequencies of the (response) pattern represented by the other columns in \code{patternfreq}.
+
+Unused factor levels are retained. Duplicate configurations
+are summed. Missing configuration categories are retained as table levels.
+No \code{Pfreq} class assignment is needed for ordinary frequency data.
+The choice of \code{weighted} affects only this conversion; it does not
+change the handling of weights by \code{CFA()} or \code{S2CFA()}.
 }
 \examples{
-#######################################
+#########################################
+d <- data.frame(A = factor(c("yes", "no", "yes")),
+                B = factor(c("low", "low", "high")))
+pf <- dat2fre(d, wgt = c(1, 2, 3))
+fre2tab(pf)
+fre2tab(pf, weighted = TRUE)
+fre2tab(pf, form = ~ B + A)
+fre2tab(pf, form = A ~ B)
+fre2tab(pf, form = Freq ~ A + B)
+fre2tab(pf, form = ~ A)
+#########
 data(LienertLSD)# loading example pattern frequencies table
 fre2tab(LienertLSD)# coverting it into a table
 
@@ -38,5 +67,9 @@ structable(fre2tab(Lienert1978, form=~Group + Student + Teacher),direction = "v"
 }
 \references{
 No references at the moment
+}
+\seealso{
+\code{\link{dat2fre}}, \code{\link{fre2dat}},
+  \code{\link[stats]{xtabs}}
 }
 \keyword{utilities}

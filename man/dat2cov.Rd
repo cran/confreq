@@ -2,7 +2,7 @@
 % Please edit documentation in R/dat2cov.R
 \name{dat2cov}
 \alias{dat2cov}
-\title{conversion of a covariate dataset into summary covariate values}
+\title{Summarize Covariates by Configuration}
 \usage{
 dat2cov(
   x,
@@ -11,31 +11,82 @@ dat2cov(
   notobs = 0,
   katorder = FALSE,
   caseorder = TRUE,
-  wgt = NULL
+  wgt = NULL,
+  variables = NULL,
+  covariates = NULL
 )
 }
 \arguments{
-\item{x}{an object of class "data.frame" with at least 2 \code{factor} variables representing the pattern (configurations) and at least 1 \code{numeric} variable representing the covariate(s).}
+\item{x}{A data frame or matrix containing configuration variables
+and numeric covariates.}
 
-\item{FUN}{a function to compute the summary statistics which can be applied to all covariate variables in \code{x}. See function \code{\link[stats]{aggregate}}.}
+\item{FUN}{A function or function name returning one numeric value per
+group and covariate. Defaults to \code{"mean"}. When \code{wgt} is
+supplied, only \code{mean} is supported and weighted means are computed.}
 
-\item{...}{further arguments passed to or used by methods in \code{FUN}.}
+\item{...}{Additional arguments passed to \code{FUN}, or to
+\code{\link[stats]{weighted.mean}} for weighted means, e.g.
+\code{na.rm = TRUE}. Not forwarded to \code{dat2fre()}.}
 
-\item{notobs}{a numeric vector possibly with length equal to the number of \code{numeric} variables in \code{x}, defining the summary value for the respective covariate variable to use for unobserved pattern (configurations) defined by the \code{factor} variables in \code{x}. By default it is assumed that this value is 0. \code{notobs} is recycled if only one value is given.}
+\item{notobs}{Numeric replacement for unobserved configurations.
+Defaults to zero. Supply one value for all covariates or one value per
+selected covariate, in the order of \code{covariates}. \code{NA} is allowed.}
 
-\item{katorder}{see \code{\link{dat2fre}}}
+\item{katorder}{Logical; see \code{\link{dat2fre}}. Use the same setting
+for the corresponding pattern-frequency table.}
 
-\item{caseorder}{see \code{\link{dat2fre}}}
+\item{caseorder}{Logical; see \code{\link{dat2fre}}. Use the same setting
+for the corresponding pattern-frequency table.}
 
-\item{wgt}{a numerical vector of survey weights to weight the cases (rows) in \code{x}}
+\item{wgt}{Optional vector of finite, nonnegative case weights, one per
+input row. Zero weights are allowed.}
+
+\item{variables}{Optional character vector of configuration column names.
+By default, all factor columns of \code{x} are selected.}
+
+\item{covariates}{Optional character vector of numeric covariate column
+names. By default, all numeric columns not selected in \code{variables}
+are used. Explicitly exclude identifiers and weight columns if necessary.}
 }
 \value{
-An object of class \code{c("data.frame", "Pcov")} holding the summary statistics for the covariate variables corresponding to the pattern (configurations) of the given dataset in the argument \code{x}.
+A data frame of class \code{c("data.frame", "Pcov")}, containing
+  the covariate summaries. The \code{configurations} attribute stores the
+  corresponding configuration columns. Row names are readable labels made
+  unique if necessary, not keys used for internal matching.
 }
 \description{
+Compute one numeric summary per covariate and configuration, in the
+order of the corresponding complete pattern-frequency table.
 Given a dataset \code{x}, this function returns summary values for some (\code{numeric}) covariate variables in \code{x} for each pattern (configuration) defined by a set of factor variables in \code{x}.
 }
 \details{
-No further details
+At least one configuration variable and one numeric covariate
+are required. Explicit selection allows numeric or character configuration
+variables without first converting them to factors. Factor levels can
+specify unobserved categories. Configuration and covariate selections
+must be disjoint and contain distinct existing column names.
+
+\code{notobs} applies only when no input record belongs to a configuration.
+Missing or undefined summaries in observed groups remain \code{NA} or
+\code{NaN}; their handling is controlled by \code{FUN} and its arguments.
+A group containing records with zero weights is still observed, even if
+its weighted mean is undefined. Missing configuration values are excluded
+according to the default \code{dat2fre()} behavior.
+
+Names passed to \code{variables} and \code{covariates} must be written in
+full because these arguments follow \code{...}. For use with \code{CFA()},
+use the same configuration columns and ordering options in \code{dat2fre()}.
+}
+\examples{
+d <- data.frame(A = factor(c("yes", "yes", "no")),
+                B = factor(c("low", "low", "high")),
+                Age = c(20, 40, 60), Weight = c(1, 3, 2))
+cov <- dat2cov(d, variables = c("A", "B"), covariates = "Age",
+               wgt = d$Weight, notobs = NA_real_)
+cov
+attr(cov, "configurations")
+}
+\seealso{
+\code{\link{dat2fre}}, \code{\link{CFA}}
 }
 \keyword{utilities}

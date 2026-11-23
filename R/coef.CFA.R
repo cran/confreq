@@ -10,5 +10,5 @@
 
 ########################### hier die plot method #class CFA #######################
 coef.CFA<-function(object, ...){
-  coef(object$glmfitres)
+  coef(object$glmfitres, ...=...)
 }

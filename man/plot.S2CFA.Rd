@@ -15,19 +15,58 @@
 \arguments{
 \item{x}{object of class\code{"S2CFA"}}
 
-\item{type}{character with default \code{type="ex.fisher.test"}, to return wether the observed pattern are 'discriminating Types' or not significant at all based on the respective p-value. Another option for \code{type} is \code{type="pChi"}.}
+\item{type}{Test column: \code{"ex.fisher.test"} (unweighted default),
+\code{"pChi"}, or \code{"p.wald"}. For survey-weighted results, an
+omitted type automatically selects \code{"p.wald"}; count-table tests
+cannot be requested for these weighted results. Conversely, \code{p.wald}
+is unavailable for unweighted results. Unavailable tests produce an
+informative error before adjustment or plotting starts.}
 
 \item{fill}{a vector of (two) colors defining the coloring of discriminating 'Types' (default "red"), or not discriminating cells (default "grey") in the plot.}
 
-\item{adjalpha}{character with default \code{adjalpha = "bonferroni"}. Selector for the type of alpha adjustment for multiple testing. Possible options are: \code{adjalpha = "none"}, for no adjustment; \code{adjalpha = "bonferroni"}, for bonferroni adjustment (default); \code{adjalpha = "holm"}, for alpha adjustment according to Holm (1979); other options to come ... .}
+\item{adjalpha}{Adjustment method: \code{"bonferroni"} (default),
+\code{"holm"}, \code{"hochberg"}, \code{"hommel"}, \code{"BH"},
+\code{"BY"}, \code{"fdr"} (alias for BH), or \code{"none"}.}
 
 \item{...}{other parameters passed trough.}
 }
 \value{
-a plot visualizing the results.
+Draws a plot and invisibly returns a list containing the table,
+  fill array, significance decisions, configuration mapping, and
+  additional entries \code{p.adj} and \code{adjalpha}.
 }
 \description{
 S3 plot method for object of class\code{"S2CFA"}
+}
+\details{
+Survey-weighted frequencies and Wald p-values are taken from
+the weighted \code{S2CFA()} result; no integer rounding is performed.
+The test assumes independent sampling units, without cluster or stratum
+information. Non-computable p-values do not contribute to the Holm and
+additional p.adjust test families. Summary and plot select the same test.
+Additional adjustment methods are \code{"hochberg"},
+\code{"hommel"}, \code{"BH"}, \code{"BY"} and \code{"fdr"} (an alias
+for \code{"BH"}). These methods use \code{\link[stats]{p.adjust}} on
+computable p-values only, following the same test-family rule as Holm.
+Hochberg and Hommel require appropriate dependence assumptions; BH and BY
+control the false discovery rate rather than the family-wise error rate.
+See \code{p.adjust} for assumptions and statistical interpretation.
+The historical Bonferroni denominator and the \code{"none"} behavior are
+retained. In particular, the reduced test-family rule for Holm and the new
+methods is not silently applied to the existing Bonferroni decisions.
+With \code{adjalpha = "holm"}, decisions use
+\code{stats::p.adjust(p, method = "holm")} on the non-missing p-values
+only. Missing values (\code{NA}/\code{NaN}) do not contribute to the number
+of comparisons. The historical strict rule, adjusted p-value less than
+\code{alpha}, is retained. Decisions use full precision before rounding.
+Only finite values in \code{[0, 1]} are computable p-values. Other numeric
+values are excluded with a warning and treated as missing decisions.
+Missing decisions are drawn using the neutral fill color.
+}
+\examples{
+data(Lienert1978)
+res <- S2CFA(Lienert1978)
+plot(res, adjalpha = "BY")
 }
 \references{
 Holm, S. (1979). A simple sequentially rejective multiple test procedure. \emph{Scandinavian Journal of Statistics, 6}(2), 65–70.

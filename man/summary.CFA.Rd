@@ -34,19 +34,62 @@
 
 \item{wide}{logical with default \code{wide = FALSE}. If set to \code{wide = TRUE}, results for all significance tests are returned.}
 
-\item{adjalpha}{character with default \code{adjalpha = "bonferroni"}. Selector for the type of alpha adjustment for multiple testing. Possible options are: \code{adjalpha = "none"}, for no adjustment; \code{adjalpha = "bonferroni"}, for bonferroni adjustment (default); \code{adjalpha = "holm"}, for alpha adjustment according to Holm (1979); other options to come ... .}
+\item{adjalpha}{Adjustment method: \code{"bonferroni"} (default),
+\code{"holm"}, \code{"hochberg"}, \code{"hommel"}, \code{"BH"},
+\code{"BY"}, \code{"fdr"} (alias for BH), or \code{"none"}.
+\code{"holland"} remains available in this summary method.}
 
 \item{...}{other parameters passed trough.}
 }
 \value{
-a summary of the results printed on the console.
+A data frame of local results, with printed explanatory output.
+  Includes a final \code{p.adj} column. For Holm adjustment, includes \code{Holm.crit} and \code{Holm.adj}.
 }
 \description{
 S3 summary method for object of class\code{"CFA"}
+}
+\details{
+Additional adjustment methods are \code{"hochberg"},
+\code{"hommel"}, \code{"BH"}, \code{"BY"} and \code{"fdr"} (an alias
+for \code{"BH"}). These methods use \code{\link[stats]{p.adjust}} on
+computable p-values only, following the same test-family rule as Holm.
+Hochberg and Hommel require appropriate dependence assumptions; BH and BY
+control the false discovery rate rather than the family-wise error rate.
+See \code{p.adjust} for assumptions and statistical interpretation.
+The historical Bonferroni denominator and the \code{"none"} behavior are
+retained. In particular, the reduced test-family rule for Holm and the new
+methods is not silently applied to the existing Bonferroni decisions.
+The final column \code{p.adj} contains the selected adjusted p-values
+(raw p-values for \code{"none"}); old columns keep their positions.
+Existing \code{Holm.adj}, \code{Holm.crit} and, where applicable,
+\code{Holland.adj} remain available. Classification precedes rounding.
+With \code{adjalpha = "holm"}, decisions use
+\code{stats::p.adjust(p, method = "holm")} on the non-missing p-values
+only. Missing values (\code{NA}/\code{NaN}) do not contribute to the number
+of comparisons. The historical strict rule, adjusted p-value less than
+\code{alpha}, is retained. Decisions use full precision before rounding.
+Only finite values in \code{[0, 1]} are computable p-values. Other numeric
+values are excluded with a warning and treated as missing decisions.
+The additional column \code{Holm.adj} contains adjusted p-values.
+The existing \code{Holm.crit} column is retained as a diagnostic value:
+\code{alpha / (m - r + 1)}, where \code{m} is the number of tested values
+and \code{r} is their rank (minimum rank for ties). A row-wise comparison
+with this column alone does not implement the sequential Holm procedure.
+Missing decisions are displayed as \code{NA} and are omitted when
+\code{showall = FALSE}. The existing Holm columns retain their positions.
+Functional cells are excluded from the Holm test family and retain
+their \code{"b"} label. Other pre-existing adjustment methods retain their decisions.
+}
+\examples{
+data(LienertLSD)
+res <- CFA(LienertLSD, bintest = FALSE)
+summary(res, type = "pChi", adjalpha = "BH")
 }
 \references{
 Holm, S. (1979). A simple sequentially rejective multiple test procedure. \emph{Scandinavian Journal of Statistics, 6}(2), 65–70.
 
 Bonferroni, C. E. (1935). Il calcolo delle assicurazioni su gruppi di teste. In S.O. Carboni (Ed.), \emph{Studi in Onore del Professore Salvatore Ortu Carboni} (S. 13–60). Roma, Tipografia del Senato: Bardi.
+
+Holland, B. S., & Copenhaver, M. D. (1987). An Improved Sequentially Rejective Bonferroni Test Procedure. \emph{Biometrics, 43}(2), 417. https://doi.org/10.2307/2531823
 }
 \keyword{methods}

@@ -28,9 +28,9 @@ A special case is to define a null-model or rather a cfa model of order zero. In
 
 \item{ccor}{either a logical (TRUE / FALSE) determining whether to apply a continuity correction or not for the Binomial Approximation to the z-Test. When set to \code{ccor=TRUE} continuity correction is applied for expected values 5 =< expected =< 10. For \code{ccor=FALSE} no continuity correction is applied. Another option is to set \code{ccor=c(x,y)} where x is the lower and y the upper bound for expected values where continuity correction is applied. So \code{ccor=c(5,10)} is equivalent to \code{ccor=TRUE}.}
 
-\item{family}{argument passed to \code{\link{glm.fit}} with default set to \code{poisson()}}
+\item{family}{argument passed to \code{\link{glm}} with default set to \code{poisson()}}
 
-\item{intercept}{argument passed to \code{\link{glm.fit}} with default set to \code{FALSE}}
+\item{intercept}{deprecated argument currently ignored -- former was passed to \code{\link{glm.fit}} with default set to \code{FALSE}}
 
 \item{method}{character defining the estimation method for expected frequencies with default set to \code{method="log"} to estimate the expected frequencies using \code{\link{glm}}. An other option is to set this argument to \code{method="margins"} which will result in expected frequencies calculated based on the margins of the multidimensional contingency table. Only main effects models are possible in this case and thus the arguments \code{form}, \code{family} \code{cova} and \code{intercept} are ignored.}
 
@@ -49,7 +49,17 @@ an object of class \code{CFA} with results.
 Calculates various coefficients for the Configural Frequencies Analysis (CFA) defining main- and (optional) interaction effects. The core principle is to use \code{\link{glm}} in package \code{stats} to calculate the expected counts considering a designmatrix, which is constructed based on an formula definition given in argument \code{form}.
 }
 \details{
-This is the main function of the package. It internal calls several functions of the package \code{\link{confreq-package}} which are also available as single functions. For classification of the observed patterns into 'Types' and 'Antitypes' according to Lienert  (1971), a S3 summary method for the resulting object of class \code{"CFA"} can be applied - see \code{\link{summary.CFA}}. An S3 plot method is useful for visualization of the contingency table and the 'Types' and 'Antitypes' -- see \code{\link{plot.CFA}}. Since version  1.6.0-1 of \code{confreq} survey weights are supported when tabluating a data set with function \code{\link{dat2fre}}. In case that for the resulting tabulated data in the object of class \code{c("data.frame","Pfreq")} survey weights were used the function \code{CFA} will take into account those weigts for estimation of the expected counts -- currently only when \code{method="log"}.
+This is the main function of the package. It internal calls several functions of the package \code{\link{confreq-package}} which are also available as single functions. For classification of the observed patterns into 'Types' and 'Antitypes' according to Lienert  (1971), a S3 summary method for the resulting object of class \code{"CFA"} can be applied - see \code{\link{summary.CFA}}. An S3 plot method is useful for visualization of the contingency table and the 'Types' and 'Antitypes' -- see \code{\link{plot.CFA}}. Since version  1.6.0-1 of \code{confreq} survey weights are supported when tabluating a data set with function \code{\link{dat2fre}}. In case that for the resulting tabulated data in the object of class \code{c("data.frame","Pfreq")} survey weights were used the function \code{CFA} will take into account those weigts for estimation of the expected counts -- currently only when \code{method="log"}.  
+
+Input must contain a complete, nonduplicated configuration grid in
+canonical category order. Invalid input is rejected before fitting, rather
+than silently pairing frequencies with the wrong design-matrix rows.
+After selecting or sorting rows, recreate canonical input and align any
+covariates or custom design matrix explicitly. Weighted input is detected
+from a valid \code{wgtfreq} attribute, not from an arbitrary comment.
+Weighted \code{method="margins"} is rejected because the historical margin
+calculation uses raw frequencies. The existing weighted log-linear path is
+retained; it is not a new design-based survey-variance implementation.
 }
 \examples{
 #######################################

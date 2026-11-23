@@ -2,7 +2,7 @@
 % Please edit documentation in R/dat2fre.R
 \name{dat2fre}
 \alias{dat2fre}
-\title{dataset to pattern frequency conversion}
+\title{Convert Individual Data to Pattern Frequencies}
 \usage{
 dat2fre(
   x,
@@ -15,31 +15,76 @@ dat2fre(
 )
 }
 \arguments{
-\item{x}{an object of class "matrix" or "data.frame". If \code{x} is a "data.frame" each variable (column) must be an \code{integer} or a \code{factor}. If \code{x} is a "matrix" it is assumed that the categories for each variable in \code{x} start with \code{1} -- there is no check for that !!!}
+\item{x}{A data frame containing factor, character, numeric or logical
+columns, or a numeric matrix of positive integer category codes.
+Column names must be unique; \code{Freq} is reserved for the output.}
 
-\item{katorder}{logical with default set to \code{katorder==FALSE}. When set to \code{katorder==TRUE} variables are ordered according to their number of categories (variable with most categories is the rightmost variable) in the resulting object.}
+\item{katorder}{Logical. Reorder variables by increasing number of
+categories? Defaults to \code{FALSE}.}
 
-\item{caseorder}{logical with default set to \code{caseorder==TRUE}. When set to \code{caseorder==FALSE} configurations are only ordered according to the categories of the rightmost variable in the resulting object.}
+\item{caseorder}{Logical. If \code{TRUE} (default), order configurations
+by category order with the rightmost variable changing fastest.
+If \code{FALSE}, retain the order produced by \code{table()}.}
 
-\item{kat}{ignored when \code{x} is a \code{data.frame}! If \code{x} is a \code{"matrix"} the optional argument \code{kat} must be an integer vector defining the number of categories for every variable in \code{x} (in the respective order). If left empty the (max) number of categories is estimated from the data given in \code{x}.}
+\item{kat}{For numeric matrices only: a vector specifying the number
+of categories per column. Codes must be in \code{1:kat[j]}.
+If omitted, column maxima determine the category counts.}
 
-\item{codes}{a list with character vectors containing coding for integers in matrix (if \code{x} is a numeric \code{matrix}). If \code{codes} is not empty (and the argument \code{x} is an object of class "matrix") the return object will be pattern frequencies table as \code{data.frame}.}
+\item{codes}{For numeric matrices only: a list with one entry per column
+and one unique label per category. For named entries, names are used
+as labels; otherwise, entry values are used as labels.}
 
-\item{wgt}{a numerical vector of survey weights to weight the cases (rows) in \code{x}}
+\item{wgt}{Optional numeric vector of finite, nonnegative case weights,
+one per input row. Zero weights are allowed.}
 
-\item{...}{other parameters passed through to \code{\link{table}} (in case of x  being a \code{data.frame}) or to \code{\link{tabulate}} (in case of x being a matrix).}
+\item{...}{Named options passed to \code{\link[base]{table}}:
+\code{exclude}, \code{useNA}, \code{dnn} and \code{deparse.level}.
+Other or unnamed arguments are rejected.}
 }
 \value{
-An object of class c("data.frame","Pfreq") containing the (response) pattern frequencies table representation of the given dataset in the argument \code{x}.
+A data frame of class \code{c("Pfreq", "data.frame")}, with one
+  factor column per configuration variable and a final \code{Freq} column.
+  Weighted inputs additionally produce the attributes described above.
 }
 \description{
+Tabulate individual records as a complete table of configurations,
+including configurations with zero observed frequency.
 Given a dataset this function returns a (response) pattern frequencies table representation of it.
 }
 \details{
-To use survey weights a vector of positive numeric values with length matching the number of rows in \code{x} must be assigned to the argument \code{wgt}. The individual case weights are then aggregated (respective sum of weights) for each pattern observed in the data (assigned to argument \code{x}).
+For data frames, factor levels define available categories and
+their order, including unused levels. Other columns use observed categories
+in the order determined by \code{table()}. Use factor levels to specify
+additional categories. The arguments \code{kat} and \code{codes} are
+rejected for data frames rather than silently ignored.
+
+Numeric matrices retain the historical assumption of codes starting at
+one. Use a data frame for other coding schemes or character labels.
+Missing matrix codes are rejected. For data frames, the default table
+options exclude missing categories; \code{useNA = "ifany"} includes them.
+
+The \code{Freq} column always contains unweighted counts. If weights are
+supplied, \code{wgtfreq} stores cell sums of weights, \code{WGT} stores
+the mean weight per observed cell (one for unobserved cells), and
+\code{wgtdat} stores the original weight vector. A comment marks the object
+as weighted for compatibility with \code{CFA()}.
+The additional attributes \code{wgtfreq2} (cell sums of squared weights)
+and \code{wgtpositive} (cell counts of positive-weight records) support
+the independent-unit survey variance calculation in \code{S2CFA()}.
+Both attributes follow exactly the row order of the frequency table.
+Use the default \code{caseorder = TRUE} for \code{CFA()} and use identical
+variable selection and ordering options when preparing covariates.
 }
 \examples{
 #######################################
+d <- data.frame(A = factor(c("yes", "no", "yes")),
+                B = factor(c("low", "low", "high")))
+pf <- dat2fre(d)
+pf
+weighted <- dat2fre(d, wgt = c(1, 2, 3))
+attr(weighted, "wgtfreq")
+########################################
+
 data(suicide)# loading data in data frame (702 cases) representation 
 dat2fre(suicide) # converting it into a pattern frequencies table
 
@@ -55,5 +100,9 @@ dat2fre(test) # making a proper ordered pattern frequencies table again
 }
 \references{
 No references in the moment
+}
+\seealso{
+\code{\link{fre2dat}}, \code{\link{dat2cov}},
+  \code{\link{fre2tab}}, \code{\link{CFA}}, \code{\link{S2CFA}}
 }
 \keyword{utilities}

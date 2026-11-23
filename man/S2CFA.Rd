@@ -4,25 +4,57 @@
 \alias{S2CFA}
 \title{Configural Frequencies Analysis for two Samples.}
 \usage{
-S2CFA(patternfreq, alpha = 0.05, ccor = FALSE, ...)
+S2CFA(patternfreq, alpha = 0.05, ccor = FALSE, ..., weighted = NULL)
 }
 \arguments{
 \item{patternfreq}{an object of class \code{"Pfreq"}, which is data in pattern frequencies representation - see function \code{\link{dat2fre}}. The variable defining the two sub samples (a variable with max. two categories) must be located in the last but one column of the object of class \code{"Pfreq"}}
 
 \item{alpha}{a numeric giving the alpha level for testing (default set to \code{alpha=.05})}
 
-\item{ccor}{a logical (TRUE / FALSE) determining whether to apply a continuity correction or not. When set to \code{ccor=TRUE} continuity correction is applied. For \code{ccor=FALSE} no continuity correction is applied.}
+\item{ccor}{For unweighted analysis only; TRUE is rejected for survey weights. A logical (TRUE / FALSE) determining whether to apply a continuity correction or not. When set to \code{ccor=TRUE} continuity correction is applied. For \code{ccor=FALSE} no continuity correction is applied.}
 
-\item{...}{additional parameters passed through to other functions.}
+\item{...}{Reserved for compatibility; not used by this implementation.}
+
+\item{weighted}{Logical or NULL. By default, use survey weights if the
+\code{wgtfreq} attribute is present. TRUE explicitly requests weighted
+analysis; FALSE explicitly uses raw frequencies. This argument follows
+\code{...} and must be named in full.}
 }
 \value{
-an object of class \code{S2CFA} with results.
+An object of class \code{S2CFA}. Weighted results additionally
+  contain \code{weighted = TRUE} and a \code{weighting} description.
+  The first ten local result columns retain the historical layout; survey
+  columns are \code{Wald}, \code{df.wald}, \code{p.wald}, \code{prop.diff}
+  and \code{SE.diff}. Frequencies in weighted results are sums of weights.
 }
 \description{
 Calculates coefficients for the two-sample CFA. Instead of differentiating between 'Types' and 'Antitypes', two-sample CFA looks for discrimination types, that is configurations with significant differences in frequencies between two sub samples.
 }
 \details{
-no details at the moment ...
+With survey weights, observed and expected frequencies use sums
+of weights, without rounding. Inference compares the two weighted proportions
+by an asymptotic Wald chi-squared test (one degree of freedom) using a
+linearized variance for independent sampling units, with replacement.
+No clustering, stratification, calibration or finite-population correction
+can be incorporated from the weight vector alone.
+
+The influence for record i in group g is
+\code{w_i * (I_i - p_g) / sum(w_g)}. The two group contributions are
+disjoint. Their squared influences are summed and multiplied by
+\code{n / (n - 1)}, where n counts all positive-weight records in both
+groups. The variance is obtained from \code{wgtfreq2} and
+\code{wgtpositive}, stored by the revised \code{dat2fre()}.
+Zero-variance configurations are not tested and have an NA p-value.
+For old weighted objects without these attributes, only weighted descriptive
+results are returned with a warning; recreate them with \code{dat2fre()}.
+
+The weighted p-value is \code{p.wald}, not a Fisher exact test and not a
+Pearson test on population expansion totals. Classical test columns remain
+NA in weighted results. Multiplying all weights by a common positive
+factor leaves the Wald statistic and p-value unchanged.
+The unweighted statistical calculation retains its historical behavior.
+Both groups are paired by categories, even after a row permutation.
+Incomplete or duplicated configuration grids are rejected explicitly.
 }
 \examples{
 #######################################

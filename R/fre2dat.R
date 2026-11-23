@@ -2,17 +2,42 @@
 #' @keywords utilities 
 #' @export fre2dat
 #' @description Given a (response) pattern frequencies table this function returns a dataset representation of it.
-#' @details No details
-#' 
-#' @param x typically an object of class "matrix" which is a (response) pattern frequencies table. \code{data.frames} are converted into a matrix with \code{\link{data.matrix}}. It is assumed, that the last column of the object \code{x} represents the frequencies of the (respose) patern represented by the other columns in \code{x}.
-#' @param fact logical, default is \code{(fact=TRUE)} and the result is coerced to a data.frame with factor variables. If this argument is set to \code{(fact=FALSE)} a matrix object with numerical values is returned.
-#' @param ... additional parameters passed trough. This is an option to assign factor labels to the resulting \code{data.frame} (when setting argument \code{fact=TRUE}) --> see \code{factor} in the \code{base} package and examples.
-#' 
+#' @details The order of configurations in the input is retained; each row
+#' is repeated according to its frequency. Zero-frequency rows produce no
+#' records, and incomplete configuration tables can be expanded directly.
+#' With \code{fact = TRUE} and no additional factor arguments, existing
+#' factor levels and labels are retained. Other columns are converted to
+#' factors. Additional factor arguments apply to every column, so a shared
+#' \code{labels} argument must be appropriate for all variables.
+#'
+#' Weighted-frequency attributes are not expanded into individual weights.
+#' Expansion always uses the final frequency column. Fractional frequencies
+#' are rejected rather than rounded. A round trip need not restore the
+#' original individual row order.
+#'
+#' @param x A pattern-frequency data frame or matrix, with configuration
+#'   variables in all but the last column. The last column must contain
+#'   finite, nonnegative integer frequencies.
+#' @param fact Logical. If \code{TRUE} (default), return a data frame with
+#'   factor columns. If \code{FALSE}, return a numeric matrix using
+#'   \code{\link[base]{data.matrix}}; factors are represented by integer codes.
+#' @param ... Arguments passed to \code{\link[base]{factor}} for each column
+#'   when \code{fact = TRUE}. Ignored when \code{fact = FALSE}.
+#'   
 #' WARNING using this option will only work correct when all 'pattern' columns (variables) in the frequencies table share the same number of categories    
 
-#' @return An object of class "matrix" or "data.frame" (depending on the argument \code{fact}) containing the dataset representation of the (response) pattern frequencies table give in the argument \code{x}. 
+#' @return A data frame with factor columns or a numeric matrix, according
+#'   to \code{fact}, with one row per reconstructed individual record.
+#' @seealso \code{\link{dat2fre}}, \code{\link{fre2tab}}
+#' 
 #' @references No references in the moment 
 #' @examples #######################################
+#' pf <- data.frame(A = factor(c("yes", "no")),
+#'                  B = factor(c("low", "high")), Freq = c(2, 1))
+#' fre2dat(pf)
+#' fre2dat(pf, fact = FALSE)
+#' dat2fre(fre2dat(pf))
+#' ##################################
 #' data(LienertLSD)# loading example pattern frequencies table
 #' fre2dat(LienertLSD)# coverting it into a (data) matrix
 #' # for a matrix without colnames
@@ -23,49 +48,68 @@
 ############### start of function definition ##################
 ########### pattern frequency to data conversion ##############
 ################ jhheine at googlemail.com ####################
-fre2dat <- function(x,fact=TRUE,...) {
-	x <- data.matrix(x)
-	lp <- dim(x)[2]
-	pp <- dim(x)[1] # könnte zu kurz sein! je nach x
-  kat <- apply(x[,1:(lp-1)],2,max) # Anzahl kategorien je variable
-	npos<-prod(kat) #anzahl möglicher pattern
-  ######## sicherheitshalber richtiges (zeilenweises) sortieren von x
-	vars<-1:(lp-1)
-	orderlist <- list()
-	for(i in 1:length(vars)){
-	  orderlist[[i]]<-rank(x[, vars[i]])
-	}
-	x<-(x[do.call("order", orderlist), ])
-	######## ENDE sicherheitshalber richtiges sortieren von x
-  
-	######## wenn x unvollständig ist
-	if (npos!=pp){ 
-	  cat("pattern frequencies representation covers not all possible paterns!","\n")
-	  ### vervollständigen (sortiert ist ja schon):
-	  pos_p<-apply(pos_cfg_cfa(kat, fact = fact),1,function(x){paste(x,collapse="")}) # JHH 09-03-2021 fact = FALSE --> fact = fact
-	  emp_p<-apply(x[ ,1:(lp-1)],1,function(x){paste(x,collapse="")})
-	  fehlend_p<-pos_p[!pos_p%in%emp_p]
-	  fehlende<-cbind(matrix(as.numeric(unlist(strsplit(fehlend_p, split=""))),ncol=(lp-1),byrow = TRUE),rep(0,length(fehlend_p)) )
-	  x<-rbind(x,fehlende) #fehlende pattern an x anhängen
-	  # nun x nochmals sortieren
-	  vars<-1:(lp-1)
-	  orderlist <- list()
-	  for(i in 1:length(vars)){
-	    orderlist[[i]]<-rank(x[, vars[i]])
-	  }
-	  x<-(x[do.call("order", orderlist), ])
-	  pp <- dim(x)[1] # neuen wert für pp festsetzten nach vervollständigung
-	  cat("missing pattern were added and were given frequencies of zero","\n")
-	}
-  
-  ######## wenn x vollständig ist
-  if (npos==pp){    
-    fun <- function(x){matrix(rep(c(x[1:(lp-1)]), each=x[lp]), ncol=(lp-1))}
-    dat<-do.call(rbind,apply(x,1,fun))
-    if(length(colnames(x))!=0){colnames(dat)<-colnames(x)[1:(lp-1)]} # variablennmen aus x uebertragen
-    if(length(colnames(x))==0){colnames(dat)<-LETTERS[1:(lp-1)]}
-    if(fact==TRUE){dat<-as.data.frame(apply(dat,2,factor,...),stringsAsFactors=fact)}#,... # # JHH 09-03-2021: ,stringsAsFactors=fact
+# Faktorlabels und unbenutzte Faktorstufen bleiben bei fact=TRUE erhalten.
+fre2dat <- function(x, fact = TRUE, ...) {
+  z <- .cf_frequency(x, integer = TRUE)
+  if (!is.logical(fact) || length(fact) != 1L || is.na(fact))
+    stop("fact must be TRUE or FALSE.")
+  idx <- rep(seq_len(nrow(z$data)), times = z$freq)
+  d <- z$data[idx, , drop = FALSE]
+  rownames(d) <- NULL
+  if (!fact) {
+    # Historischer Rueckgabetyp: numerische Matrix mit Faktorcodes.
+    return(data.matrix(d))
   }
-
-  return(dat)
+  dots <- list(...)
+  for (j in seq_along(d)) {
+    if (!is.factor(d[[j]]) || length(dots)) d[[j]] <- factor(d[[j]], ...)
+  }
+  d
 }
+### old stuff
+# fre2dat <- function(x,fact=TRUE,...) {
+# 	x <- data.matrix(x)
+# 	lp <- dim(x)[2]
+# 	pp <- dim(x)[1] # könnte zu kurz sein! je nach x
+#   kat <- apply(x[,1:(lp-1)],2,max) # Anzahl kategorien je variable
+# 	npos<-prod(kat) #anzahl möglicher pattern
+#   ######## sicherheitshalber richtiges (zeilenweises) sortieren von x
+# 	vars<-1:(lp-1)
+# 	orderlist <- list()
+# 	for(i in 1:length(vars)){
+# 	  orderlist[[i]]<-rank(x[, vars[i]])
+# 	}
+# 	x<-(x[do.call("order", orderlist), ])
+# 	######## ENDE sicherheitshalber richtiges sortieren von x
+#   
+# 	######## wenn x unvollständig ist
+# 	if (npos!=pp){ 
+# 	  cat("pattern frequencies representation covers not all possible paterns!","\n")
+# 	  ### vervollständigen (sortiert ist ja schon):
+# 	  pos_p<-apply(pos_cfg_cfa(kat, fact = fact),1,function(x){paste(x,collapse="")}) # JHH 09-03-2021 fact = FALSE --> fact = fact
+# 	  emp_p<-apply(x[ ,1:(lp-1)],1,function(x){paste(x,collapse="")})
+# 	  fehlend_p<-pos_p[!pos_p%in%emp_p]
+# 	  fehlende<-cbind(matrix(as.numeric(unlist(strsplit(fehlend_p, split=""))),ncol=(lp-1),byrow = TRUE),rep(0,length(fehlend_p)) )
+# 	  x<-rbind(x,fehlende) #fehlende pattern an x anhängen
+# 	  # nun x nochmals sortieren
+# 	  vars<-1:(lp-1)
+# 	  orderlist <- list()
+# 	  for(i in 1:length(vars)){
+# 	    orderlist[[i]]<-rank(x[, vars[i]])
+# 	  }
+# 	  x<-(x[do.call("order", orderlist), ])
+# 	  pp <- dim(x)[1] # neuen wert für pp festsetzten nach vervollständigung
+# 	  cat("missing pattern were added and were given frequencies of zero","\n")
+# 	}
+#   
+#   ######## wenn x vollständig ist
+#   if (npos==pp){    
+#     fun <- function(x){matrix(rep(c(x[1:(lp-1)]), each=x[lp]), ncol=(lp-1))}
+#     dat<-do.call(rbind,apply(x,1,fun))
+#     if(length(colnames(x))!=0){colnames(dat)<-colnames(x)[1:(lp-1)]} # variablennmen aus x uebertragen
+#     if(length(colnames(x))==0){colnames(dat)<-LETTERS[1:(lp-1)]}
+#     if(fact==TRUE){dat<-as.data.frame(apply(dat,2,factor,...),stringsAsFactors=fact)}#,... # # JHH 09-03-2021: ,stringsAsFactors=fact
+#   }
+# 
+#   return(dat)
+# }

@@ -19,7 +19,9 @@
 
 \item{fill}{a vector of (three) colors defining the coloring of significant 'Types' (default "red"), 'Antitypes' (default "blue") or not significant cells (default "grey") in the plot.}
 
-\item{adjalpha}{character with default \code{adjalpha = "bonferroni"}. Selector for the type of alpha adjustment for multiple testing. Possible options are: \code{adjalpha = "none"}, for no adjustment; \code{adjalpha = "bonferroni"}, for bonferroni adjustment (default); \code{adjalpha = "holm"}, for alpha adjustment according to Holm (1979); other options to come ... .}
+\item{adjalpha}{Adjustment method: \code{"bonferroni"} (default),
+\code{"holm"}, \code{"hochberg"}, \code{"hommel"}, \code{"BH"},
+\code{"BY"}, \code{"fdr"} (alias for BH), or \code{"none"}.}
 
 \item{...}{other parameters passed trough}
 }
@@ -28,6 +30,36 @@ a plot visualizing the results.
 }
 \description{
 S3 plot method for object of class\code{"CFA"}
+}
+\details{
+Plot frequencies use the same raw or weighted frequency basis as
+the CFA result. The existing CFA inferential calculations are unchanged;
+this plotting correction does not supply a design-based survey variance.
+Additional adjustment methods are \code{"hochberg"},
+\code{"hommel"}, \code{"BH"}, \code{"BY"} and \code{"fdr"} (an alias
+for \code{"BH"}). These methods use \code{\link[stats]{p.adjust}} on
+computable p-values only, following the same test-family rule as Holm.
+Hochberg and Hommel require appropriate dependence assumptions; BH and BY
+control the false discovery rate rather than the family-wise error rate.
+See \code{p.adjust} for assumptions and statistical interpretation.
+The historical Bonferroni denominator and the \code{"none"} behavior are
+retained. In particular, the reduced test-family rule for Holm and the new
+methods is not silently applied to the existing Bonferroni decisions.
+With \code{adjalpha = "holm"}, decisions use
+\code{stats::p.adjust(p, method = "holm")} on the non-missing p-values
+only. Missing values (\code{NA}/\code{NaN}) do not contribute to the number
+of comparisons. The historical strict rule, adjusted p-value less than
+\code{alpha}, is retained. Decisions use full precision before rounding.
+Only finite values in \code{[0, 1]} are computable p-values. Other numeric
+values are excluded with a warning and treated as missing decisions.
+Missing decisions are drawn using the neutral fill color.
+Functional cells are excluded from the Holm test family and retain
+their \code{"b"} label. Other pre-existing adjustment methods retain their decisions.
+}
+\examples{
+data(LienertLSD)
+res <- CFA(LienertLSD, bintest = FALSE)
+plot(res, type = "pChi", adjalpha = "BH")
 }
 \references{
 Holm, S. (1979). A simple sequentially rejective multiple test procedure. \emph{Scandinavian Journal of Statistics, 6}(2), 65–70.

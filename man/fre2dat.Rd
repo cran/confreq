@@ -7,25 +7,48 @@
 fre2dat(x, fact = TRUE, ...)
 }
 \arguments{
-\item{x}{typically an object of class "matrix" which is a (response) pattern frequencies table. \code{data.frames} are converted into a matrix with \code{\link{data.matrix}}. It is assumed, that the last column of the object \code{x} represents the frequencies of the (respose) patern represented by the other columns in \code{x}.}
+\item{x}{A pattern-frequency data frame or matrix, with configuration
+variables in all but the last column. The last column must contain
+finite, nonnegative integer frequencies.}
 
-\item{fact}{logical, default is \code{(fact=TRUE)} and the result is coerced to a data.frame with factor variables. If this argument is set to \code{(fact=FALSE)} a matrix object with numerical values is returned.}
+\item{fact}{Logical. If \code{TRUE} (default), return a data frame with
+factor columns. If \code{FALSE}, return a numeric matrix using
+\code{\link[base]{data.matrix}}; factors are represented by integer codes.}
 
-\item{...}{additional parameters passed trough. This is an option to assign factor labels to the resulting \code{data.frame} (when setting argument \code{fact=TRUE}) --> see \code{factor} in the \code{base} package and examples.
-
+\item{...}{Arguments passed to \code{\link[base]{factor}} for each column
+  when \code{fact = TRUE}. Ignored when \code{fact = FALSE}.
+  
 WARNING using this option will only work correct when all 'pattern' columns (variables) in the frequencies table share the same number of categories}
 }
 \value{
-An object of class "matrix" or "data.frame" (depending on the argument \code{fact}) containing the dataset representation of the (response) pattern frequencies table give in the argument \code{x}.
+A data frame with factor columns or a numeric matrix, according
+  to \code{fact}, with one row per reconstructed individual record.
 }
 \description{
 Given a (response) pattern frequencies table this function returns a dataset representation of it.
 }
 \details{
-No details
+The order of configurations in the input is retained; each row
+is repeated according to its frequency. Zero-frequency rows produce no
+records, and incomplete configuration tables can be expanded directly.
+With \code{fact = TRUE} and no additional factor arguments, existing
+factor levels and labels are retained. Other columns are converted to
+factors. Additional factor arguments apply to every column, so a shared
+\code{labels} argument must be appropriate for all variables.
+
+Weighted-frequency attributes are not expanded into individual weights.
+Expansion always uses the final frequency column. Fractional frequencies
+are rejected rather than rounded. A round trip need not restore the
+original individual row order.
 }
 \examples{
 #######################################
+pf <- data.frame(A = factor(c("yes", "no")),
+                 B = factor(c("low", "high")), Freq = c(2, 1))
+fre2dat(pf)
+fre2dat(pf, fact = FALSE)
+dat2fre(fre2dat(pf))
+##################################
 data(LienertLSD)# loading example pattern frequencies table
 fre2dat(LienertLSD)# coverting it into a (data) matrix
 # for a matrix without colnames
@@ -36,5 +59,8 @@ fre2dat(LienertLSD,fact=TRUE,labels=c("yes","no"))
 }
 \references{
 No references in the moment
+}
+\seealso{
+\code{\link{dat2fre}}, \code{\link{fre2tab}}
 }
 \keyword{utilities}

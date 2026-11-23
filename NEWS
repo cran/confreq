@@ -1,6 +1,46 @@
+Changes in Version 1.7.0-7
+o Implemented survey weights in S2CFA() an in turn enhanced functions dat2fre(), S2CFA(), summary.S2CFA(), plot.S2CFA(), CFA(), plot.CFA()
+
+
+Changes in Version 1.7.0-6
+
+o Revised and corrected the Holm adjustment in summary.CFA(), plot.CFA(), summary.S2CFA(), and plot.S2CFA(), which now use stats::p.adjust(method = "holm"). These functions also support the additional adjustment methods "hochberg", "hommel", "BH" (alias "fdr"), and "BY" via the adjalpha argument.
+
+Changes in Version 1.7.0-5
+
+o revised the complete conversion utility functions fre2tab(), fre2dat(), dat2fre(), dat2cov() - these functions now use shared internal helper functions
+
+
+Changes in Version 1.7.0-4
+
+o fixed ploting method for result objects of class 'S2CFA'
+
+
+Changes in Version 1.7.0-3
+
+o enhancements for method 'anova' for result objects from CFA() for model comparison.
+
+
+Changes in Version 1.7.0-2
+
+o changed some internal calculation routines (glm() vs. glm.fit() ...). 
+
+o added method 'anova' for result objects from CFA() for model comparison.
+
+
+
+Changes in Version 1.7.0-0
+
+o added option "holland" for the argument 'adjalpha' in function summary.CFA(), which enables the correction of p values according to Holland and Copenhaver (1987).
+
+o added the determinateion coefficient 'Q' as proposed by Betzin & Bollmann-Sdorra (2003) as part of main function CFA()
+
+o added the single functions Q_determination_cfa() and Q_determination_bound_cfa() for Q to be optionaly directly called by the user 
+
+
 Changes in Version 1.6.1-3
 
-o fixed Authors@R field in DESCRIPTION
+o fixed Authors@R field in DESCRIPTION specifying roles based on a subset of the MARC Code List for Relators as suggested in person() in package utils
 
 Changes in Version 1.6.1-2
 
